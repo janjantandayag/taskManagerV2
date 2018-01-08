@@ -1,7 +1,7 @@
 <div class="col-md-3 left_col">
   <div class="left_col scroll-view">
     <div class="navbar nav_title" style="border: 0;">
-      <a href="dashboard.php" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
+      <a href="dashboard.php" class="site_title"><i class="fa fa-paw"></i> <span>Task Manager Application</span></a>
     </div>
 
     <div class="clearfix"></div>
@@ -9,11 +9,11 @@
     <!-- menu profile quick info -->
     <div class="profile clearfix">
       <div class="profile_pic">
-        <img src="assets/images/img.jpg" alt="..." class="img-circle profile_img">
+        <img src="assets/images/attachment/profile/<?= $_SESSION['profile_image'] ?>" alt="..." class="img-circle profile_img">
       </div>
       <div class="profile_info">
         <span>Welcome,</span>
-        <h2>John Doe</h2>
+        <h2><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></h2>
       </div>
     </div>
     <!-- /menu profile quick info -->
@@ -40,13 +40,7 @@
       <a data-toggle="tooltip" data-placement="top" title="Settings">
         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
       </a>
-      <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-      </a>
-      <a data-toggle="tooltip" data-placement="top" title="Lock">
-        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-      </a>
-      <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+      <a data-toggle="tooltip" data-placement="top" title="Logout" href="database/user_functions.php?action=logout">
         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
       </a>
     </div>

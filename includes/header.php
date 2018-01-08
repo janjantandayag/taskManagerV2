@@ -1,3 +1,11 @@
+<?php
+  $page = $_SERVER['PHP_SELF'];
+  if($page === '/taskManagerV2/index.php' ){
+    session_start();
+  }
+
+  include('database/connection.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="assets/images/favicon.ico" type="image/ico" />
 
-    <title>Gentelella Alela! | </title>
+    <title>Task Manager Application</title>
 
     <!-- Bootstrap -->
     <link href="assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">

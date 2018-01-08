@@ -1,14 +1,16 @@
  <!-- footer content -->
-        <footer>
+ <?php if($_SERVER['PHP_SELF'] != '/taskManagerV2/index.php') : ?>
+           <footer>
           <div class="pull-right">
-            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+            Task Manager Application
           </div>
           <div class="clearfix"></div>
         </footer>
         <!-- /footer content -->
       </div>
     </div>
-
+  <?php endif; ?>
+  
     <!-- jQuery -->
     <script src="assets/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
