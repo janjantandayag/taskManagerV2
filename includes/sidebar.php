@@ -30,6 +30,11 @@
               <li><a href="dashboard.php">Dashboard</a></li>
             </ul>
           </li>
+            <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
+            <ul class="nav child_menu">
+              <li><a href="users.php">All Users</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

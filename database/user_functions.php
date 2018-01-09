@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 include('connection.php');
 
 // LOGGED-IN THE USER
@@ -24,9 +26,41 @@ function login($username,$password){
 	}
 }
 
+// Logged out user
 function logout(){
 	session_destroy();
 	header('Location: ../index.php');
+}
+
+// Get all users.
+function getUsers(){	
+	GLOBAL $connection;
+	$sql = "SELECT * FROM users ORDER BY first_name ASC";
+	$query = mysqli_query($connection,$sql);
+	return $query;
+}
+
+// Get user positions
+function getUserPositions($user_id){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$value = [];
+
+	while($result = mysqli_fetch_assoc($query)){
+		$value[] = $result['position_title'];
+	}
+
+	return $value ? implode(', ',$value) : "<span class='label label-danger'>Position Not Set</span>";
+}
+
+// Count number of positions
+function countPosition($user_id){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$count = mysqli_num_rows($query);
+	return ($count > 0 && $count != 1) ? 's' : '';
 }
 
 

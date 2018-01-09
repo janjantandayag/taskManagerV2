@@ -3,8 +3,6 @@
   if($page === '/taskManagerV2/index.php' ){
     session_start();
   }
-
-  include('database/connection.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
