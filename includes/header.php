@@ -12,7 +12,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="assets/images/favicon.ico" type="image/ico" />
 
     <title>Task Manager Application</title>
 
@@ -27,9 +26,13 @@
     <!-- bootstrap-datetimepicker -->
     <link href="assets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <!-- Bootstrap Colorpicker -->
-    <link href="assets/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <link href="assets/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-
+   <!-- jQuery -->
+    <script src="assets/vendors/jquery/dist/jquery.min.js"></script>
+    <script src='assets/vendors/img-cropper/jquery.imgareaselect.js'></script>
+    <link rel="stylesheet" type="text/css" href="assets/vendors/img-cropper/imgareaselect.css" />
     <!-- Custom Theme Style -->
     <link href="assets/build/css/custom.min.css" rel="stylesheet">
   </head>

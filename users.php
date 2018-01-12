@@ -31,7 +31,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 										<?= getUserPositions($user['user_id']) ?> </h5>
 									</div>
 									<div class="right col-xs-5 text-center">
-										<img src="assets/images/attachment/profile/<?= $user['profile_image'] ?>" alt="" class="img-circle img-responsive" />
+										<img src="database/attachment/images/profile/<?= $user['profile_image'] ?>" alt="" class="img-circle img-responsive" />
 									</div>
 								</div>
 								<div class="col-xs-12 bottom">

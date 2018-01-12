@@ -9,7 +9,7 @@
     <!-- menu profile quick info -->
     <div class="profile clearfix">
       <div class="profile_pic">
-        <img src="assets/images/attachment/profile/<?= $_SESSION['profile_image'] ?>" alt="..." class="img-circle profile_img">
+        <img src="database/attachment/images/profile/<?= $_SESSION['profile_image'] ?>" alt="..." class="img-circle profile_img">
       </div>
       <div class="profile_info">
         <span>Welcome,</span>
@@ -33,7 +33,7 @@
           <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
               <li><a href="users.php">All Users</a></li>
-              <li><a href="users_add.php">Add New User</a></li>
+              <li><a href="users_form.php">Add New User</a></li>
             </ul>
           </li>
         </ul>

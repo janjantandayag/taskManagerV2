@@ -9,7 +9,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="">
           <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <img src="assets/images/attachment/profile/<?= $_SESSION['profile_image'] ?>" alt=""><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?>
+            <img src="database/attachment/images/profile/<?= $_SESSION['profile_image'] ?>" alt=""><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?>
             <span class=" fa fa-angle-down"></span>
           </a>
           <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -31,7 +31,7 @@
           <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
             <li>
               <a>
-                <span class="image"><img src="assets/images/attachment/profile/<?= $_SESSION['profile_image'] ?>" alt="Profile Image" /></span>
+                <span class="image"><img src="database/attachment/images/profile/<?= $_SESSION['profile_image'] ?>" alt="Profile Image" /></span>
                 <span>
                   <span><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></span>
                   <span class="time">3 mins ago</span>
