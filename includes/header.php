@@ -29,6 +29,8 @@
     <link rel="stylesheet" type="text/css" href="assets/vendors/img-cropper/imgareaselect.css" />
     <!-- Custom Theme Style -->
     <link href="assets/build/css/custom.min.css" rel="stylesheet">
+    <!-- TABLE SORTER -->
+    <script src="assets/js/table_sorter/table-sorter.js"></script>
   </head>
 
   <?php

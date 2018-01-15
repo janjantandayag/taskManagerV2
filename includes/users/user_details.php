@@ -28,15 +28,15 @@
 			<span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-			<input type="text" class="form-control has-feedback-left" id="inputSuccess32" value="<?=  $isUpdate ? $user_detail['email'] : ''?>" required name="email" placeholder="Email">
+			<input type="email" class="form-control has-feedback-left" id="inputSuccess32" value="<?=  $isUpdate ? $user_detail['email'] : ''?>" required name="email" placeholder="Email">
 			<span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-			<input type="text" class="form-control has-feedback-left" id="inputSuccess4" value="<?=  $isUpdate ? $user_detail['office_phone'] : ''?>" required name="office_phone" placeholder="Office Phone">
+			<input type="text" class="form-control" id="inputSuccess4" style="padding-left:43px" required value="<?=  $isUpdate ? $user_detail['office_phone'] : ''?>" name="office_phone" placeholder="Office Phone" data-inputmask="'mask' : '(999) 999-9999'">
 			<span class="fa fa-phone form-control-feedback left" aria-hidden="true"></span>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-			<input type="text" class="form-control has-feedback-left" id="inputSuccess5" required value="<?=  $isUpdate ? $user_detail['cell_phone'] : ''?>" name="cell_phone" placeholder="Cellphone">
+			<input type="text" class="form-control" id="inputSuccess5" style="padding-left:43px" required value="<?=  $isUpdate ? $user_detail['cell_phone'] : ''?>" name="cell_phone" placeholder="Cellphone" data-inputmask="'mask' : '(999) 999-9999'">
 			<span class="fa fa-phone form-control-feedback left" aria-hidden="true"></span>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">

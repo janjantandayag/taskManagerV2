@@ -13,11 +13,11 @@
 			    <input type="hidden" id="y" name="y" />
 			    <input type="hidden" id="w" name="w" />
 			    <input type="hidden" id="h" name="h" />
-			    <p><img id="filePreview" src="<?= $isUpdate ? 'database/attachment/images/profile/' . $user_detail['profile_image'] : '' ?>" /></p>
+			    <p><img id="filePreview" src="<?= $isUpdate ? 'database/attachment/images/profile/' . $user_detail['profile_image'] : 'database/attachment/images/profile/user-default.png' ?>" /></p>
 			</div>
 			<div class="upload-btn-wrapper col-md-3 col-xs-12" style="margin-top:20px">
 				<button class="btn btn-info btn-xs" style="overflow: hidden;cursor: pointer;" type="button">Upload a photo</button>
-				<input name="image" id="fileInput" type="file" style="cursor: pointer;" />
+				<input name="image" id="fileInput" type="file" accept="image/*" data-type='image' style="cursor: pointer;" />
 			</div>		
     	</div>                           	             	     
 	</div>     	

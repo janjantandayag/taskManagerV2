@@ -47,28 +47,38 @@ function updateCoords(im,obj){
 }
 
 //check coordinates
-function checkCoords(){
-    // if(parseInt($('#w').val())) return true;
-    // alert('Please select a crop region then press submit.');
-    // return false;
-}
+// function checkCoords(){
+//     if(parseInt($('#w').val())) return true;
+//     alert('Please select a crop region then press submit.');
+//     return false;
+// }
 
 $(document).ready(function(){
     //prepare instant image preview
-    var p = $("#filePreview");
-    $("#fileInput").change(function(){
-        //fadeOut or hide preview
-        p.fadeOut();
-        $('[class^="imgareaselect"]').show();
-        //prepare HTML5 FileReader
-        var oFReader = new FileReader();
-        if(document.getElementById("fileInput").files.length !=0 ){
-            oFReader.readAsDataURL(document.getElementById("fileInput").files[0]);
-        }
+        var p = $("#filePreview");
+        $("#fileInput").change(function(){
+        var fileInput = document.getElementById('fileInput');
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if(!allowedExtensions.exec(filePath)){
+            alert('Please upload a valid photo!');
+            fileInput.value = '';
+            p.attr('src','database/attachment/images/profile/user-default.png');
+            return false;
+        }else{
+            //fadeOut or hide preview
+            p.fadeOut();
+            $('[class^="imgareaselect"]').show();
+            //prepare HTML5 FileReader
+            var oFReader = new FileReader();
+            if(document.getElementById("fileInput").files.length !=0 ){
+                oFReader.readAsDataURL(document.getElementById("fileInput").files[0]);
+            }
 
-        oFReader.onload = function (oFREvent) {
-            p.attr('src', oFREvent.target.result).fadeIn();
-        };
+            oFReader.onload = function (oFREvent) {
+                p.attr('src', oFREvent.target.result).fadeIn();
+            };
+        }
     });
 
     //implement imgAreaSelect plugin

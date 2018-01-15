@@ -62,6 +62,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   <div class="" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                       <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Position History</a></li>
+                      <li role="presentation"><a href="#tab_content2" id="vacation-tab" role="tab" data-toggle="tab" aria-expanded="true">Vacation</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
                       <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
@@ -69,15 +70,15 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                         $position_query = getPositionHistory($_GET['user_id']);
                         if(mysqli_num_rows($position_query) > 0 ) {
                         ?>
-                      	<table class="data table table-striped no-margin">
+                      	<table class="data table table-striped no-margin tablesorter" id="positionTable" >
                           <thead>
                             <tr>
-                              <th>#</th>
-                              <th>Position Name</th>
-                              <th>Position Description</th>
-                              <th>Start Date</th>
-                              <th>End Date</th>
-                              <th>Status</th>
+                              <th  style="cursor: pointer;">#</th>
+                              <th  style="cursor: pointer;">Position Name</th>
+                              <th  style="cursor: pointer;">Position Description</th>
+                              <th  style="cursor: pointer;">Start Date</th>
+                              <th  style="cursor: pointer;">End Date</th>
+                              <th  style="cursor: pointer;">Status</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -106,6 +107,9 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                         } else { ?>
                           <h4 style="text-align: center;padding:20px">No Records</h4>
                         <?php }  ?>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="vacation-tab">
+                        <h2>INSERT VACATION LOGS HERE</h2>
                       </div>
                     </div>
                   </div>

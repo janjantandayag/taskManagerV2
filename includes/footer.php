@@ -31,5 +31,11 @@
     <script src="assets/build/js/custom.min.js"></script>	
     <!-- Added My Custom Script -->
     <script src="assets/js/my_js/my_custom_script.js"></script>   
+
+    <script>
+      
+    // table sorter
+    $("#positionTable").tablesorter();
+    </script>
   </body>
 </html>
