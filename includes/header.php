@@ -1,9 +1,3 @@
-<?php
-  $page = $_SERVER['PHP_SELF'];
-  if($page === '/taskManagerV2/index.php' ){
-    session_start();
-  }
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

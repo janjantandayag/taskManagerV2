@@ -13,7 +13,7 @@
 			    <input type="hidden" id="y" name="y" />
 			    <input type="hidden" id="w" name="w" />
 			    <input type="hidden" id="h" name="h" />
-			    <p><img id="filePreview"/></p>
+			    <p><img id="filePreview" src="<?= $isUpdate ? 'database/attachment/images/profile/' . $user_detail['profile_image'] : '' ?>" /></p>
 			</div>
 			<div class="upload-btn-wrapper col-md-3 col-xs-12" style="margin-top:20px">
 				<button class="btn btn-info btn-xs" style="overflow: hidden;cursor: pointer;" type="button">Upload a photo</button>

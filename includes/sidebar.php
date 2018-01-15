@@ -13,7 +13,7 @@
       </div>
       <div class="profile_info">
         <span>Welcome,</span>
-        <h2><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></h2>
+        <h2><?= ucfirst($_SESSION['first_name']) . ' ' . ucfirst($_SESSION['last_name']) ?></h2>
       </div>
     </div>
     <!-- /menu profile quick info -->

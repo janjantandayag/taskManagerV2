@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/header.php');
   include('includes/sidebar.php');
@@ -36,8 +38,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 								</div>
 								<div class="col-xs-12 bottom">
 									<div class="emphasis" style="padding-left:15px">									
-										<button type="button" class="btn btn-<?= $user['status'] === 'ACTIVE' ? 'success' : 'default' ?> btn-xs"><?= $user['status'] ?></button>
-										<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-user"> </i> View Profile</a>
+										<button type="button" class="btn btn-<?= $user['status'] === 'ACTIVE' ? 'success' : 'default' ?> btn-xs"><?= $user['status'] === 'ACTIVE' ? 'ACTIVE' : 'DEACTIVATED' ?></button>
+										<a href="users_view.php?user_id=<?=$user['user_id']?>" class="btn btn-primary btn-xs"><i class="fa fa-user"> </i> View Profile</a>
 									</div>
 								</div>
 							</div>

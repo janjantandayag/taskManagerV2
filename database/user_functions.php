@@ -8,7 +8,7 @@ include('connection.php');
 function login($username,$password){
 	GLOBAL $connection;
 	$sql = "SELECT * FROM users WHERE email='$username' AND password=md5('$password')";
-	$query = mysqli_query($connection,$sql);
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 
 	$result = mysqli_fetch_assoc($query);
 
@@ -35,15 +35,48 @@ function logout(){
 // Get all users.
 function getUsers(){	
 	GLOBAL $connection;
-	$sql = "SELECT * FROM users ORDER BY first_name ASC";
-	$query = mysqli_query($connection,$sql);
+	$sql = "SELECT * FROM users ORDER BY last_name, first_name";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+// Get specific user using ID
+function getUserDetails($id){	
+	GLOBAL $connection;
+	$sql = "SELECT * FROM users WHERE user_id='$id'";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+
+function getActivePositions($id){
+	GLOBAL $connection;
+	$sql = "SELECT positions.position_title,positions.position_id,positions.position_description,role_position.start_date,role_position.end_date,role_position.status
+		FROM users
+		LEFT JOIN role_position ON users.user_id = role_position.user_id
+		LEFT JOIN positions ON role_position.position_id = positions.position_id
+		WHERE users.user_id = '$id' AND role_position.position_id IS NOT NULL AND role_position.status = 'ACTIVE'
+		ORDER BY role_position.status ASC, role_position.start_date DESC
+		";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));	
+	return $query;
+}
+// Get positions 
+function getPositionHistory($id){
+	GLOBAL $connection;
+	$sql = "SELECT users.user_id,role_position.position_id,positions.position_id,positions.position_title,positions.position_description,role_position.start_date,role_position.end_date,role_position.status
+		FROM users
+		LEFT JOIN role_position ON users.user_id = role_position.user_id
+		LEFT JOIN positions ON role_position.position_id = positions.position_id
+		WHERE users.user_id = '$id' AND role_position.position_id IS NOT NULL
+		ORDER BY role_position.status ASC, role_position.start_date DESC
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));	
 	return $query;
 }
 
 // Get user positions
 function getUserPositions($user_id){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id";
+	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id AND role_position.status='ACTIVE'";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	$value = [];
 
@@ -60,7 +93,7 @@ function countPosition($user_id){
 	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	$count = mysqli_num_rows($query);
-	return ($count > 0 && $count != 1) ? 's' : '';
+	return ($count > 1) ? 's' : '';
 }
 
 // Add New User
@@ -79,7 +112,7 @@ function addUser($data){
 
 	$query = "INSERT INTO users(first_name,last_name,email,office_phone,cell_phone,password,status) 
 			VALUES ('$first_name','$last_name','$email','$office_phone','$cell_phone',md5('$password'),'ACTIVE')";
-	mysqli_query($connection, $query);
+	mysqli_query($connection, $query) or die(mysqli_error($connection));
 	$user_id = mysqli_insert_id($connection);
 
 	$file_name_init = $user_id .'-'.$first_name.'-'.$last_name;
@@ -92,19 +125,24 @@ function addUser($data){
 		$position_id = $positions[$i];
 		$start_date =  $start_dates[$i];
 		$end_date = $end_dates[$i];
+		$status = empty($end_date) ? 'ACTIVE' : 'INACTIVE';
 
-		$query = "INSERT INTO role_position(user_id,position_id,start_date,end_date) 
-			VALUES ($user_id,$position_id,'$start_date','$end_date')";
-		mysqli_query($connection, $query);
+		if(!empty($position_id) && !empty($start_date)){
+			$query = "INSERT INTO role_position(user_id,position_id,start_date,end_date,status) 
+				VALUES ($user_id,$position_id,'$start_date','$end_date','$status')";
+			mysqli_query($connection, $query) or die(mysqli_error($connection));
+		}
 	}
 
 
 	if($_SESSION['add_user_error'] === ""){
 		$_SESSION['add_user_success'] = "Successfully added new user!";
 		unset($_SESSION['add_user_error']);
+		header("Location:../users_view.php?user_id=$user_id");	
+	} else {
+		header("Location:../users_form.php");	
 	}
 
-	header("Location:../users_form.php");	
 }
 
 function uploadImage($file_name_init,$user_id){

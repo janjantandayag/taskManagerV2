@@ -5,9 +5,17 @@ $('#myDatepicker2').datetimepicker({
     format: 'YYYY-MM-DD'
 });
 
+$(".date").each(function(index){
+    $(this).attr('id','myDatepicker'+index);
+    $('#myDatepicker'+index).datetimepicker({
+        format: 'YYYY-MM-DD'
+    });
+});
+
 $('.addPositionButton').click(function(){  
     $copy = $( ".initialInput:first").clone();
-    $copy.find('.date input').val('');
+    $copy.find('.date input').val(''); 
+    $copy.find('.position_title').val('');
     $copy.appendTo("#position_container");
     $( ".initialInput").find('button').css("display","block");
 
