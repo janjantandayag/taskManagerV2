@@ -145,6 +145,7 @@ function addUser($data){
 
 }
 
+// Upload Image
 function uploadImage($file_name_init,$user_id){
 	// Modify file name
 	GLOBAL $connection;
@@ -241,6 +242,28 @@ function uploadImage($file_name_init,$user_id){
     }
 }
 
+// Reset Password
+function resetPassword($id){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM users WHERE users.user_id = $id";
+	$query = mysqli_query($connection,$sql);
+
+	if($query->num_rows != 0){
+		$sql = "UPDATE users SET users.password = md5('password') WHERE users.user_id = $id";
+		$query = mysqli_query($connection,$sql);
+
+		echo json_encode([
+			'status' => 'success',
+			'message' => 'Successfully resetted password!'
+		]);
+	} else {
+		echo json_encode([
+			'status' => 'error',
+			'message' => 'User not found in the system!'
+		]);
+	}
+}
+
 
 if($_POST){
 	if(isset($_POST['login'])){
@@ -248,8 +271,13 @@ if($_POST){
 		$password = $_POST['password'];
 		login($username,$password);
 	}
+
 	if(isset($_POST['add_user'])){
 		addUser($_POST);
+	}	
+
+	if(isset($_POST['action']) == 'reset_password'){
+		resetPassword($_POST['user_id']);
 	}
 }
 

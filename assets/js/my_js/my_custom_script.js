@@ -88,4 +88,45 @@ $(document).ready(function(){
         onSelectEnd: updateCoords,
         show: true
     });
+
+
 });
+
+    // PASSWORD RESET
+function resetPassword(selected){
+    var inputHidden = $(selected).val();
+    var id = $("#"+inputHidden).val();
+    var $user = $(".row-"+id).text();
+
+    BootstrapDialog.confirm({
+        title : 'PASSWORD RESET',
+        message : 'Are you sure you want to reset the password of <b>' + $user + '</b> ?',
+        type : BootstrapDialog.TYPE_WARNING,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Reset', // <-- Default value is 'OK',
+        btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/user_functions.php', {'user_id':id,'action' : 'reset_password'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_WARNING
+                        });
+                    }
+                }, 'json')
+            } else {
+
+            }
+        }
+    });
+}

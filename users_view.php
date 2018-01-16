@@ -46,7 +46,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   	<li><i class="fa fa-phone user-profile-icon"></i> <?= $user_details['cell_phone']; ?></li>
 
                     <li class="m-top-xs">                    	
-						<button class="btn btn-<?= $user_details['status']=='ACTIVE' ? 'success' : 'default' ?> btn-xs" type="button"><?= $user_details['status']=='ACTIVE' ? 'ACTIVE' : 'DEACTIVATED' ?> USER</button>
+						<button style="cursor: none" class="btn btn-<?= $user_details['status']=='ACTIVE' ? 'success' : 'default' ?> btn-xs" type="button"><?= $user_details['status']=='ACTIVE' ? 'ACTIVE' : 'DEACTIVATED' ?> USER</button>
                     </li>
                   </ul>
                   <hr>
@@ -97,7 +97,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                                 date('F d, Y | D', strtotime($position['end_date'])) ?>
                               </td>
                               <td>                                
-                                <button style="width:100%" class="btn btn-<?= $position['status']=='ACTIVE' ? 'success' : 'default' ?> btn-xs" type="button"><?= $position['status'] ?></button>
+                                <button style="width:100%;cursor: none" class="btn btn-<?= $position['status']=='ACTIVE' ? 'success' : 'default' ?> btn-xs" type="button"><?= $position['status'] ?></button>
                               </td>
                             </tr>
                             <?php } ?>

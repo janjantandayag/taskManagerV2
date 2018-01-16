@@ -30,10 +30,11 @@
               <li><a href="dashboard.php">Dashboard</a></li>
             </ul>
           </li>
-          <li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
+          <li><a><i class="fa fa-users"></i> Manage Users <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
               <li><a href="users.php">All Users</a></li>
               <li><a href="users_form.php">Add New User</a></li>
+              <li><a href="users_password_reset.php">Password Reset</a></li>
             </ul>
           </li>
         </ul>
