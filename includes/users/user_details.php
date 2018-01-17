@@ -1,12 +1,11 @@
 <?php
-	$isUpdate = false;
 	if($_GET){
 		if(isset($_GET['id']) && isset($_GET['form'])){
 			$user_id = $_GET['id'];
 			$action = $_GET['form'];
 			$isUpdate = true;
 		}
-
+		
 	$user_detail = mysqli_fetch_assoc(getUserDetails($user_id));
 	}
 ?>

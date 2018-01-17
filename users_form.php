@@ -7,22 +7,18 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
   include('database/user_functions.php');
+
+  $isUpdate = false;
 ?>
 
 
 
 <div class="right_col" role="main">	
 	<?php 
-	if(isset($_SESSION['add_user_error']) || isset($_SESSION['add_user_success'])) {
+	if(isset($_SESSION['add_user_error'])) {
 		$alert['class_type'] = 'danger';
 		$alert['text'] = 'ERROR!';
 		$message = isset($_SESSION['add_user_error']) ? $_SESSION['add_user_error'] : '';
-
-		if(!isset($_SESSION['add_user_error'])){
-			$alert['class_type'] = 'success';
-			$alert['text'] = 'SUCCESS!';
-			$message = $_SESSION['add_user_success'];
-		}
 	?>
 	<div class="row">
  		<div class="alert alert-<?= $alert['class_type'] ?> alert-dismissible fade in" role="alert" style="margin-top:70px">
@@ -31,7 +27,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
             <strong><?= $alert['text'] ?></strong> <?= $message; ?>
       	</div>  
 	</div>
-	<?php } unset($_SESSION['add_user_error'],$_SESSION['add_user_success']); ?>
+	<?php } unset($_SESSION['add_user_error']); ?>
 	<div class="row">
 		<div class="col-md-12 col-xs-12">			
 			<br />

@@ -37,9 +37,17 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 									</div>
 								</div>
 								<div class="col-xs-12 bottom">
-									<div class="emphasis" style="padding-left:15px">									
-										<button type="button" style="cursor: none" class="btn btn-<?= $user['status'] === 'ACTIVE' ? 'success' : 'default' ?> btn-xs"><?= $user['status'] === 'ACTIVE' ? 'ACTIVE' : 'DEACTIVATED' ?></button>
-										<a href="users_view.php?user_id=<?=$user['user_id']?>" class="btn btn-primary btn-xs"><i class="fa fa-user"> </i> View Profile</a>
+									<div class="emphasis" style="padding-left:15px">				
+										<?php if($user['status'] == 'ACTIVE') : ?>
+										<span style="padding: 3px;border-radius: 2px;background: #26B99A; color: #fff;font-weight: bold;font-size: 12px">ACTIVE</span>
+										<?php else : ?>										
+										<span style="padding: 3px;border-radius: 2px;background: #b3b3b3; color: #fff;font-weight: bold;font-size: 12px">DEACTIVATED</span>
+										<?php endif; ?>
+										<div style="float:right">											
+											<a href="users_view.php?user_id=<?=$user['user_id']?>" class="btn btn-primary btn-xs"><i class="fa fa-user"> </i> View Profile</a>
+											<a href="#" onclick="updateStatus(this);" data-id="<?= $user['user_id']; ?>" data-name="<?=ucfirst($user['first_name']) . ' ' . ucfirst($user['last_name']) ?>" class="btn btn-<?= $user['status'] == 'ACTIVE' ? 'danger' : 'success' ?> btn-xs"><i class="fa fa-<?= $user['status'] == 'ACTIVE' ? 'remove' : 'check' ?>"></i> <?= $user['status'] == 'ACTIVE' ? 'Deactivate' : 'Activate' ?></a>
+										</div>
+										
 									</div>
 								</div>
 							</div>

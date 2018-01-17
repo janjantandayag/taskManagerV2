@@ -7,7 +7,7 @@ include('connection.php');
 // LOGGED-IN THE USER
 function login($username,$password){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM users WHERE email='$username' AND password=md5('$password')";
+	$sql = "SELECT * FROM users WHERE email='$username' AND password=md5('$password') AND status='ACTIVE'";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 
 	$result = mysqli_fetch_assoc($query);
@@ -117,7 +117,7 @@ function addUser($data){
 
 	$file_name_init = $user_id .'-'.$first_name.'-'.$last_name;
 
-	uploadImage($file_name_init,$user_id);
+	uploadImage(str_replace(' ', '', $file_name_init),$user_id);
 
 
 	for ($i=0;$i<count($positions);$i++){
@@ -142,7 +142,62 @@ function addUser($data){
 	} else {
 		header("Location:../users_form.php");	
 	}
+}
 
+// Update User
+function updateUser($data) {	
+	GLOBAL $connection;	
+	$user_id = $data['user_id'];
+	$first_name = strtolower($data['first_name']);
+	$last_name = strtolower($data['last_name']);
+	$email = strtolower($data['email']);
+	$office_phone = strtolower($data['office_phone']);
+	$cell_phone = strtolower($data['cell_phone']);
+	$password = strtolower($data['password']);
+
+	$positions = $data['position_id'];
+	$start_dates = $data['start_date'];
+	$end_dates = $data['end_date'];
+
+	$query = "UPDATE users 
+	          SET first_name = '$first_name',last_name = '$last_name',email = '$email', office_phone = '$office_phone' , cell_phone = '$cell_phone',
+	              password = md5('$password'),status='ACTIVE' WHERE user_id = $user_id
+	";
+
+	mysqli_query($connection, $query) or die(mysqli_error($connection));
+
+	$file_name_init = $user_id .'-'.$first_name.'-'.$last_name;
+
+	uploadImage(str_replace(' ', '', $file_name_init),$user_id);
+
+	// DELETE POSITIONS FOR THIS USER
+	$delete_prev = "DELETE FROM role_position WHERE user_id=$user_id";	
+	mysqli_query($connection,$delete_prev) or die(mysqli_error($connection));
+
+	// ADD POSITIONS
+	for ($i=0;$i<count($positions);$i++){
+		GLOBAL $connection;
+		$position_id = $positions[$i];
+		$start_date =  $start_dates[$i];
+		$end_date = $end_dates[$i];
+		$status = empty($end_date) ? 'ACTIVE' : 'INACTIVE';
+
+		if(!empty($position_id) && !empty($start_date)){
+
+			$query = "INSERT INTO role_position(user_id,position_id,start_date,end_date,status) 
+				VALUES ($user_id,$position_id,'$start_date','$end_date','$status')";
+			mysqli_query($connection, $query) or die(mysqli_error($connection));
+		}
+	}
+
+
+	if($_SESSION['add_user_error'] === ""){
+		$_SESSION['add_user_success'] = "User successfully updated!";
+		unset($_SESSION['add_user_error']);
+		header("Location:../users_view.php?user_id=$user_id");	
+	} else {
+		header("Location:../users_form.php");	
+	}
 }
 
 // Upload Image
@@ -264,6 +319,14 @@ function resetPassword($id){
 	}
 }
 
+function modifyPassword($id,$action){	
+	GLOBAL $connection;
+
+	$status = $action === 'activate' ? 'ACTIVE' : 'INACTIVE';
+	$sql = "UPDATE users SET status='$status' WHERE users.user_id = $id";
+	$query = mysqli_query($connection,$sql);
+}
+
 
 if($_POST){
 	if(isset($_POST['login'])){
@@ -272,12 +335,20 @@ if($_POST){
 		login($username,$password);
 	}
 
+	if(isset($_POST['update_user'])){
+		updateUser($_POST);
+	}	
+
 	if(isset($_POST['add_user'])){
 		addUser($_POST);
 	}	
 
 	if(isset($_POST['action']) == 'reset_password'){
 		resetPassword($_POST['user_id']);
+	}
+
+	if(isset($_POST['modify_status'])){
+		modifyPassword($_POST['user_id'],$_POST['modify_status']);
 	}
 }
 

@@ -101,12 +101,12 @@ function resetPassword(selected){
     BootstrapDialog.confirm({
         title : 'PASSWORD RESET',
         message : 'Are you sure you want to reset the password of <b>' + $user + '</b> ?',
-        type : BootstrapDialog.TYPE_WARNING,
+        type : BootstrapDialog.TYPE_PRIMARY,
         closable: true, // <-- Default value is false
         draggable: true, // <-- Default value is false
         btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
         btnOKLabel: 'Reset', // <-- Default value is 'OK',
-        btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
+        btnOKClass: 'btn-primary', // <-- If you didn't specify it, dialog type will be used,
         callback: function(result) {
             if(result) {               
                 $.post('database/user_functions.php', {'user_id':id,'action' : 'reset_password'}, function(data){
@@ -120,12 +120,36 @@ function resetPassword(selected){
                         BootstrapDialog.alert({
                             title: 'ERROR',
                             message: data.message,
-                            type: BootstrapDialog.TYPE_WARNING
+                            type: BootstrapDialog.TYPE_DANGER
                         });
                     }
                 }, 'json')
             } else {
 
+            }
+        }
+    });
+}
+
+function updateStatus(selected){
+    $uid = $(selected).data('id');
+    $name = $(selected).data('name');
+    $action = ($(selected).text() === ' Activate') ? 'activate' : 'deactivate';
+
+    BootstrapDialog.confirm({
+        title : 'MODIFY STATUS',
+        message : 'Are you sure to ' +$action+ ' <b>' + $name + '</b> ?',
+        type : BootstrapDialog.TYPE_PRIMARY,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: $action.toUpperCase(), // <-- Default value is 'OK',
+        btnOKClass: 'btn-primary', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/user_functions.php', {'user_id':$uid,'modify_status' : $action}, function(data){
+                    location.reload();
+                });
             }
         }
     });

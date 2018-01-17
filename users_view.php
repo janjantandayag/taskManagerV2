@@ -15,6 +15,20 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 <div class="right_col" role="main">
 	<div class="">        
+    <?php 
+    if(isset($_SESSION['add_user_success'])) {
+      $alert['class_type'] = 'success';
+      $alert['text'] = 'SUCCESS!';
+      $message = $_SESSION['add_user_success'];
+    ?>
+    <div class="row">
+      <div class="alert alert-<?= $alert['class_type'] ?> alert-dismissible fade in" role="alert" style="margin-top:70px">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+              </button>
+              <strong><?= $alert['text'] ?></strong> <?= $message; ?>
+          </div>  
+    </div>
+  <?php } unset($_SESSION['add_user_success']); ?>
         <div class="row">
         	<?php 
 			if(mysqli_num_rows($query) > 0){
@@ -23,7 +37,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
-                <h2>Update Profile - <?= strtoupper($user_details['first_name']) . ' ' . strtoupper($user_details['last_name']) ?></h2>
+                <h2>View Profile - <small><?= strtoupper($user_details['first_name']) . ' ' . strtoupper($user_details['last_name']) ?></small></h2>
                 <ul class="nav navbar-right panel_toolbox">
                   <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                 </ul>
@@ -46,7 +60,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   	<li><i class="fa fa-phone user-profile-icon"></i> <?= $user_details['cell_phone']; ?></li>
 
                     <li class="m-top-xs">                    	
-						<button style="cursor: none" class="btn btn-<?= $user_details['status']=='ACTIVE' ? 'success' : 'default' ?> btn-xs" type="button"><?= $user_details['status']=='ACTIVE' ? 'ACTIVE' : 'DEACTIVATED' ?> USER</button>
+  						        <?php if($user_details['status'] == 'ACTIVE') : ?>
+                      <span style="padding: 3px;border-radius: 2px;background: #26B99A; color: #fff;font-weight: bold;font-size: 12px">ACTIVE</span>
+                      <?php else : ?>                   
+                      <span style="padding: 3px;border-radius: 2px;background: #b3b3b3; color: #fff;font-weight: bold;font-size: 12px">DEACTIVATED</span>
+                      <?php endif; ?>
                     </li>
                   </ul>
                   <hr>

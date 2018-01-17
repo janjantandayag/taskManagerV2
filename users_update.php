@@ -3,10 +3,12 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
-  include('includes/header.php');
-  include('includes/sidebar.php');
-  include('includes/top_navigation.php');
-  include('database/user_functions.php');
+	include('includes/header.php');
+	include('includes/sidebar.php');
+	include('includes/top_navigation.php');
+	include('database/user_functions.php');
+
+	$isUpdate = true;
 ?>
 
 
@@ -20,8 +22,9 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 				<?php include('includes/users/user_profile.php'); ?>			
 				<?php include('includes/users/user_position.php'); ?>
 				<div class="row">
-					<div class="col-xs-12" style="text-align: center">							
-						<button class="btn btn-primary btn-md" name="add_user" type="submit">Add User</button>
+					<div class="col-xs-12" style="text-align: center">			
+						<input type="hidden" name="user_id" value="<?= $_GET['id']; ?>">				
+						<button class="btn btn-primary btn-md" name="update_user" type="submit">Update User</button>
 					</div>              
 				</div>
 			</form>
