@@ -318,13 +318,40 @@ function resetPassword($id){
 		]);
 	}
 }
-
-function modifyPassword($id,$action){	
+// modify status
+function modifyStatus($id,$action){	
 	GLOBAL $connection;
 
 	$status = $action === 'activate' ? 'ACTIVE' : 'INACTIVE';
 	$sql = "UPDATE users SET status='$status' WHERE users.user_id = $id";
 	$query = mysqli_query($connection,$sql);
+}
+
+// get users that are portfolio management analyst
+function getAllPMA(){	
+	GLOBAL $connection;
+
+	$sql = "SELECT users.first_name,users.user_id,users.last_name,role_position.role_position_id
+			FROM positions
+			LEFT JOIN role_position ON positions.position_id = role_position.position_id
+			LEFT JOIN users ON role_position.user_id = users.user_id
+			WHERE positions.position_title = 'Portfolio Management Analyst'			
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+
+// get deal groups associated with PMA
+function pmaDealGroups($role_position_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT deal_groups.group_name, deal_groups.dealgroup_id
+			FROM role_position,dealgroup_staffing,deal_groups
+			WHERE role_position.role_position_id = $role_position_id
+			AND role_position.role_position_id = dealgroup_staffing.role_position_id
+			AND dealgroup_staffing.dealgroup_id = deal_groups.dealgroup_id";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
 }
 
 
@@ -348,7 +375,7 @@ if($_POST){
 	}
 
 	if(isset($_POST['modify_status'])){
-		modifyPassword($_POST['user_id'],$_POST['modify_status']);
+		modifyStatus($_POST['user_id'],$_POST['modify_status']);
 	}
 }
 

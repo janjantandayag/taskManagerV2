@@ -154,3 +154,28 @@ function updateStatus(selected){
         }
     });
 }
+
+function postComment(id,type){
+    comment = $('#comment').val();
+
+    $.post('database/comment_functions.php', {'id':id,'add_comment' : 'add_comment','comment' : comment, 'type' : type}, function(data){
+         if(data.status == 'success'){
+                 BootstrapDialog.alert({
+                    title: 'SUCCESS',
+                    message: data.message,
+                    type: BootstrapDialog.TYPE_SUCCESS,
+                    callback: function(result) {                        
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1000);
+                    }
+                });
+            } else {
+                BootstrapDialog.alert({
+                    title: 'ERROR',
+                    message: data.message,
+                    type: BootstrapDialog.TYPE_DANGER
+                });
+            }
+        }, 'json');
+}
