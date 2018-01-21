@@ -9,7 +9,7 @@ if(!isset($connection)){
 function postComment(){
 	GLOBAL $connection;
 
-	$comment = $_POST['comment'];
+	$comment = nl2br(htmlentities($_POST['comment'], ENT_QUOTES, 'UTF-8'));
 	$type = $_POST['type'];
 	$author_id = $_SESSION['user_id'];
 	$id = ($type==='task') ? 't_' . $_POST['id'] : 'b_' . $_POST['id'];

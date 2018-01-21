@@ -12,6 +12,7 @@ function getAllTasks($user_id = '', $dealgroup_id = ''){
 
 	$andWhere = " tasks.dealgroup_id = deal_groups.dealgroup_id 
 			AND tasks.document_id = documents.document_id 
+			AND tasks.status <> 'DELETED'
 			ORDER BY tasks.due_date DESC";
 
 	if (!empty($user_id) && !empty($dealgroup_id)){
@@ -37,9 +38,22 @@ function getAllTasks($user_id = '', $dealgroup_id = ''){
 	return $query;
 }
 
+// GET TASK - IN PROGRESS
+function filterTask($filter){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM tasks,deal_groups,documents WHERE  tasks.dealgroup_id = deal_groups.dealgroup_id 
+			AND tasks.document_id = documents.document_id 
+			AND tasks.status = '$filter'
+			ORDER BY tasks.due_date DESC";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+
+// GET TASK DETAILS
 function getTaskDetails($task_id){
 	GLOBAL $connection;
-	$sql = "SELECT *
+	$sql = "SELECT *,tasks.type AS task_type
 			FROM tasks,documents,deal_groups
 			WHERE tasks.task_id = '$task_id'
 			AND tasks.dealgroup_id = deal_groups.dealgroup_id
@@ -63,4 +77,87 @@ function getTaskComments($task_id){
 
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
+}
+
+// Add Task
+function addTask(){
+	GLOBAL $connection;
+
+	$task_title = $_POST['task_title'];
+	$due_date = $_POST['due_date'];
+	$deal_group = $_POST['deal_group'];
+	$document = $_POST['document'];
+	$task_ref = $_POST['task_ref'];
+	$link_to_support = $_POST['link_to_support'];
+	$task_type = $_POST['task_type'];
+	$task_language = nl2br(htmlentities($_POST['task_language'], ENT_QUOTES, 'UTF-8'));
+	$task_note = nl2br(htmlentities($_POST['task_note'], ENT_QUOTES, 'UTF-8'));
+
+	$query = "INSERT INTO tasks(title,dealgroup_id,document_id,reference,language,due_date,status,type,note,link_to_support) 
+			VALUES ('$task_title','$deal_group','$document','$task_ref','$task_language','$due_date','IN PROGRESS','$task_type','$task_note','$link_to_support')";
+	mysqli_query($connection, $query) or die(mysqli_error($connection));
+	$task_id = mysqli_insert_id($connection);
+
+	header("Location: ../task_view.php?task_id=$task_id");
+}
+
+// Edit Task
+function editTask(){
+	GLOBAL $connection;
+	$task_title = $_POST['task_title'];
+	$due_date = $_POST['due_date'];
+	$deal_group = $_POST['deal_group'];
+	$document = $_POST['document'];
+	$task_ref = $_POST['task_ref'];
+	$link_to_support = $_POST['link_to_support'];
+	$task_type = $_POST['task_type'];
+	$status = $_POST['task_status'];
+
+	$task_language = nl2br(htmlentities($_POST['task_language'], ENT_QUOTES, 'UTF-8'));
+	$task_note = nl2br(htmlentities($_POST['task_note'], ENT_QUOTES, 'UTF-8'));
+	$task_id = $_POST['task_id'];
+
+	$query = "UPDATE tasks SET title='$task_title',dealgroup_id='$deal_group',document_id='$document',reference='$task_ref',
+			language='$task_language',due_date='$due_date',type='$task_type',note='$task_note',link_to_support='$link_to_support',
+			status = '$status'
+			WHERE tasks.task_id=$task_id
+	";
+	mysqli_query($connection, $query) or die(mysqli_error($connection));
+
+	$_SESSION['update_task_error'] = ' Task successfully updated! ';
+
+	header("Location: ../tasks_update.php?task_id=$task_id");
+}
+
+// DELETE A TASK
+function deleteTask(){
+	GLOBAL $connection;
+	$task_id = $_POST['task_id'];
+
+	$query = "UPDATE tasks SET status = 'DELETED'
+			WHERE tasks.task_id=$task_id
+	";
+	mysqli_query($connection, $query) or die(json_encode([
+		'status' => 'error',
+		'message' => mysqli_error($connection)
+	]));
+
+	echo json_encode([
+		'status' => 'success',
+		'message' => 'Task successfully deleted!'
+	]);
+}
+
+if($_POST){
+	if(isset($_POST['add_task'])){
+		addTask();
+	}
+
+	if(isset($_POST['edit_task'])){
+		editTask();
+	}
+
+	if(isset($_POST['delete_task'])){
+		deleteTask();
+	}
 }

@@ -179,3 +179,40 @@ function postComment(id,type){
             }
         }, 'json');
 }
+
+function deleteTask(id,task_title){
+    BootstrapDialog.confirm({
+        title : 'DELETE TASK',
+        message : 'Are you sure to delete <b style="color:red">'+ task_title.toUpperCase() +'</b>?',
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Delete', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/task_functions.php', {'task_id':id,'delete_task' : 'delete_task'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback: function(result) {                        
+                                setTimeout(function(){
+                                    location.reload();
+                                }, 1000);
+                            }
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+}

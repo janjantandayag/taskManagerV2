@@ -37,7 +37,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 				<?php include('includes/users/user_position.php'); ?>
 				<div class="row">
 					<div class="col-xs-12" style="text-align: center">							
-						<button class="btn btn-primary btn-md" name="add_user" type="submit">Add User</button>
+						<button class="btn btn-primary btn-sm" name="add_user" type="submit">Add User</button>
 					</div>              
 				</div>
 			</form>

@@ -13,7 +13,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	<div class="row" style="margin-top:70px">
 		<div class="page-title">
           <div class="title_left">
-            <h3>All Tasks</h3>
+            <h3>Incomplete Tasks</h3>
           </div>
         </div>
 		<div class="col-md-12 col-sm-12 col-xs-12" style="background:#fff;border-top:5px solid #cecece">
@@ -31,9 +31,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	              </thead>
 		          <tbody>		          	
 		              <?php
-		              $task_query = getAllTasks();
+		              $task_query = filterTask('IN PROGRESS');
 		              while($task = mysqli_fetch_assoc($task_query)) {
-		              	$task_bg = $task['status'] === 'IN PROGRESS' ? 'danger' : 'success';
 		              ?>
 	                 <tr>
 	                	<td><a class="dashboard_table_link_hover" href="task_view.php?task_id=<?=$task['task_id'];?>"><?= $task['title'] ?></a></td>
@@ -41,12 +40,12 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                	<td><a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank"><?= $task['document_name'] ?></a></td>
 	                	<td><?= date('F d, Y  l', strtotime($task['due_date'])) ?></td>
 	                	<td>
-	                		<span class="label label-<?=$task_bg?>" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
+	                		<span class="label label-danger" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
 	                	</td>
 	                	<td>
                             <a href="task_view.php?task_id=<?=$task['task_id'];?>" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
                             <a href="tasks_update.php?task_id=<?=$task['task_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                            <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
+                            <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
                       	</td>
 	                </tr>
 	                <?php } ?>
@@ -59,8 +58,6 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 <?php
   include('includes/footer.php');
-
-
 
 } else {
 	$_SESSION['login_error'] = 'Unauthorized access. Please login to continue!';

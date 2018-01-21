@@ -42,7 +42,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                         </li>
                         <li>
                           <span class="name"> Deal Group </span>
-                          <span class="value"> <a href="dealgroup_view.php?deal_group_id=<?=$task['deal_group_id'];?>"><?= $task['group_name'] . ' <small>(' . $task['code_name'] . ')</small>' ?></a> </span>
+                          <span class="value"> <a href="dealgroup_view.php?deal_group_id=<?=$task['dealgroup_id'];?>"><?= $task['group_name'] . ' <small>(' . $task['code_name'] . ')</small>' ?></a> </span>
                         </li>
                       </ul>
                       <br />
@@ -115,7 +115,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     </div>
 
                     <div class="mtop20">
-                        <a href="#" class="btn btn-sm btn-primary">Edit Task</a>
+                        <a href="tasks_update.php?task_id=<?= $task['task_id']; ?>" class="btn btn-sm btn-primary">Edit Task</a>
                         <a href="#" class="btn btn-sm btn-danger">Delete</a>
                  	</div>
                   </section>
