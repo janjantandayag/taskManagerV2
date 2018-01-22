@@ -19,12 +19,28 @@
         <label>Task Title</label>
         <input type="text" class="form-control has-feedback-left"  required name="task_title" value="<?= $isUpdate ? $task['title'] : ''?>" placeholder="Task Title">
         <span class="fa fa-tag form-control-feedback left" aria-hidden="true"></span>
+      </div>      
+      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+        <label>Type</label>
+        <input type="text" class="form-control has-feedback-right"  name="task_type" placeholder="Type" required value="<?= $isUpdate ? $task['task_type'] : ''?>">
+        <span class="fa fa-tags form-control-feedback right" aria-hidden="true"></span>
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <label>Start Date</label>
+        <div class="form-group">
+          <div class="input-group" id="myDatepicker0">
+              <input type="text" class="form-control date" name="start_date" placeholder="Due Date" value="<?= $isUpdate ? $task['start_date'] : ''?>" required>
+              <span class="input-group-addon">
+                 <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+          </div>
+        </div>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12">
         <label>Due Date</label>
         <div class="form-group">
-          <div class="input-group date" id="myDatepicker0">
-              <input type="text" class="form-control" name="due_date" placeholder="Due Date" value="<?= $isUpdate ? $task['due_date'] : ''?>" required>
+          <div class="input-group" id="myDatepicker1">
+              <input type="text" class="form-control date" name="due_date" placeholder="Due Date" value="<?= $isUpdate ? $task['due_date'] : ''?>" required>
               <span class="input-group-addon">
                  <span class="glyphicon glyphicon-calendar"></span>
               </span>
@@ -65,21 +81,6 @@
         <input type="text" class="form-control has-feedback-right"  required name="link_to_support" placeholder="Link To Support" value="<?= $isUpdate ? $task['link_to_support'] : ''?>">
         <span class="fa fa-file form-control-feedback right" aria-hidden="true"></span>
       </div>
-      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-        <label>Type</label>
-        <input type="text" class="form-control has-feedback-left"  name="task_type" placeholder="Type" required value="<?= $isUpdate ? $task['task_type'] : ''?>">
-        <span class="fa fa-tags form-control-feedback left" aria-hidden="true"></span>
-      </div>
-      <?php if($isUpdate) : ?>
-      <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-        <label>Status</label>        
-        <span class="fa fa-file form-control-feedback right" style="margin-right: 10px;" aria-hidden="true"></span>
-        <select class="form-control has-feedback-right" name="task_status" required >           
-          <option value="IN PROGRESS" <?= $task['status'] == 'IN PROGRESS' ? 'selected' : ''  ?>>In Progress</option>
-          <option value="FINISHED" <?= $task['status'] == 'FINISHED' ? 'selected' : ''  ?>>Finished</option>
-        </select>
-      </div>
-      <?php endif; ?>
     </div>  
     <div class="row" style="padding:0px 12px 0 12px">          
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">

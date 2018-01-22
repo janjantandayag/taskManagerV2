@@ -32,7 +32,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	              </thead>
 		          <tbody>		          	
 		              <?php
-		              $task_query = filterTask('IN PROGRESS');
+		              $task_query = filterTask('UPCOMING');
 		              while($task = mysqli_fetch_assoc($task_query)) {
 		              ?>
 	                 <tr>
@@ -42,7 +42,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                	<td><?= strtotime($task['start_date']) ? date('F d, Y | l', strtotime($task['start_date'])) : 'NOT SET' ?></td>
 	                	<td><?= date('F d, Y | l', strtotime($task['due_date'])) ?></td>
 	                	<td>
-	                		<span class="label label-warning" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
+	                		<span class="label label-info" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
 	                	</td>
 	                	<td>
                             <a href="tasks_update.php?task_id=<?=$task['task_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>

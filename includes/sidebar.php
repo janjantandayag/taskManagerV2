@@ -40,8 +40,10 @@
           <li><a><i class="fa fa-list-alt"></i> Tasks <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
               <li><a href="tasks.php">All Tasks</a></li>
+              <li><a href="tasks_upcoming.php">Upcoming</a></li>
               <li><a href="tasks_inprogress.php">In Progress</a></li>
               <li><a href="tasks_completed.php">Completed</a></li>
+              <li><a href="tasks_pastdue.php">Past Due</a></li>
               <li><a href="tasks_add.php">Add New Task</a></li>
             </ul>
           </li>

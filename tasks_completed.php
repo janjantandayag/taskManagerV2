@@ -24,6 +24,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                  <th  style="cursor: pointer;">Task</th>
 	                  <th  style="cursor: pointer;">Credit</th>
 	                  <th  style="cursor: pointer;">Document Reference</th>
+	                  <th  style="cursor: pointer;">Start Date</th>
 	                  <th  style="cursor: pointer;">Due Date</th>
 	                  <th  style="cursor: pointer;">Status</th>
 	                  <th  style="cursor: pointer;">Action</th>
@@ -38,12 +39,12 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                	<td><a class="dashboard_table_link_hover" href="task_view.php?task_id=<?=$task['task_id'];?>"><?= $task['title'] ?></a></td>
 	                	<td><a class="dashboard_table_link_hover" href="dealgroup_view.php?dealgroup_id=<?= $task['dealgroup_id'] ?>"><?= $task['group_name'] ?></a></td>
 	                	<td><a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank"><?= $task['document_name'] ?></a></td>
-	                	<td><?= date('F d, Y  l', strtotime($task['due_date'])) ?></td>
+	                	<td><?= strtotime($task['start_date']) ? date('F d, Y | l', strtotime($task['start_date'])) : 'NOT SET' ?></td>
+	                	<td><?= date('F d, Y | l', strtotime($task['due_date'])) ?></td>
 	                	<td>
 	                		<span class="label label-success" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
 	                	</td>
 	                	<td>
-                            <a href="task_view.php?task_id=<?=$task['task_id'];?>" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
                             <a href="tasks_update.php?task_id=<?=$task['task_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                             <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
                       	</td>

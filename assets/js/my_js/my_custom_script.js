@@ -88,8 +88,6 @@ $(document).ready(function(){
         onSelectEnd: updateCoords,
         show: true
     });
-
-
 });
 
     // PASSWORD RESET
@@ -216,3 +214,10 @@ function deleteTask(id,task_title){
         }
     });
 }
+
+// $('#task_myDatepicker1,#task_myDatepicker0').datetimepicker({
+//     format: 'YYYY-MM-DD',
+//     minDate: new Date()
+// });
+
+
