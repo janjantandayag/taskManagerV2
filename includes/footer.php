@@ -10,6 +10,8 @@
       </div>
     </div>
   <?php endif; ?>
+    <!-- Bootstrap Switch - JS  -->
+    <script src="assets/vendors/bootstrap-switch/js/bootstrap-switch.min.js"></script>    
     <!-- Bootstrap -->
     <script src="assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -29,8 +31,6 @@
     <script src="assets/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="assets/build/js/custom.min.js"></script>	
-    <!-- Added My Custom Script -->
-    <script src="assets/js/my_js/my_custom_script.js"></script>   
         <!-- Datatables -->
     <script src="assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="assets/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -48,6 +48,9 @@
         <!-- Bootstrap Dialog -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
+    
+    <!-- Added My Custom Script -->
+    <script src="assets/js/my_js/my_custom_script.js"></script>   
 
     <script>      
     // table sorter

@@ -215,9 +215,40 @@ function deleteTask(id,task_title){
     });
 }
 
-// $('#task_myDatepicker1,#task_myDatepicker0').datetimepicker({
-//     format: 'YYYY-MM-DD',
-//     minDate: new Date()
-// });
+$("[name='checkbox-taskcomplete']").bootstrapSwitch({
+    onText : 'FINISHED',
+    offText : '',
+    onColor : 'success'
+});
+
+function setToComplete(task_id,switched){
+    $value = $(switched).val();
+    $action = ($value === '') ? 'set' : 'unset';
+     $.post('database/task_functions.php', {'task_id':task_id,'action_task_status' : $action}, function(data){
+        if(data.status == 'success'){
+             BootstrapDialog.alert({
+                title: 'SUCCESS',
+                message: data.message,
+                type: BootstrapDialog.TYPE_SUCCESS,
+                callback: function(result) {                        
+                    setTimeout(function(){
+                        location.reload();
+                    }, 500);
+                }
+            });
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+}
+
+$('#datatable-responsive').DataTable( {
+    "lengthMenu":  [ 1,5,10,15,20, 25, 50, 75, 100, 150, 200 ],
+    "pageLength" : 10
+} );
 
 

@@ -38,7 +38,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                 <tr>
 	                	<td><a class="dashboard_table_link_hover" href="task_view.php?task_id=<?=$task['task_id'];?>"><?= $task['title'] ?></a></td>
 	                	<td><a class="dashboard_table_link_hover" href="dealgroup_view.php?dealgroup_id=<?= $task['dealgroup_id'] ?>"><?= $task['group_name'] ?></a></td>
-	                	<td><a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank"><?= $task['document_name'] ?></a></td>
+	                	<td>
+	                		<a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank" title="<?= $task['document_name'] ?>">
+	                			<?= strlen($task['document_name']) === 20 ? $task['document_name'] : substr($task['document_name'], 0,20) . ' ...'  ?>	                			
+	                		</a>
+	                	</td>
 	                	<td><?= strtotime($task['start_date']) ? date('F d, Y | l', strtotime($task['start_date'])) : 'NOT SET' ?></td>
 	                	<td><?= date('F d, Y | l', strtotime($task['due_date'])) ?></td>
 	                	<td>

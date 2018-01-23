@@ -38,6 +38,8 @@
     <link href="assets/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- BOOTSTRAP SWITCH - CSS -->
+    <link href="assets/vendors/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
   </head>
 
   <?php

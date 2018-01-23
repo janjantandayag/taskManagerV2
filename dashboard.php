@@ -12,6 +12,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 	$user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
 	$dealgroup_id = isset($_GET['deal_group_id']) ? $_GET['deal_group_id'] : '';
+	$to = isset($_GET['to']) ? $_GET['to'] : '';
+	$from = isset($_GET['from']) ? $_GET['from'] : '';
 ?>
 
   <div class="right_col" role="main">
@@ -51,29 +53,57 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		</div>
 		<div class="col-md-10 col-sm-12 col-xs-12" style="background:#fff;border-top:5px solid #cecece">
 			<div class="x_content">          
+				<div style="float:right;margin-bottom: 30px">
+					<form action="database/task_functions.php" method="POST" class="form-inline">
+						<?php include('includes/tasks/task_daterangeform.php'); ?>
+ 						<input type="hidden" name="user_id" value="<?= $user_id ?>" />
+ 						<input type="hidden" name="dealgroup_id" value="<?= $dealgroup_id ?>" />
+						<input type="hidden" name="location" value="dashboard" />
+					</form>
+				</div>
 		        <table id="datatable-responsive" class="table table-striped dt-responsive nowrap" cellspacing="0" width="100%">
 		         <thead>
 	                <tr>
 	                  <th  style="cursor: pointer;">Task</th>
 	                  <th  style="cursor: pointer;">Credit</th>
 	                  <th  style="cursor: pointer;">Document Reference</th>
+	                  <th  style="cursor: pointer;">Start Date</th>
 	                  <th  style="cursor: pointer;">Due Date</th>
 	                  <th  style="cursor: pointer;">Status</th>
 	                </tr>
 	              </thead>
 		          <tbody>		          	
 		              <?php
-		              $task_query = getAllTasks($user_id,$dealgroup_id);
-		              while($task = mysqli_fetch_assoc($task_query)) {
-		              	$task_bg = $task['status'] === 'IN PROGRESS' ? 'danger' : 'success';
+		              $task_query = getAllTasks($user_id,$dealgroup_id,$from,$to);
+		              while($task = mysqli_fetch_assoc($task_query)) {		              	
+		              	$task_status =[];
+
+		              	if($task['status'] === 'UPCOMING'){
+		              		$task_status['text'] = 'UPCOMING';
+		              		$task_status['class'] = 'info';
+		              	} elseif($task['status'] === 'IN PROGRESS'){
+		              		$task_status['text'] = 'IN PROGRESS';
+		              		$task_status['class'] = 'warning';
+		              	} elseif($task['status'] === 'PAST DUE'){
+		              		$task_status['text'] = 'PAST DUE';
+		              		$task_status['class'] = 'danger';
+		              	} else {
+		              		$task_status['text'] = 'FINISHED';
+		              		$task_status['class'] = 'success';		              		
+		              	}
 		              ?>
 	                 <tr>
 	                	<td><a class="dashboard_table_link_hover" href="task_view.php?task_id=<?=$task['task_id'];?>"><?= $task['title'] ?></a></td>
 	                	<td><a class="dashboard_table_link_hover" href="dealgroup_view.php?dealgroup_id=<?= $task['dealgroup_id'] ?>"><?= $task['group_name'] ?></a></td>
-	                	<td><a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank"><?= $task['document_name'] ?></a></td>
-	                	<td><?= date('F d, Y  l', strtotime($task['due_date'])) ?></td>
 	                	<td>
-	                		<span class="label label-<?=$task_bg?>" style="width: 100% !important;display: block"><?= $task['status'] ?></span>
+	                		<a class="dashboard_table_link_hover" href="<?= $task['document_link'] ?>" target="_blank" title="<?= $task['document_name'] ?>">
+	                			<?= strlen($task['document_name']) === 20 ? $task['document_name'] : substr($task['document_name'], 0,20) . ' ...'  ?>	                			
+	                		</a>
+	                	</td>
+	                	<td><?= date('F d, Y | l', strtotime($task['start_date'])) ?></td>
+	                	<td><?= date('F d, Y | l', strtotime($task['due_date'])) ?></td>
+	                	<td>
+	                		<span class="label label-<?=$task_status['class']?>" style="width: 100% !important;display: block"><?= $task_status['text'] ?></span>
 	                	</td>
 	                </tr>
 	                <?php } ?>

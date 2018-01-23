@@ -20,7 +20,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           <div class="col-md-12">
             <div class="x_panel">
               <div class="x_title">
-                <h2><?= strtoupper($task['title']); ?></h2>
+                <h2><?= strtoupper($task['title']); ?> </h2>
                 <ul class="nav navbar-right panel_toolbox">
                   <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                   </li>
@@ -29,28 +29,44 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
               </div>
 
               <div class="x_content">
-
                 <div class="col-md-9 col-sm-9 col-xs-12">
-				 	<ul class="stats-overview">
+				 	        <ul class="stats-overview">
+                      <?php
+                        $task_status =[];
+
+                        if($task['status'] === 'UPCOMING'){
+                          $task_status['text'] = 'UPCOMING';
+                          $task_status['class'] = 'info';
+                        } elseif($task['status'] === 'IN PROGRESS'){
+                          $task_status['text'] = 'IN PROGRESS';
+                          $task_status['class'] = 'warning';
+                        } elseif($task['status'] === 'PAST DUE'){
+                          $task_status['text'] = 'PAST DUE';
+                          $task_status['class'] = 'danger';
+                        } else {
+                          $task_status['text'] = 'FINISHED';
+                          $task_status['class'] = 'success';                      
+                        }
+                      ?>
+                        <li>
+                          <span class="name"> Start Date </span>
+                          <span class="value text-<?= $task_status['class']?>"> <?= date('F d, Y | l',strtotime($task['start_date'])); ?> </span>
+                        </li>
                         <li>
                           <span class="name"> Due Date </span>
-                          <span class="value text-<?= $task['status'] === 'FINISHED' ? 'success' : 'danger'?>"> <?= date('F d, Y | l',strtotime($task['due_date'])); ?> </span>
+                          <span class="value text-<?= $task_status['class']?>"> <?= date('F d, Y | l',strtotime($task['due_date'])); ?> </span>
                         </li>
                         <li>
                           <span class="name"> Status </span>
-                          <span class="value text-<?= $task['status'] === 'FINISHED' ? 'success' : 'danger'?>"> <?= $task['status']; ?> </span>
-                        </li>
-                        <li>
-                          <span class="name"> Deal Group </span>
-                          <span class="value"> <a href="dealgroup_view.php?deal_group_id=<?=$task['dealgroup_id'];?>"><?= $task['group_name'] . ' <small>(' . $task['code_name'] . ')</small>' ?></a> </span>
+                          <span class="value text-<?= $task_status['class']?>"> <?= $task['status']; ?> </span>
                         </li>
                       </ul>
                       <br />
                   <div id="mainb">               
                   	<h4 style="font-weight: bold;">Language</h4>   	
-					<p>
-						<?=$task['language'];?>
-					</p>
+          					<p>
+          						<?=$task['language'];?>
+          					</p>
                   </div>
                   <div id="comment_text" style="margin-top:50px;border-top:1px dotted #dad7d7;padding-top:20px">
                     <form>
@@ -93,22 +109,28 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                 <div class="col-md-3 col-sm-3 col-xs-12">
                   <section class="panel">
                     <div class="x_title">
-                      <h2>Task Details</h2>
+                      <h2>TASK DETAILS</h2>
                       <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
                       <div class="project_detail">
-						<p class="title">Note</p>
+						            <p class="title">Note</p>
                         <p><?= ($task['note']) ?  $task['note'] :'<strong style="text-transform:uppercase;color:red;font-size:10px">not set</strong>'; ?></p>
 
+                        <p class="title">Deal Group</p>
+                        <p><a href="dealgroup_view.php?deal_group_id=<?=$task['dealgroup_id'];?>"><?= $task['group_name'] . ' <small>(' . $task['code_name'] . ')</small>' ?></a></p>
+                        
                         <p class="title">Document</p>
                         <p><a href="https://<?= $task['document_link'] ?>"><?=$task['document_name'] . ' (' .$task['reference'].')';?></a> </p>
 
                     	<p class="title">Link To Support</p>
-                        <p><?= ($task['link_to_support']) ?  $task['link_to_support'] :'<strong style="text-transform:uppercase;color:red;font-size:10px">not set</strong>'; ?></p>
+                        <p><?= ($task['link_to_support']) ?  '<a href="' . $task['link_to_support'] .'">' .$task['link_to_support'] . '</a>'  :'<strong style="text-transform:uppercase;color:red;font-size:10px">not set</strong>'; ?></p>
 
                         <p class="title">Type</p>
                         <p><?= ($task['type']) ?  $task['type'] :'<strong style="text-transform:uppercase;color:red;font-size:10px">not set</strong>'; ?></p>
+
+                       <p class="title">Set To Complete</p>
+                        <p><input type="checkbox" onchange="setToComplete(<?=$task['task_id'];?>,this)" name="checkbox-taskcomplete" <?= $task['status'] === 'FINISHED' ? 'checked' : ''?> value="<?= $task['status'] === 'FINISHED' ? 'FINISHED' : ''?>"></p>
                       </div>
 
                       <br />

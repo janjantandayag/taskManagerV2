@@ -41,12 +41,23 @@ function updateStatus(){
 	}
 }
 // GET ALL TASKS
-function getAllTasks($user_id = '', $dealgroup_id = ''){	
+function getAllTasks($user_id = '', $dealgroup_id = '',$from = '' , $to = ''){	
 	GLOBAL $connection;	
 	updateStatus();
 
+	$dateQuery = '';
+
+	if(!empty($from) &&  !empty($to)){
+		$dateQuery = " AND tasks.start_date BETWEEN '$from' AND '$to'";
+	} else if (!empty($from) && empty($to)){		
+		$dateQuery = " AND tasks.start_date >= '$from'";
+	} else if (empty($from) && !empty($to)) {		
+		$dateQuery = " AND tasks.start_date <= '$to'";
+	}
+
+
 	$andWhere = " tasks.dealgroup_id = deal_groups.dealgroup_id 
-			AND tasks.document_id = documents.document_id 
+			AND tasks.document_id = documents.document_id " . $dateQuery . "
 			AND tasks.status <> 'DELETED'
 			ORDER BY tasks.due_date DESC";
 
@@ -190,13 +201,28 @@ function deleteTask(){
 	]);
 }
 
-// SET TO COMPLETE
-function setToComplete(){
-	// if action == complete
-	// SET status to complete
-	// else
-	// SET status = 'IN PROGRESS' 
-	// RUN the update status
+// Change status
+function changeStatus(){
+	GLOBAL $connection;
+
+	$task_id = $_POST['task_id'];
+	$action = $_POST['action_task_status'];
+	$status = ($action === 'unset') ? ' ' : 'FINISHED';
+
+	$query = "UPDATE tasks SET status = '$status'
+			WHERE tasks.task_id=$task_id
+	";
+
+	mysqli_query($connection, $query) or die(json_encode([
+		'status' => 'error',
+		'message' => mysqli_error($connection)
+	]));
+	updateStatus();
+
+	echo json_encode([
+		'status' => 'success',
+		'message' => 'Task status successfully updated!'
+	]);
 }
 
 if($_POST){
@@ -210,5 +236,39 @@ if($_POST){
 
 	if(isset($_POST['delete_task'])){
 		deleteTask();
+	}
+
+	if(isset($_POST['action_task_status'])){
+		changeStatus();
+	}
+
+	if(isset($_POST['rangeFilter'])){
+		$query_string = '';
+
+		if(isset($_POST['user_id']) && isset($_POST['dealgroup_id'])) {
+			if(!empty($_POST['user_id']) && !empty($_POST['dealgroup_id'])){
+				$query_string .= 'deal_group_id=' . $_POST['dealgroup_id'] . '&user_id='. $_POST['user_id'];
+			} else if (empty($_POST['dealgroup_id']) && !empty($_POST['user_id'])){
+				$query_string .= 'user_id=' . $_POST['user_id'];
+			}
+		}
+
+		if(!empty($_POST['to']) && empty($query_string)){
+			$query_string .= "to=" . $_POST['to'];
+		} else if(!empty($query_string) && !empty($_POST['to'])){
+			$query_string .= "&to=" . $_POST['to'];
+		} 
+
+		if(!empty($_POST['from']) && empty($query_string)){
+			$query_string .= "from=" . $_POST['from'];
+		} else if(!empty($query_string) && !empty($_POST['from'])){
+			$query_string .= "&from=" . $_POST['from'];
+		}
+
+		if($_POST['location'] === 'dashboard'){
+			header("Location: ../dashboard.php?$query_string");
+		} elseif($_POST['location'] === 'tasks_all') {
+			header("Location: ../tasks.php?$query_string");			
+		}
 	}
 }
