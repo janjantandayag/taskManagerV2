@@ -251,4 +251,25 @@ $('#datatable-responsive').DataTable( {
     "pageLength" : 10
 } );
 
+$('#taskadd_dealgroup').on('change',function(){
+    $documentField = $('#taskadd_document');
+    $dealGroupId = $(this).val();
+    if($dealGroupId !== ''){
+        $documentField.empty();
+        $documentField.removeAttr('disabled');
+        $.post('database/task_functions.php', {'dealgroup_id':$dealGroupId,'action_update_document' : ''}, function(data){
+            if($.isEmptyObject(data)){
+                $documentField.attr('disabled','disabled');
+            } else {
+                $options = '<option value="" > Select document ... </option>';
+                for(i=0;i<data.length;i++){
+                    $options += '<option value="' + data[i].document_id +'">'+ data[i].document_name +'</option>';
+                }
+                $documentField.append($options);
+            }
+        }, 'json');
+
+    }
+});
+
 

@@ -7,6 +7,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
   include('database/task_functions.php');
+  include('database/user_functions.php');
 
 
 	$to = isset($_GET['to']) ? $_GET['to'] : '';
@@ -74,7 +75,9 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                		<span class="label label-<?=$task_status['class']?>" style="width: 100% !important;display: block"><?= $task_status['text'] ?></span>
 	                	</td>
 	                	<td>
+	                		<?php if(array_key_exists('ADMINISTRATOR', getUserRoles())) : ?>
                             <a href="tasks_update.php?task_id=<?=$task['task_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                        	<?php endif; ?>
                             <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
                       	</td>
 	                </tr>

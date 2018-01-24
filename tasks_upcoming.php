@@ -7,6 +7,9 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
   include('database/task_functions.php');
+
+  $to = isset($_GET['to']) ? $_GET['to'] : '';
+  $from = isset($_GET['from']) ? $_GET['from'] : '';
 ?>
 
   <div class="right_col" role="main">
@@ -17,7 +20,13 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           </div>
         </div>
 		<div class="col-md-12 col-sm-12 col-xs-12" style="background:#fff;border-top:5px solid #cecece">
-			<div class="x_content">          
+			<div class="x_content">       
+				<div style="float:right;margin-bottom: 30px">
+					<form action="database/task_functions.php" method="POST" class="form-inline">
+						<?php include('includes/tasks/task_daterangeform.php'); ?>
+						<input type="hidden" name="location" value="filter_upcoming" />
+					</form>
+				</div>     
 		        <table id="datatable-responsive" class="table table-striped dt-responsive nowrap" cellspacing="0" width="100%">
 		         <thead>
 	                <tr>
@@ -32,7 +41,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	              </thead>
 		          <tbody>		          	
 		              <?php
-		              $task_query = filterTask('UPCOMING');
+		              $task_query = filterTask('UPCOMING',$to,$from);
 		              while($task = mysqli_fetch_assoc($task_query)) {
 		              ?>
 	                 <tr>
@@ -50,7 +59,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	                	</td>
 	                	<td>
                             <a href="tasks_update.php?task_id=<?=$task['task_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                            <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                            <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
                       	</td>
 	                </tr>
 	                <?php } ?>

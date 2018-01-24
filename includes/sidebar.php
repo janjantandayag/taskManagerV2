@@ -49,8 +49,8 @@
           </li>
           <li><a><i class="fa fa-building-o"></i> Entities <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="#">All Entities</a></li>
-              <li><a href="#">Add New Entity</a></li>
+              <li><a href="entities.php">All Entities</a></li>
+              <li><a href="entities_add.php">Add New Entity</a></li>
             </ul>
           </li>
           <li><a><i class="fa fa-users"></i> Deal Groups <span class="fa fa-chevron-down"></span></a>

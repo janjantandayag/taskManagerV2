@@ -7,6 +7,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
   include('database/task_functions.php');
+  include('database/user_functions.php');
 
   $task_id = $_GET['task_id'];
   $task = getTaskDetails($task_id);
@@ -137,8 +138,10 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     </div>
 
                     <div class="mtop20">
-                        <a href="tasks_update.php?task_id=<?= $task['task_id']; ?>" class="btn btn-sm btn-primary">Edit Task</a>
-                        <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        <?php if(array_key_exists('ADMINISTRATOR', getUserRoles())) : ?>
+                        <a href="tasks_update.php?task_id=<?= $task['task_id']; ?>" class="btn btn-xs btn-primary">Edit Task</a>                        
+                        <?php endif; ?>
+                        <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
                  	</div>
                   </section>
                 </div>

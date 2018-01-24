@@ -17,8 +17,8 @@
     <div class="x_content">
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Task Title</label>
-        <input type="text" class="form-control has-feedback-left"  required name="task_title" value="<?= $isUpdate ? $task['title'] : ''?>" placeholder="Task Title">
-        <span class="fa fa-tag form-control-feedback left" aria-hidden="true"></span>
+        <input type="text" class="form-control has-feedback-right"  required name="task_title" value="<?= $isUpdate ? $task['title'] : ''?>" placeholder="Task Title">
+        <span class="fa fa-tag form-control-feedback right" aria-hidden="true"></span>
       </div>      
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Type</label>
@@ -49,8 +49,8 @@
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Deal Group</label>
-        <span class="fa fa-users form-control-feedback left" style="margin-top: 30px" aria-hidden="true"></span>
-        <select class="form-control has-feedback-left" name="deal_group" required >         
+        <span class="fa fa-users form-control-feedback right" style="margin-top: 30px" aria-hidden="true"></span>
+        <select class="form-control has-feedback-right" name="deal_group" required id="taskadd_dealgroup">         
           <?php $dealgroup_query = getDealGroups();  ?>
           <option value="" disabled <?= $isUpdate ? '':'selected' ?>>Select deal group...</option>
           <?php while($deal_group = mysqli_fetch_assoc($dealgroup_query)) : ?>
@@ -61,20 +61,21 @@
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Document</label>
         <span class="fa fa-file form-control-feedback right" style="margin-top: 30px;margin-right: 10px" aria-hidden="true"></span>
-        <select class="form-control has-feedback-right" name="document" required >           
+        <select class="form-control has-feedback-right" name="document" required id="taskadd_document" <?= $isUpdate ? '' : 'disabled' ?>>           
           <?php 
-            $document_query = getAllDocuments();
+            if($isUpdate) {
+            $document_query = getDocumentsByDealGroup($task['dealgroup_id']);
           ?>
           <option value="" disabled <?= $isUpdate ? '':'selected' ?>>Select document...</option>
           <?php while($document = mysqli_fetch_assoc($document_query)) : ?>
           <option value="<?=$document['document_id'];?>" <?= ($isUpdate && $document['document_id'] === $task['document_id']) ? 'selected' : ''?>><?=$document['document_name'];?></option>
-          <?php endwhile; ?>
+          <?php endwhile; }?>
         </select>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Reference</label>
-        <input type="text" class="form-control has-feedback-left" required name="task_ref" placeholder="Reference" value="<?= $isUpdate ? $task['reference'] : ''?>" >
-        <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
+        <input type="text" class="form-control has-feedback-right" required name="task_ref" placeholder="Reference" value="<?= $isUpdate ? $task['reference'] : ''?>" >
+        <span class="fa fa-search form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Link To Support</label>

@@ -85,13 +85,23 @@ function getAllTasks($user_id = '', $dealgroup_id = '',$from = '' , $to = ''){
 }
 
 // GET TASK - IN PROGRESS
-function filterTask($filter){
+function filterTask($filter,$to = '',$from = ''){
 	GLOBAL $connection;	
 	updateStatus();
 
+	$dateQuery = '';
+
+	if(!empty($from) &&  !empty($to)){
+		$dateQuery = " AND tasks.start_date BETWEEN '$from' AND '$to'";
+	} else if (!empty($from) && empty($to)){		
+		$dateQuery = " AND tasks.start_date >= '$from'";
+	} else if (empty($from) && !empty($to)) {		
+		$dateQuery = " AND tasks.start_date <= '$to'";
+	}
+
 	$sql = "SELECT * FROM tasks,deal_groups,documents WHERE  tasks.dealgroup_id = deal_groups.dealgroup_id 
-			AND tasks.document_id = documents.document_id 
-			AND tasks.status = '$filter'
+			AND tasks.document_id = documents.document_id
+			AND tasks.status = '$filter' " . $dateQuery . "
 			ORDER BY tasks.due_date DESC";
 
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
@@ -130,7 +140,6 @@ function getTaskComments($task_id){
 // Add Task
 function addTask(){
 	GLOBAL $connection;
-	updateStatus();
 
 	$task_title = $_POST['task_title'];
 	$due_date = $_POST['due_date'];
@@ -147,6 +156,8 @@ function addTask(){
 			VALUES ('$task_title','$deal_group','$document','$task_ref','$task_language','$due_date','$start_date','IN PROGRESS','$task_type','$task_note','$link_to_support')";
 	mysqli_query($connection, $query) or die(mysqli_error($connection));
 	$task_id = mysqli_insert_id($connection);
+
+	updateStatus();
 
 	header("Location: ../task_view.php?task_id=$task_id");
 }
@@ -225,6 +236,41 @@ function changeStatus(){
 	]);
 }
 
+// Update document when dealgroup id is selected
+function updateDocumentField(){
+	GLOBAL $connection;
+	$dealgroup_id = $_POST['dealgroup_id'];
+
+	$sql = "SELECT * FROM documents,dealgroup_document
+			 WHERE dealgroup_document.dealgroup_id = $dealgroup_id
+			 AND dealgroup_document.document_id = documents.document_id
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	$documents = [];
+	while($document = mysqli_fetch_assoc($query)){
+		$documents[] = [
+			'document_id' => $document['document_id'],
+			'document_name' => $document['document_name']
+		];
+	}
+	echo json_encode($documents);
+}
+
+// Document on update
+function getDocumentsByDealGroup($dealgroup_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM documents,dealgroup_document
+			 WHERE dealgroup_document.dealgroup_id = $dealgroup_id
+			 AND dealgroup_document.document_id = documents.document_id
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+
 if($_POST){
 	if(isset($_POST['add_task'])){
 		addTask();
@@ -269,6 +315,18 @@ if($_POST){
 			header("Location: ../dashboard.php?$query_string");
 		} elseif($_POST['location'] === 'tasks_all') {
 			header("Location: ../tasks.php?$query_string");			
-		}
+		} elseif($_POST['location'] === 'filter_upcoming'){
+			header("Location: ../tasks_upcoming.php?$query_string");					
+		} elseif($_POST['location'] === 'filter_inprogress'){
+			header("Location: ../tasks_inprogress.php?$query_string");					
+		}  elseif($_POST['location'] === 'filter_completed'){
+			header("Location: ../tasks_completed.php?$query_string");					
+		}  elseif($_POST['location'] === 'filter_pastdue'){
+			header("Location: ../tasks_pastdue.php?$query_string");					
+		}		
+	}
+
+	if(isset($_POST['action_update_document'])){
+		updateDocumentField();
 	}
 }

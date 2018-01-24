@@ -2,7 +2,9 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-include('connection.php');
+if(!isset($connection)){
+	include('connection.php');
+}
 
 // LOGGED-IN THE USER
 function login($username,$password){
@@ -25,6 +27,23 @@ function login($username,$password){
 		header('Location: ../index.php');
 	}
 }
+// GET USER ROLES
+function getUserRoles(){
+	GLOBAL $connection;
+	$id = $_SESSION['user_id'];
+
+	$sql = "SELECT * FROM user_role,roles
+			WHERE user_role.user_id = $id
+			AND user_role.role_id = roles.role_id
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$roles = [];
+	while($role = mysqli_fetch_assoc($query)){
+		$roles[$role['role_name']] = $role['role_name'];
+	}
+	return $roles;
+}
+
 
 // Logged out user
 function logout(){
