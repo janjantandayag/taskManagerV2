@@ -40,7 +40,27 @@
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
 			<input type="password" class="form-control has-feedback-left" id="inputSuccess6" required name="password" placeholder="Password">
+			<input type="hidden" name="previous_positions" class="previous_position" value="<?= $isUpdate ? implode(",",getPreviousPositions($user_id)) : ''  ?>" />
 			<span class="fa fa-key form-control-feedback left" aria-hidden="true"></span>
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">			
+			<select name="positions[]" id="position_select" class="form-control"  multiple />
+				<option></option>
+				<?php
+						$query = getPositions();
+						while($position = mysqli_fetch_assoc($query)) {
+				?>
+					<option value="<?=$position['position_id']?>" > <?=$position['position_title']?></option>
+				<?php 	}  	?>
+			</select>
+				<?php
+			 		if($isUpdate){
+						$data = fetchUserPositions($user_id);
+				?>
+			<script>
+				$("#position_select").val(<?= "[" . implode(",", $data) . "]" ?>);
+			</script>
+				<?php } ?>
 		</div>
 	</div>
 </div>		

@@ -272,4 +272,12 @@ $('#taskadd_dealgroup').on('change',function(){
     }
 });
 
+$(document).ready(function() {
+    $('#position_select').select2({
+        placeholder: 'Select positions...',
+        theme: 'bootstrap',
+        allowClear: true,
+        multiple: true,
+    });
+});
 

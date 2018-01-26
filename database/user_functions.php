@@ -5,7 +5,6 @@ if (session_status() == PHP_SESSION_NONE) {
 if(!isset($connection)){
 	include('connection.php');
 }
-
 // LOGGED-IN THE USER
 function login($username,$password){
 	GLOBAL $connection;
@@ -26,6 +25,40 @@ function login($username,$password){
 		$_SESSION['login_error'] = 'Username or password is incorrect!';
 		header('Location: ../index.php');
 	}
+}
+// GET ALL USERS' POSITIONS NOT SET
+function fetchUserPositions($id){
+	GLOBAL $connection;
+
+	$sql = "SELECT positions.position_id AS id, positions.position_title as text FROM role_position,positions
+			WHERE role_position.user_id = $id
+			AND role_position.position_id = positions.position_id
+	";	
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	$data = [];
+	while($position = mysqli_fetch_assoc($query)){
+		$data[] = $position['id'];
+	}
+
+	return $data;
+}
+// GET ALL USERS' POSITIONS NOT SET
+function getPreviousPositions($id){
+	GLOBAL $connection;
+
+	$sql = "SELECT role_position.role_position_id
+			FROM role_position
+			WHERE role_position.user_id = $id
+	";	
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	$data = [];
+	while($position = mysqli_fetch_assoc($query)){
+		$data[] = $position['role_position_id'];
+	}
+
+	return $data;
 }
 // GET USER ROLES
 function getUserRoles(){
@@ -72,7 +105,8 @@ function getActivePositions($id){
 		FROM users
 		LEFT JOIN role_position ON users.user_id = role_position.user_id
 		LEFT JOIN positions ON role_position.position_id = positions.position_id
-		WHERE users.user_id = '$id' AND role_position.position_id IS NOT NULL AND role_position.status = 'ACTIVE'
+		WHERE users.user_id = '$id' AND role_position.position_id IS NOT NULL 
+		AND role_position.status = 'ACTIVE'
 		ORDER BY role_position.status ASC, role_position.start_date DESC
 		";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));	
@@ -81,12 +115,13 @@ function getActivePositions($id){
 // Get positions 
 function getPositionHistory($id){
 	GLOBAL $connection;
-	$sql = "SELECT users.user_id,role_position.position_id,positions.position_id,positions.position_title,positions.position_description,role_position.start_date,role_position.end_date,role_position.status
-		FROM users
-		LEFT JOIN role_position ON users.user_id = role_position.user_id
-		LEFT JOIN positions ON role_position.position_id = positions.position_id
-		WHERE users.user_id = '$id' AND role_position.position_id IS NOT NULL
-		ORDER BY role_position.status ASC, role_position.start_date DESC
+	$sql = "SELECT *
+			FROM positions
+			LEFT JOIN role_position ON positions.position_id = role_position.position_id
+			LEFT JOIN dealgroup_staffing ON role_position.role_position_id = dealgroup_staffing.role_position_id
+			WHERE role_position.user_id = '$id' 
+			AND dealgroup_staffing.role_position_id IS NOT NULL
+			ORDER BY dealgroup_staffing.status ASC, dealgroup_staffing.start_date DESC
 	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));	
 	return $query;
@@ -95,7 +130,11 @@ function getPositionHistory($id){
 // Get user positions
 function getUserPositions($user_id){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id AND role_position.status='ACTIVE'";
+	$sql = "SELECT * FROM role_position,positions,dealgroup_staffing 
+			WHERE user_id = $user_id 
+			AND role_position.position_id = positions.position_id
+			AND role_position.role_position_id = dealgroup_staffing.role_position_id
+			AND dealgroup_staffing.status = 'ACTIVE'";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	$value = [];
 
@@ -109,7 +148,12 @@ function getUserPositions($user_id){
 // Count number of positions
 function countPosition($user_id){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM role_position,positions WHERE user_id = $user_id AND role_position.position_id = positions.position_id";
+	$sql = "SELECT * FROM role_position,positions,dealgroup_staffing 
+			WHERE user_id = $user_id 
+			AND role_position.position_id = positions.position_id
+			AND role_position.role_position_id = dealgroup_staffing.role_position_id
+			AND dealgroup_staffing.status = 'ACTIVE'
+	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	$count = mysqli_num_rows($query);
 	return ($count > 1) ? 's' : '';
@@ -124,10 +168,7 @@ function addUser($data){
 	$office_phone = strtolower($data['office_phone']);
 	$cell_phone = strtolower($data['cell_phone']);
 	$password = strtolower($data['password']);
-
-	$positions = $data['position_id'];
-	$start_dates = $data['start_date'];
-	$end_dates = $data['end_date'];
+	$positions = $data['positions'];
 
 	$query = "INSERT INTO users(first_name,last_name,email,office_phone,cell_phone,password,status) 
 			VALUES ('$first_name','$last_name','$email','$office_phone','$cell_phone',md5('$password'),'ACTIVE')";
@@ -138,21 +179,13 @@ function addUser($data){
 
 	uploadImage(str_replace(' ', '', $file_name_init),$user_id);
 
-
-	for ($i=0;$i<count($positions);$i++){
-		GLOBAL $connection;
-		$position_id = $positions[$i];
-		$start_date =  $start_dates[$i];
-		$end_date = $end_dates[$i];
-		$status = empty($end_date) ? 'ACTIVE' : 'INACTIVE';
-
-		if(!empty($position_id) && !empty($start_date)){
-			$query = "INSERT INTO role_position(user_id,position_id,start_date,end_date,status) 
-				VALUES ($user_id,$position_id,'$start_date','$end_date','$status')";
+	foreach($positions as $position_id){
+		if(!empty($position_id)){
+			$query = "INSERT INTO role_position(user_id,position_id) 
+				VALUES ($user_id,$position_id)";
 			mysqli_query($connection, $query) or die(mysqli_error($connection));
 		}
 	}
-
 
 	if($_SESSION['add_user_error'] === ""){
 		$_SESSION['add_user_success'] = "Successfully added new user!";
@@ -166,6 +199,9 @@ function addUser($data){
 // Update User
 function updateUser($data) {	
 	GLOBAL $connection;	
+	$_SESSION['update_user_error'] = "";
+	$_SESSION['update_user_success'] = "";
+
 	$user_id = $data['user_id'];
 	$first_name = strtolower($data['first_name']);
 	$last_name = strtolower($data['last_name']);
@@ -173,15 +209,17 @@ function updateUser($data) {
 	$office_phone = strtolower($data['office_phone']);
 	$cell_phone = strtolower($data['cell_phone']);
 	$password = strtolower($data['password']);
+	$current = empty($data['positions']) ? [] : $data['positions'] ;
+	$previous = explode(",", $data['previous_positions']);
 
-	$positions = $data['position_id'];
-	$start_dates = $data['start_date'];
-	$end_dates = $data['end_date'];
+
 
 	$query = "UPDATE users 
-	          SET first_name = '$first_name',last_name = '$last_name',email = '$email', office_phone = '$office_phone' , cell_phone = '$cell_phone',
-	              password = md5('$password'),status='ACTIVE' WHERE user_id = $user_id
-	";
+	        SET first_name = '$first_name',last_name = '$last_name',email = '$email', 
+	          	  office_phone = '$office_phone' , cell_phone = '$cell_phone',
+	              password = md5('$password'),status='ACTIVE' 
+	        WHERE user_id = $user_id";
+
 
 	mysqli_query($connection, $query) or die(mysqli_error($connection));
 
@@ -189,34 +227,63 @@ function updateUser($data) {
 
 	uploadImage(str_replace(' ', '', $file_name_init),$user_id);
 
-	// DELETE POSITIONS FOR THIS USER
-	$delete_prev = "DELETE FROM role_position WHERE user_id=$user_id";	
-	mysqli_query($connection,$delete_prev) or die(mysqli_error($connection));
+	$current_role_positions = [];
 
-	// ADD POSITIONS
-	for ($i=0;$i<count($positions);$i++){
-		GLOBAL $connection;
-		$position_id = $positions[$i];
-		$start_date =  $start_dates[$i];
-		$end_date = $end_dates[$i];
-		$status = empty($end_date) ? 'ACTIVE' : 'INACTIVE';
+	if(!empty($current)) {
+		foreach($current as $position_id){
+			if(!empty($position_id)) {
+				$sql = "SELECT role_position.role_position_id
+						FROM role_position
+						WHERE role_position.user_id = $user_id
+						AND role_position.position_id = $position_id
+				";
 
-		if(!empty($position_id) && !empty($start_date)){
+				$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+				
+				if(!$query->num_rows > 0){
+					$sql_insert = "INSERT INTO role_position(position_id,user_id)
+						VALUES ($position_id,$user_id)";
 
-			$query = "INSERT INTO role_position(user_id,position_id,start_date,end_date,status) 
-				VALUES ($user_id,$position_id,'$start_date','$end_date','$status')";
-			mysqli_query($connection, $query) or die(mysqli_error($connection));
+					mysqli_query($connection,$sql_insert) or die(mysqli_error($connection));
+					$inserted_role_position_id = mysqli_insert_id($connection);
+					$current_role_positions[] = $inserted_role_position_id;
+				} else {
+					$current_role_positions[] = mysqli_fetch_assoc($query)['role_position_id'];
+				}
+			}
 		}
 	}
 
+	$role_position_ids = array_unique(array_merge($previous,$current_role_positions));
 
-	if($_SESSION['add_user_error'] === ""){
-		$_SESSION['add_user_success'] = "User successfully updated!";
-		unset($_SESSION['add_user_error']);
-		header("Location:../users_view.php?user_id=$user_id");	
-	} else {
-		header("Location:../users_form.php");	
+	include('position_functions.php');
+	foreach($role_position_ids as $role_position_id){
+		$sql = "SELECT dealgroup_staffing.role_position_id
+			   FROM dealgroup_staffing
+			   WHERE dealgroup_staffing.role_position_id = $role_position_id
+		";
+
+		$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+		if($query->num_rows > 0){
+			if( in_array($role_position_id, $previous) && !in_array($role_position_id, $current_role_positions) ){
+				$position_details = getRolePositionDetails($role_position_id);
+				$_SESSION['update_user_error'] .= "<li>Cannot delete position title: <strong>" . strtoupper($position_details['position_title']) . "</strong></li>";
+			}
+		} else {
+			if( in_array($role_position_id, $previous) && !in_array($role_position_id, $current_role_positions) ){
+				$sql = "DELETE FROM role_position WHERE role_position_id=$role_position_id";
+				$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+			}
+		}
 	}
+
+	if(empty($_SESSION['update_user_error'])){
+		$_SESSION['update_user_success'] .= "User successfully updated!";	
+		unset($_SESSION['update_user_error']);
+	} 
+
+	header("Location:../users_update.php?id=$user_id&&form=update");
 }
 
 // Upload Image
@@ -354,7 +421,9 @@ function getAllPMA(){
 			FROM positions
 			LEFT JOIN role_position ON positions.position_id = role_position.position_id
 			LEFT JOIN users ON role_position.user_id = users.user_id
-			WHERE positions.position_title = 'Portfolio Management Analyst'			
+			LEFT JOIN dealgroup_staffing ON role_position.role_position_id = dealgroup_staffing.role_position_id
+			WHERE positions.position_title = 'Portfolio Management Analyst'	
+			AND dealgroup_staffing.dealgroup_staffing_id IS NOT NULL		
 	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
