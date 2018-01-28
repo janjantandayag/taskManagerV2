@@ -41,16 +41,16 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     while($entity = mysqli_fetch_assoc($entity_query)){
                 ?>
                 <tr>
-                  <td><a href="entities_view.php?entity_id=<?= $entity['entity_id']; ?>"><?=$entity['entity_legal_name']; ?></a></td>
-                  <td><?=$entity['entity_nickname']; ?></td>
-                  <td><?=$entity['street_address']; ?></td>
-                  <td><?=$entity['city']; ?></td>
-                  <td><?=$entity['state']; ?></td>
-                  <td><?=$entity['zipcode']; ?></td>
-                  <td><?=$entity['country']; ?></td>
-                  <td><?=$entity['incorporation_state']; ?></td>
+                  <td><a href="entities_view.php?entity_id=<?= $entity['entity_id']; ?>" class="dashboard_table_link_hover" ><?= empty($entity['entity_legal_name']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_legal_name']); ?></a></td>
+                  <td><?= empty($entity['entity_nickname']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_nickname']); ?></td>
+                  <td><?= empty($entity['street_address']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['street_address']); ?></td>
+                  <td><?= empty($entity['city']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['city']); ?></td>
+                  <td><?= empty($entity['state']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['state']); ?></td>
+                  <td><?= empty($entity['zipcode']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['zipcode']); ?></td>
+                  <td><?= empty($entity['country']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['country']); ?></td>
+                  <td><?= empty($entity['incorporation_state']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['incorporation_state']); ?></td>
                   <td>
-                    <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                    <a href="entities_update.php?entity_id=<?=$entity['entity_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                     <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
                   </td>
                 </tr>

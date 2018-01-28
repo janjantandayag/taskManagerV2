@@ -281,3 +281,27 @@ $(document).ready(function() {
     });
 });
 
+$('.addDealGroup').click(function(){  
+    $copy = $( ".dealgroupInitial:first").clone();
+    $copy.appendTo("#dealGroupContainer");
+    $copy.find(".task_type,.taskadd_dealgroup").val("");
+
+    
+    $rowLength = $(".dealgroupInitial").length;
+    if($rowLength != 1) {
+        $copy.find('button').css('display','block');
+    }
+});
+
+function removeDealGroup(clicked){
+    $rowLength = $(".dealgroupInitial").length;
+
+    if($rowLength != 1) {
+        $(clicked).parents(".dealgroupInitial").remove();
+    } 
+
+    if($rowLength == 2){
+        $( ".dealgroupInitial").find('button').css("display","none");
+    }
+}
+
