@@ -217,8 +217,9 @@ function deleteTask(id,task_title){
 
 $("[name='checkbox-taskcomplete']").bootstrapSwitch({
     onText : 'FINISHED',
-    offText : '',
-    onColor : 'success'
+    offText : 'PENDING',
+    onColor : 'success',
+    offColor : 'danger'
 });
 
 function setToComplete(task_id,switched){
@@ -304,4 +305,19 @@ function removeDealGroup(clicked){
         $( ".dealgroupInitial").find('button').css("display","none");
     }
 }
+
+$('.show_form_pos_assign').click(function(){  
+    $val = $(this).data('value');
+    $target = $('.container'+$val);
+
+    if($target.hasClass('displayed')){        
+        $($target).removeClass('displayed');
+        $($target).slideUp(800);
+        $(this).html('show form <span class="fa fa-chevron-down"></span>');
+    } else {
+        $($target).slideDown(800);
+        $($target).addClass(' displayed');
+        $(this).html('hide form <span class="fa fa-chevron-up"></span>');
+    }
+});
 

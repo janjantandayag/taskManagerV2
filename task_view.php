@@ -130,7 +130,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                         <p class="title">Type</p>
                         <p><?= ($task['type']) ?  $task['type'] :'<strong style="text-transform:uppercase;color:red;font-size:10px">not set</strong>'; ?></p>
 
-                       <p class="title">Set To Complete</p>
+                       <p class="title">Status</p>
                         <p><input type="checkbox" onchange="setToComplete(<?=$task['task_id'];?>,this)" name="checkbox-taskcomplete" <?= $task['status'] === 'FINISHED' ? 'checked' : ''?> value="<?= $task['status'] === 'FINISHED' ? 'FINISHED' : ''?>"></p>
                       </div>
 

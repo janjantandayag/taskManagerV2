@@ -29,3 +29,11 @@ a.dropdown-toggle{
 	font-size:13.5px;
 	transition: .5s all;
 }
+.backgroundWhite{
+	padding:20px 0;
+	background:#fff;
+	border-radius: 5px;
+}
+.set_position_container{
+	display: none;
+}
