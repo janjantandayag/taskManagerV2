@@ -34,6 +34,6 @@ a.dropdown-toggle{
 	background:#fff;
 	border-radius: 5px;
 }
-.set_position_container{
-	display: none;
+.accordion .panel-heading{
+	border-bottom: 2px solid #b0b5b4;
 }

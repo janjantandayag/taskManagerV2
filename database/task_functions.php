@@ -2,9 +2,8 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-if(!isset($connection)){
-	include('connection.php');
-}
+require_once('connection.php');
+
 date_default_timezone_set('Asia/Manila');
 // UPDATE task status
 function getStatus($start_date,$due_date){

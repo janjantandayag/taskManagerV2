@@ -312,12 +312,181 @@ $('.show_form_pos_assign').click(function(){
 
     if($target.hasClass('displayed')){        
         $($target).removeClass('displayed');
-        $($target).slideUp(800);
+        $($target).slideUp(400);
         $(this).html('show form <span class="fa fa-chevron-down"></span>');
     } else {
-        $($target).slideDown(800);
+        $($target).slideDown(400);
         $($target).addClass(' displayed');
         $(this).html('hide form <span class="fa fa-chevron-up"></span>');
     }
 });
+
+$('.delete_assigned_position_btn').on('click',function(){
+    $id = $(this).data('id');
+    $name = $(this).data('user');
+    $title = $(this).data('position');
+    $data_row = $(this).data('tr');
+
+    $message = "Remove <strong>" + $name + "</strong> as <strong>" + $title + "</strong> ?";
+    BootstrapDialog.confirm({
+        title : 'REMOVE POSITION',
+        message : $message,
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Delete', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/dealgroup_staffing.php', {'dealgroup_staff_id':$id,'dealgroup_staff_remove' : 'dealgroup_staff_remove','target_row': $data_row}, function(data){
+                     if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback : function (result) { if(result) updateFragment(data.after_action);}
+                        });                            
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+});
+
+$('.dealstaff_add_position').on('click',function(){
+    $entity_id = $(this).data('entityid');
+    $dealgroup_id = $(this).data('dealgroupid');
+
+    $.post('database/dealgroup_staffing.php', {'dealgroup_id':$dealgroup_id, 'entity_id' : $entity_id, 'dealgroup_assigned_position' : 'dealgroup_assigned_position'}, function(data){
+        if(data.status == 'success'){
+            BootstrapDialog.show({
+                title: 'ASSIGN POSITION',
+                message: data.message,
+                cssClass: 'login-dialog',
+                buttons: [{
+                    label: 'ASSIGN POSITION',
+                    cssClass: 'btn-primary',
+                    type: 'submit',
+                    action: function(dialog){
+                        $noError = true;
+                        $( "#update_staffing_form .input_required" ).each(function() {           
+                            if( !$(this).val() ) {
+                                  $noError = false;
+                            }
+                        });  
+                        if($noError) {
+                            $values = $('#update_staffing_form').serialize();
+                            $.post('database/dealgroup_staffing.php' , $values , function(data){
+                                if(data.status == 'success'){
+                                     BootstrapDialog.alert({
+                                        title: 'SUCCESS',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_SUCCESS,
+                                        callback : function (result) { if(result) updateFragment(data.after_action);}
+                                    });        
+                                } else {
+                                    BootstrapDialog.alert({
+                                        title: 'ERROR',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_DANGER
+                                    });
+                                }
+                                dialog.close();
+                            }, 'json');
+                        } else {
+                            alert('Please specify required fields!');
+                            return false;
+                        }
+                    }
+                }]
+            });           
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+
+    setTimeout(function(){
+        $('form#update_staffing_form').find('br').remove();
+    }, 300);
+});
+
+$('.update_assigned_position_btn').on('click',function(){
+    $id = $(this).data('id');
+
+    $.post('database/dealgroup_staffing.php', {'id':$id, 'updateDealStaffingForm' : 'updateDealStaffingForm'}, function(data){
+        if(data.status == 'success'){
+            BootstrapDialog.show({
+                title: 'UPDATE POSITION',
+                message: data.message,
+                type: BootstrapDialog.TYPE_WARNING,
+                buttons: [{
+                    label: 'UPDATE',
+                    cssClass: 'btn-warning',
+                    type: 'submit',
+                    action: function(dialog){
+                        $values = $('#update_staffing_form').serialize();
+                        $.get('database/dealgroup_staffing.php' , $values , function(data){
+                            if(data.status == 'success'){
+                                 BootstrapDialog.alert({
+                                    title: 'SUCCESS',
+                                    message: data.message,
+                                    type: BootstrapDialog.TYPE_SUCCESS,
+                                    callback : function (result) { if(result) updateFragment(data.after_action);}
+                                });        
+                            } else {
+                                BootstrapDialog.alert({
+                                    title: 'ERROR',
+                                    message: data.message,
+                                    type: BootstrapDialog.TYPE_DANGER
+                                });
+                            }
+                            dialog.close();
+                        }, 'json');
+                    }
+                }]
+            });           
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+
+    setTimeout(function(){
+        $('form#update_staffing_form').find('br').remove();
+    }, 300);
+});
+
+function updateFragment(data){
+    if(data.action == 'replace'){
+        for(var tar_e in data.fragments){
+            $(data.target + ' ' + tar_e).fadeOut(1000);
+            $(data.target + ' ' + tar_e).text(data.fragments[tar_e]);            
+            $(data.target + ' ' + tar_e).fadeIn(1000);
+        }   
+    }
+
+    if(data.action == 'delete'){
+        $(data.target).fadeOut(1500);
+    }
+
+    if(data.action == 'append') {
+        for(i=0;i<data.fragments.length;i++){
+            $(data.target).append(data.fragments[i]);
+        }
+    }
+}
 

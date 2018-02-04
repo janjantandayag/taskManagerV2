@@ -7,9 +7,24 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
   include('database/dealgroup_functions.php');
+  include('database/position_functions.php');
+  include('database/user_functions.php');
 ?>
 
 <div class="right_col" role="main">
+  <?php if(isset($_SESSION['action_success']) || isset($_SESSION['action_error'])) {
+    $class = isset($_SESSION['action_success']) ? 'success' : 'danger';
+    $text_bold = isset($_SESSION['action_success']) ? 'SUCCESS' : 'ERROR';
+    $message = isset($_SESSION['action_success']) ? $_SESSION['action_success'] : $_SESSION['action_error'];
+  ?>
+  <div class="row">
+    <div class="alert alert-<?= $class ?> ?> alert-dismissible fade in" role="alert" style="margin-top:70px">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+            </button>
+            <strong><?= $text_bold ?>!</strong> <?= $message ?>
+        </div>  
+  </div>
+  <?php } unset($_SESSION['action_success'],$_SESSION['action_error']); ?>
   <div class="col-md-12 col-sm-6 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
@@ -69,29 +84,41 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                       <div id="<?= $id ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;">
                         <div class="panel-body">                          
                           <div style="text-align: right">
-                            <a href="javascript:void(0)" data-value="<?= $id ?>" class="show_form_pos_assign"  >show form<span class="fa fa-chevron-down"></span></a>
+                            <a href="javascript:void(0)" data-value="<?= $id ?>" class="show_form_pos_assign"  >hide form<span class="fa fa-chevron-up"></span></a>
                           </div>
-                          <div class="set_position_container container<?=$id?> backgroundWhite" >
-                          <form class="form-horizontal form-label-left" method="POST" action="#">
-                             <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
+                          <div class="set_position_container container<?=$id?> backgroundWhite displayed" >
+                          <form class="form-horizontal form-label-left " action="#" >
+                             <!-- <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
                               <label>Position Title</label>
                               <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
-                              <select class="form-control has-feedback-right position_title" name="position_id[]" required >         
+                              <select class="form-control has-feedback-right position_title" name="position_id" required >         
                                 <option value=""></option>
+                                <?php
+                                $position_query = getPositions();
+                                while($position = mysqli_fetch_assoc($position_query)) {
+                                ?>
+                                <option value="<?= $position['position_id']; ?>"><?= $position['position_title'] ?></option>
+                                <?php } ?>
                               </select>
                             </div>    
                             <div class="col-md-3 col-sm-3 col-xs-12 form-group has-feedback">
-                              <label>User</label>
+                              <label>Assigned To</label>
                               <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
-                              <select class="form-control has-feedback-right position_title" name="position_id[]" required >         
+                              <select class="form-control has-feedback-right position_title" name="user_id" required >         
                                 <option value=""></option>
+                                <?php
+                                $users_query = getActiveUsers();
+                                while($user = mysqli_fetch_assoc($users_query)) {
+                                ?>
+                                <option value="<?= $user['user_id']; ?>"><?= ucwords($user['first_name']) . ' ' . ucwords($user['last_name']) ?></option>
+                                <?php } ?>
                               </select>
                             </div>    
                             <div class="col-md-3 col-sm-3 col-xs-12">
                               <label>Start Date</label>
                               <div class="form-group">
                                 <div class="input-group date" id="myDatepicker1">
-                                    <input type="text" class="form-control"  name="start_date[]">
+                                    <input type="text" class="form-control"  name="start_date" required>
                                     <span class="input-group-addon">
                                        <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -102,15 +129,15 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                               <label>End Date</label>               
                               <div class="form-group">
                                 <div class="input-group date" id="myDatepicker2">
-                                    <input type="text" class="form-control" name="end_date[]">
+                                    <input type="text" class="form-control" name="end_date">
                                     <span class="input-group-addon">
                                        <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
                               </div>
-                            </div>   
+                            </div>    -->
                             <div class="col-xs-12" style="text-align: right">             
-                              <button class="btn btn-primary btn-xs" type="button"><span class="fa fa-plus"></span> Add Position</button> 
+                              <button class="btn btn-primary btn-xs dealstaff_add_position" type="button" data-entityId = "<?= $entity_id ?>" data-dealgroupId = "<?= $dealgroup_id ?>" ><span class="fa fa-plus"></span> Add Position</button> 
                             </div>  
                           </form>                                  
                           </div>                                         
@@ -120,7 +147,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                           ?>
                           <div class="assigned_position" style="padding:0 10px">
                             <?php if($positionassignment_query->num_rows != 0 ): ?>
-                              <table class="table table-bordered">
+                              <table class="table table-bordered table-striped table-hover" id="table_<?= $dealgroup_id . '_' .$entity_id ?>">
                                 <thead>
                                   <tr>
                                     <th>Position Title</th>
@@ -132,14 +159,14 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                                 </thead>
                                 <tbody>
                                   <?php while($positionassignment = mysqli_fetch_assoc($positionassignment_query)) : ?>
-                                  <tr>
-                                    <td><?= $positionassignment['position_title'] ?></td>
-                                    <td><?= ucwords($positionassignment['first_name']) . ' ' . ucwords($positionassignment['last_name']) ?></td>
-                                    <td><?= date('F d, Y | l', strtotime($positionassignment['start_date'])) ?></td>
-                                    <td><?= is_null($positionassignment['end_date']) ? 'ACTIVE' : date('F d, Y | l', strtotime($positionassignment['end_date'])) ?></td>
+                                  <tr id="rowdealgroup_<?= $positionassignment['dealgroup_staffing_id'] ?>">
+                                    <td id="position_title"><?= $positionassignment['position_title'] ?></td>
+                                    <td id="assigned_to"><?= ucwords($positionassignment['first_name']) . ' ' . ucwords($positionassignment['last_name']) ?></td>
+                                    <td id="start_date"><?= date('F d, Y | l', strtotime($positionassignment['start_date'])) ?></td>
+                                    <td id="end_date"><?= $positionassignment['end_date'] == 0 ? 'ACTIVE' : date('F d, Y | l', strtotime($positionassignment['end_date'])) ?></td>
                                     <td>                                    
-                                      <a href="#">EDIT</a> | 
-                                      <a href="#">DELETE</a> 
+                                      <a href="javascript:void(0);" class="update_assigned_position_btn btn-xs btn-warning" data-id="<?= $positionassignment['dealgroup_staffing_id']; ?>"> UPDATE </a>&nbsp;
+                                      <a href="javascript:void(0);" class="delete_assigned_position_btn btn-xs btn-danger" data-id="<?= $positionassignment['dealgroup_staffing_id']; ?>" data-user="<?= ucwords($positionassignment['first_name']) . ' ' . ucwords($positionassignment['last_name']) ?>" data-position="<?= ucwords($positionassignment['position_title']) ?>" data-tr="#rowdealgroup_<?= $positionassignment['dealgroup_staffing_id'] ?>"> REMOVE </a> 
                                     </td>
                                   </tr>
                                   <?php endwhile; ?>

@@ -2,9 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-if(!isset($connection)){
-	include('connection.php');
-}
+require_once('connection.php');
 // LOGGED-IN THE USER
 function login($username,$password){
 	GLOBAL $connection;
@@ -88,6 +86,13 @@ function logout(){
 function getUsers(){	
 	GLOBAL $connection;
 	$sql = "SELECT * FROM users ORDER BY last_name, first_name";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
+// Get all users.
+function getActiveUsers(){	
+	GLOBAL $connection;
+	$sql = "SELECT * FROM users WHERE users.status = 'ACTIVE' ORDER BY last_name, first_name";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
@@ -417,13 +422,14 @@ function modifyStatus($id,$action){
 function getAllPMA(){	
 	GLOBAL $connection;
 
-	$sql = "SELECT users.first_name,users.user_id,users.last_name,role_position.role_position_id
+	$sql = "SELECT DISTINCT users.user_id, users.first_name,users.user_id,users.last_name,role_position.role_position_id
 			FROM positions
 			LEFT JOIN role_position ON positions.position_id = role_position.position_id
 			LEFT JOIN users ON role_position.user_id = users.user_id
 			LEFT JOIN dealgroup_staffing ON role_position.role_position_id = dealgroup_staffing.role_position_id
 			WHERE positions.position_title = 'Portfolio Management Analyst'	
 			AND dealgroup_staffing.dealgroup_staffing_id IS NOT NULL		
+
 	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;

@@ -49,7 +49,7 @@ function getEntityDealGroupStaff($dealgroup_id,$entity_id){
 			AND dealgroup_staffing.role_position_id = role_position.role_position_id
 			AND role_position.position_id = positions.position_id
 			AND role_position.user_id = users.user_id
-			ORDER BY dealgroup_staffing.start_date DESC
+			ORDER BY positions.position_title DESC
 	";
 
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));

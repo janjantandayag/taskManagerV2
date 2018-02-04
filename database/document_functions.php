@@ -2,9 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-if(!isset($connection)){
-	include('connection.php');
-}
+require_once('connection.php');
 
 // GET ALL DOCUMENTS
 function getAllDocuments(){
