@@ -47,7 +47,7 @@
   </head>
 
   <?php
-  if($_SERVER['PHP_SELF'] == '/taskManagerV2/index.php') { ?>
+  if($_SERVER['PHP_SELF'] == '/task_manager/index.php') { ?>
   <body class="login">
     <div>
   <?php } else { ?>
