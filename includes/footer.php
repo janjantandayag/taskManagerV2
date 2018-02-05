@@ -1,5 +1,5 @@
  <!-- footer content -->
- <?php if($_SERVER['PHP_SELF'] != '/taskManagerV2/index.php') : ?>
+ <?php if($_SERVER['PHP_SELF'] != '/taskManagerV2/df/index.php') : ?>
            <footer>
           <div class="pull-right">
             Task Manager Application
