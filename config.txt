@@ -1,0 +1,5 @@
+Host hostgator
+    User klandau
+    HostName kylelandau.com
+    Port 2222
+    PreferredAuthentications publickey
