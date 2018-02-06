@@ -6,4 +6,4 @@
     <label for="to">To:</label>
     <input type="date" class="form-control" value="<?= $_GET['to']; ?>" name="to" id="to">
 	</div>
-	<button class="btn btn-success btn-sm" type="submit" name="rangeFilter">FILTER</button>
+	<button class="btn btn-success btn-sm" type="submit" name="rangeFilter">FILTER DUE DATE</button>

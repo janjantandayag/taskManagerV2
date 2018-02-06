@@ -47,11 +47,11 @@ function getAllTasks($user_id = '', $dealgroup_id = '',$from = '' , $to = ''){
 	$dateQuery = '';
 
 	if(!empty($from) &&  !empty($to)){
-		$dateQuery = " AND tasks.start_date BETWEEN '$from' AND '$to'";
+		$dateQuery = " AND tasks.due_date BETWEEN '$from' AND '$to'";
 	} else if (!empty($from) && empty($to)){		
-		$dateQuery = " AND tasks.start_date >= '$from'";
+		$dateQuery = " AND tasks.due_date >= '$from'";
 	} else if (empty($from) && !empty($to)) {		
-		$dateQuery = " AND tasks.start_date <= '$to'";
+		$dateQuery = " AND tasks.due_date <= '$to'";
 	}
 
 
@@ -65,14 +65,21 @@ function getAllTasks($user_id = '', $dealgroup_id = '',$from = '' , $to = ''){
 				WHERE tasks.dealgroup_id = $dealgroup_id AND ";
 		$sql.= $andWhere;
 	} elseif (!empty($user_id) && empty($dealgroup_id)){		
-		$sql = "SELECT *
-			FROM positions,role_position,dealgroup_staffing,deal_groups,tasks,documents
-			WHERE positions.position_title = 'Portfolio Management Analyst' 
-			AND role_position.user_id = $user_id
-			AND positions.position_id = role_position.position_id
-			AND role_position.role_position_id = dealgroup_staffing.role_position_id
-			AND dealgroup_staffing.dealgroup_id = deal_groups.dealgroup_id AND
+		// $sql = "SELECT *
+		// 	FROM positions,role_position,dealgroup_staffing,deal_groups,tasks,documents
+		// 	WHERE positions.position_title = 'Portfolio Management Analyst' 
+		// 	AND role_position.user_id = $user_id
+		// 	AND positions.position_id = role_position.position_id
+		// 	AND role_position.role_position_id = dealgroup_staffing.role_position_id
+		// 	AND dealgroup_staffing.dealgroup_id = deal_groups.dealgroup_id AND
+		// ";
+		$sql = " SELECT *
+				 FROM role_position,deal_groups,tasks,documents
+				 WHERE role_position.position_title = 'Portfolio Management Analyst'
+				 AND role_position.user_id = $user_id
+				 AND role_position.dealgroup_id = deal_groups.dealgroup_id AND
 		";
+
 		$sql.= $andWhere;
 	} else {
 		$sql = "SELECT * FROM tasks,deal_groups,documents WHERE ";
@@ -91,11 +98,11 @@ function filterTask($filter,$to = '',$from = ''){
 	$dateQuery = '';
 
 	if(!empty($from) &&  !empty($to)){
-		$dateQuery = " AND tasks.start_date BETWEEN '$from' AND '$to'";
+		$dateQuery = " AND tasks.due_date BETWEEN '$from' AND '$to'";
 	} else if (!empty($from) && empty($to)){		
-		$dateQuery = " AND tasks.start_date >= '$from'";
+		$dateQuery = " AND tasks.due_date >= '$from'";
 	} else if (empty($from) && !empty($to)) {		
-		$dateQuery = " AND tasks.start_date <= '$to'";
+		$dateQuery = " AND tasks.due_date <= '$to'";
 	}
 
 	$sql = "SELECT * FROM tasks,deal_groups,documents WHERE  tasks.dealgroup_id = deal_groups.dealgroup_id 
@@ -115,6 +122,7 @@ function getTaskDetails($task_id){
 			WHERE tasks.task_id = '$task_id'
 			AND tasks.dealgroup_id = deal_groups.dealgroup_id
 			AND tasks.document_id = documents.document_id 
+			AND tasks.status != 'DELETED'
 	";
 
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));

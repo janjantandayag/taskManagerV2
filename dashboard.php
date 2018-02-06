@@ -8,6 +8,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/top_navigation.php');
   include('database/user_functions.php');
   include('database/task_functions.php');
+  include('database/dealgroup_functions.php');
 
 
 	$user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
@@ -23,27 +24,31 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 			<?php			
 				$query = getAllPMA();
 				$i=0;
-				while($pma = mysqli_fetch_assoc($query)){					
-	        		$deal_group_query = pmaDealGroups($pma['role_position_id']);
+				while($pma = mysqli_fetch_assoc($query)){										
+	        		$dealgroup_ids = pmaDealGroups($pma['user_id']);
 			?>
 			    <div class="panel panel-<?=$user_id === $pma['user_id'] ? 'success' : ''?>">
 			      <div class="panel-heading">
 			        <h4 class="panel-title" style="font-size:15px !important">
 			        	<?php
 			        		$uid = $pma['user_id'];
-			        		$link = $deal_group_query->num_rows === 0 ? "javascript:void(0)" : "dashboard.php?user_id=$uid";
+			        		$link = $dealgroup_ids ? "dashboard.php?user_id=$uid" : "javascript:void(0)";
 			        	?>
-			          <a href="<?=$link?>"><?= ucfirst($pma['first_name']) . ' ' . ucfirst($pma['last_name'])?></a> <span data-toggle="collapse" href="#collapse<?= $i ?>" class="label label-<?=$deal_group_query->num_rows === 0 ? 'default' : 'success'?> " style="float:right;font-size:13px;cursor: pointer;"><?=$deal_group_query->num_rows?></span>
+			          <a href="<?=$link?>"><?= ucfirst($pma['first_name']) . ' ' . ucfirst($pma['last_name'])?></a> <span data-toggle="collapse" href="#collapse<?= $i ?>" class="label label-<?= $dealgroup_ids ? 'success' : 'default'?> " style="float:right;font-size:13px;cursor: pointer;"><?= count($dealgroup_ids) ?></span>
 			        </h4>
 			      </div>
 			      <div id="collapse<?= $i ?>" class="panel-collapse collapse <?= $user_id === $pma['user_id'] ? 'in' : '' ?>">			      	
 		        	<?php
-		        		if($deal_group_query->num_rows > 0 ) {
+		        		if($dealgroup_ids) {
 		        	?>
 			        <ul class="list-group">
-		        	<?php while($deal_groups = mysqli_fetch_assoc($deal_group_query)) : ?>
-			         	<li class="list-group-item" style="<?= $dealgroup_id === $deal_groups['dealgroup_id'] ? 'border-left:10px solid #5cb85c;background:#dff0d8;font-weight: bold;font-size:12px' : '' ?>"><a href="dashboard.php?deal_group_id=<?=$deal_groups['dealgroup_id'];?>&user_id=<?=$pma['user_id'];?>"><?=$deal_groups['group_name'];?></a></li>
-		          	<?php endwhile; ?>
+		        	<?php
+		        		foreach($dealgroup_ids as $dealgroupid) { 
+		        			$deal_group = getDealGroupDetails($dealgroupid);
+
+		        	?>
+			         	<li class="list-group-item" style="<?= $dealgroup_id === $deal_group['dealgroup_id'] && $pma['user_id'] === $user_id ? 'border-left:10px solid #5cb85c;background:#dff0d8;font-weight: bold;font-size:12px' : '' ?>"><a href="dashboard.php?deal_group_id=<?=$deal_group['dealgroup_id'];?>&user_id=<?=$pma['user_id'];?>"><?=$deal_group['group_name'];?></a></li>
+		          	<?php  }  ?>
 			        </ul>
 			        <?php } ?>
 			      </div>

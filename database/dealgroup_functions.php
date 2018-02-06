@@ -55,3 +55,15 @@ function getEntityDealGroupStaff($dealgroup_id,$entity_id){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
+
+// get dealgroup details
+function getDealGroupDetails($dealgroup_id){
+	GLOBAL $connection;
+	
+	$sql = "SELECT deal_groups.group_name, deal_groups.dealgroup_id
+		FROM deal_groups
+		WHERE deal_groups.dealgroup_id = $dealgroup_id";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return mysqli_fetch_assoc($query);
+}

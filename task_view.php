@@ -90,7 +90,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                       <li>
                         <img src="database/attachment/images/profile/<?=$task_comment['profile_image']?>" class="avatar" alt="Avatar">
                         <div class="message_date">
-                          <p class="month"><?= date('F d, Y| h:i:s A',strtotime($task_comment['commented_date'])) ?></p>
+                          <p class="month"><?= date('F d, Y | h:i:s A',strtotime($task_comment['commented_date'])) ?></p>
                         </div>
                         <div class="message_wrapper">
                           <h4 class="heading"><?= ucfirst($task_comment['first_name'])  . ' ' . ucfirst($task_comment['last_name']); ?> </h4>
@@ -138,9 +138,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     </div>
 
                     <div class="mtop20">
-                        <?php if(array_key_exists('ADMINISTRATOR', getUserRoles())) : ?>
                         <a href="tasks_update.php?task_id=<?= $task['task_id']; ?>" class="btn btn-xs btn-primary">Edit Task</a>                        
-                        <?php endif; ?>
                         <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
                  	</div>
                   </section>
@@ -154,11 +152,10 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	</div>
 	<?php else : ?>
 		<div class="row">
-        			 <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top:150px;font-size:20px">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <strong>ERROR:</strong> Sorry, task does not exists in the system. 
-          </div>
-		      </div>
+			 <h5 style="text-align: center">
+          <strong style="color: #cc1b1b">ERROR:</strong> Sorry, task is either deleted or does not exists in the system. 
+      </h5>
+    </div>
 	<?php endif; ?>
 </div>
 

@@ -133,16 +133,18 @@ function updateStatus(selected){
     $uid = $(selected).data('id');
     $name = $(selected).data('name');
     $action = ($(selected).text() === ' Activate') ? 'activate' : 'deactivate';
+    $modal_type = ($(selected).text() === ' Activate') ? BootstrapDialog.TYPE_PRIMARY : BootstrapDialog.TYPE_DANGER;
+    $modal_btn_type = ($(selected).text() === ' Activate') ? 'btn-primary' : 'btn-danger'
 
     BootstrapDialog.confirm({
         title : 'MODIFY STATUS',
         message : 'Are you sure to ' +$action+ ' <b>' + $name + '</b> ?',
-        type : BootstrapDialog.TYPE_PRIMARY,
+        type : $modal_type,
         closable: true, // <-- Default value is false
         draggable: true, // <-- Default value is false
         btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
         btnOKLabel: $action.toUpperCase(), // <-- Default value is 'OK',
-        btnOKClass: 'btn-primary', // <-- If you didn't specify it, dialog type will be used,
+        btnOKClass: $modal_btn_type, // <-- If you didn't specify it, dialog type will be used,
         callback: function(result) {
             if(result) {               
                 $.post('database/user_functions.php', {'user_id':$uid,'modify_status' : $action}, function(data){

@@ -15,22 +15,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 <div class="right_col" role="main">
 	<div class="">        
-    <?php 
-    if(isset($_SESSION['add_user_success'])) {
-      $alert['class_type'] = 'success';
-      $alert['text'] = 'SUCCESS!';
-      $message = $_SESSION['add_user_success'];
-    ?>
-    <div class="row">
-      <div class="alert alert-<?= $alert['class_type'] ?> alert-dismissible fade in" role="alert" style="margin-top:70px">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-              </button>
-              <strong><?= $alert['text'] ?></strong> <?= $message; ?>
-          </div>  
-    </div>
-  <?php } unset($_SESSION['add_user_success']); ?>
-        <div class="row">
-        	<?php 
+      <div class="row">
+    	<?php 
 			if(mysqli_num_rows($query) > 0){
 				$user_details =  mysqli_fetch_assoc($query);
 			?>
@@ -94,6 +80,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                               <th  style="cursor: pointer;">#</th>
                               <th  style="cursor: pointer;">Position Name</th>
                               <th  style="cursor: pointer;">Position Description</th>
+                              <th  style="cursor: pointer;">Entity</th>
                               <th  style="cursor: pointer;">Start Date</th>
                               <th  style="cursor: pointer;">End Date</th>
                               <th  style="cursor: pointer;">Status</th>
@@ -109,6 +96,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                               <td><?= $i ?></td>
                               <td><?= $position['position_title'] ?></td>
                               <td><?= $position['position_description'] ?></td>
+                              <td><?= $position['group_name'] . ' ('. ucwords($position['entity_legal_name']) .')' ?></td>
                               <td><?= date('F d, Y | D', strtotime($position['start_date']))  ?></td>
                                <td><?= ($position['status'] == 'ACTIVE' && empty(strtotime($position['end_date']))) ? 
                                 '<b>____</b>' : 
