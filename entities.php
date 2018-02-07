@@ -40,7 +40,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   if($entity_query->num_rows != 0) {
                     while($entity = mysqli_fetch_assoc($entity_query)){
                 ?>
-                <tr>
+                <tr id="entityrow_<?=$entity['entity_id']?>">
                   <td><a href="entities_view.php?entity_id=<?= $entity['entity_id']; ?>" class="dashboard_table_link_hover" ><?= empty($entity['entity_legal_name']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_legal_name']); ?></a></td>
                   <td><?= empty($entity['entity_nickname']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_nickname']); ?></td>
                   <td><?= empty($entity['street_address']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['street_address']); ?></td>
@@ -51,7 +51,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   <td><?= empty($entity['incorporation_state']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['incorporation_state']); ?></td>
                   <td>
                     <a href="entities_update.php?entity_id=<?=$entity['entity_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                    <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteEntity(<?= $entity['entity_id'] ?>, '<?= ucwords($entity['entity_legal_name']) . " (" . ucwords($entity['entity_nickname']) .")" ?>');"><i class="fa fa-trash-o" ></i> Delete </a>
                   </td>
                 </tr>
                 <?php } } ?>

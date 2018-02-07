@@ -23,7 +23,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
-                <h2>View Profile - <small><?= strtoupper($user_details['first_name']) . ' ' . strtoupper($user_details['last_name']) ?></small></h2>
+                <h2><?= strtoupper($user_details['first_name']) . ' ' . strtoupper($user_details['last_name']) ?></h2>
                 <ul class="nav navbar-right panel_toolbox">
                   <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                 </ul>

@@ -19,7 +19,8 @@ function getDealGroups(){
 // GET deal group details
 function getDealGroupAssignmentDetails($id){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM deal_groups,dealgroup_entity_assignment
+	$sql = "SELECT * 
+			FROM deal_groups,dealgroup_entity_assignment
 			WHERE dealgroup_entity_assignment.dealgroup_entity_assignment_id = $id
 			AND dealgroup_entity_assignment.dealgroup_id = deal_groups.dealgroup_id
 	";

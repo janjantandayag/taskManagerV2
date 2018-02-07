@@ -217,6 +217,39 @@ function deleteTask(id,task_title){
     });
 }
 
+function deleteEntity(id,entity_title){
+    BootstrapDialog.confirm({
+        title : 'DELETE ENTITY',
+        message : 'Are you sure to delete <b style="color:red">'+ entity_title.toUpperCase() +'</b>?',
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Delete', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/entity_functions.php', {'entity_id':id,'delete_entity' : 'delete_entity'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback : function (result) { if(result) updateFragment(data.after_action);}
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+}
+
 $("[name='checkbox-taskcomplete']").bootstrapSwitch({
     onText : 'FINISHED',
     offText : 'PENDING',
@@ -287,7 +320,14 @@ $(document).ready(function() {
 $('.addDealGroup').click(function(){  
     $copy = $( ".dealgroupInitial:first").clone();
     $copy.appendTo("#dealGroupContainer");
-    $copy.find(".task_type,.taskadd_dealgroup").val("");
+    $copy.find("#taskadd_dealgroup,#start_date,#end_date,#type").val("");
+    
+    $(".date").each(function(index){
+        $(this).attr('id','myDatepicker'+index);
+        $('#myDatepicker'+index).datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
 
     
     $rowLength = $(".dealgroupInitial").length;
