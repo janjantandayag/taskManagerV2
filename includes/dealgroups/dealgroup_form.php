@@ -64,7 +64,7 @@
         <textarea name="business_description" rows="1" style="width: 100%;resize: none;overflow-x: hidden" class="form-control" placeholder="Business description ..."></textarea>
       </div>    
     </div>
-    <div class="row">      
+<!--     <div class="row">      
       <div class="col-md-12 col-sm-12 col-xs-12 form-group">
         <label>Documents</label>
         <div>          
@@ -81,7 +81,7 @@
           </div>
         </div> 
       </div>
-    </div>
+    </div> -->
     <div class="row" style="margin-top:30px">
       <div class="col-xs-12" style="text-align: center">              
         <input type="hidden" value="<?= $isUpdate ? $dealgroup_id : '' ?>" name="dealgroup_id">
