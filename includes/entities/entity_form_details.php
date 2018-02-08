@@ -15,32 +15,32 @@
       </div>      
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Nickname</label>
-        <input type="text" class="form-control has-feedback-right"  name="nick_name" placeholder="Nickname" required value="<?= $isUpdate ? ucwords($entity_details['entity_nickname']) : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="nick_name" placeholder="Nickname" value="<?= $isUpdate ? ucwords($entity_details['entity_nickname']) : ''?>">
         <span class="fa fa-tags form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Street Address</label>
-        <input type="text" class="form-control has-feedback-right"  name="street_address" placeholder="Street Address" required value="<?= $isUpdate ? ucwords($entity_details['street_address']) : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="street_address" placeholder="Street Address"  value="<?= $isUpdate ? ucwords($entity_details['street_address']) : ''?>">
         <span class="fa fa-home form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>City</label>
-        <input type="text" class="form-control has-feedback-right"  name="city" placeholder="City" required value="<?= $isUpdate ? ucwords($entity_details['city'])  : ''?>"
+        <input type="text" class="form-control has-feedback-right"  name="city" placeholder="City" value="<?= $isUpdate ? ucwords($entity_details['city'])  : ''?>"
         <span class="fa fa-map-marker form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>State</label>
-        <input type="text" class="form-control has-feedback-right"  name="state" placeholder="State" required value="<?= $isUpdate ? ucwords($entity_details['state']) : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="state" placeholder="State" value="<?= $isUpdate ? ucwords($entity_details['state']) : ''?>">
         <span class="fa fa-map form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Zip Code</label>
-        <input type="text" class="form-control has-feedback-right"  name="zip_code" placeholder="Zip Code" required value="<?= $isUpdate ? ucwords($entity_details['zipcode']) : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="zip_code" placeholder="Zip Code" value="<?= $isUpdate ? ucwords($entity_details['zipcode']) : ''?>">
         <span class="fa fa-sort-numeric-asc form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
         <label>Country</label>
-        <input type="text" class="form-control has-feedback-right"  name="country" placeholder="Country" required value="<?= $isUpdate ? ucwords($entity_details['country']) : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="country" placeholder="Country" value="<?= $isUpdate ? ucwords($entity_details['country']) : ''?>">
         <span class="fa fa-map-pin form-control-feedback right" aria-hidden="true"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">

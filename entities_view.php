@@ -22,7 +22,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
-                <h2><?= ucwords($entity['entity_legal_name']) . ' ( ' . ucwords($entity['entity_legal_name']) . ' )' ?></h2>
+                <h2><?= ucwords($entity['entity_legal_name']) . ' ( ' . ucwords($entity['entity_nickname']) . ' )' ?></h2>
                 <ul class="nav navbar-right panel_toolbox">
                   <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                 </ul>
@@ -32,7 +32,12 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                 <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                   <div class="profile_img">
                     <div id="crop-avatar">
-                      <img class="img-responsive avatar-view" width="100%" src="database/attachment/images/profile/<?= $user_details['profile_image'] ?>" alt="Avatar" title="Change the avatar">
+                    	<div id="map-container" style="width: 100%;height: 250px;">  
+                    		<input type="hidden" id="input_address" value="<?= $entity['street_address'] . ' ' . $entity['city'] . ' ' . $entity['state'] . ' ' . $entity['zipcode'] . ' ' . $entity['country']?>" />
+							<script>
+							    initializeMap();
+							</script>      		
+                    	</div>
                     </div>
                   </div>
                 </div>
