@@ -55,8 +55,8 @@
           </li>
           <li><a><i class="fa fa-users"></i> Deal Groups <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="#">All Deal Groups</a></li>
-              <li><a href="#">Add New Deal Group</a></li>
+              <li><a href="dealgroups.php">All Deal Groups</a></li>
+              <li><a href="dealgroups_add.php">Add New Deal Group</a></li>
             </ul>
           </li>
           <li><a><i class="fa fa-file"></i> Documents <span class="fa fa-chevron-down"></span></a>
@@ -65,7 +65,7 @@
               <li><a href="#">Add New Document</a></li>
             </ul>
           </li>
-          <li><a><i class="fa fa-users"></i> Positions <span class="fa fa-chevron-down"></span></a>
+          <li><a><i class="fa fa-edit"></i> Assignment <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
               <li><a href="#">View Positions</a></li>
               <li><a href="positions_assigned.php">Assign Positions</a></li>

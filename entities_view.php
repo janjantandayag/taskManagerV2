@@ -14,6 +14,20 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 <div class="right_col" role="main">
 	<div class="">        
+      <?php
+        if(isset($_SESSION['action_success'])) {
+          $alert['class_type'] = 'success';
+          $alert['text'] = 'SUCCESS';
+          $message = $_SESSION['action_success'];
+      ?>
+      <div class="row">
+        <div class="alert alert-<?= $alert['class_type'] ?> alert-dismissible fade in" role="alert" style="margin-top:70px">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <strong><?= $alert['text'] ?></strong> <?= $message; ?>
+            </div>  
+      </div>
+      <?php } unset($_SESSION['action_success']); ?>
 		  <div class="row">
     	<?php 
 			if(mysqli_num_rows($query) > 0){

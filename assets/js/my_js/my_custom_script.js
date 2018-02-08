@@ -532,5 +532,20 @@ function updateFragment(data){
     }
 }
 
+$('#document_btn_label').on('change',function(){
+    if(document.getElementById('document_btn').files.length > 0){
+        $('#file_to_upload_container').css("display","block");
+        $('#file_container_tb').html('');
+        for(i=0;i<document.getElementById('document_btn').files.length;i++){
+            $file_row = '<tr style="border-bottom: 1px solid"><td style="padding-bottom:5px">'+ document.getElementById('document_btn').files[i].name +'</td></tr>';
+            $('#file_container_tb').append($file_row);
+        }
+    } else {        
+        $('#file_container_tb').html('');
+        $('#file_to_upload_container').css("display","none");
+    }
+
+});
+
 
 

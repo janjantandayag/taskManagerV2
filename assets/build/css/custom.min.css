@@ -37,3 +37,6 @@ a.dropdown-toggle{
 .accordion .panel-heading{
 	border-bottom: 2px solid #b0b5b4;
 }
+[hidden] {
+  display: none !important;
+}
