@@ -117,7 +117,7 @@ function addDealGroup(){
 	if(empty($_SESSION['action_error'])){
 		$_SESSION['action_success'] .= "Deal group succesfully added!";
 		unset($_SESSION['action_error']);
-		header("Location: ../dealgroups_view.php?dealgroup_id=$entity_id");
+		header("Location: ../dealgroups_view.php?dealgroup_id=$id");
 	} else {
 		$_SESSION['action_error'] .= "Error on add!";		
 		unset($_SESSION['action_success']);
