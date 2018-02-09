@@ -82,11 +82,5 @@
         </div> 
       </div>
     </div> -->
-    <div class="row" style="margin-top:30px">
-      <div class="col-xs-12" style="text-align: center">              
-        <input type="hidden" value="<?= $isUpdate ? $dealgroup_id : '' ?>" name="dealgroup_id">
-        <button class="btn btn-primary btn-sm" name="<?= $isUpdate ? 'edit_dealgroup' : 'add_dealgroup'?>" type="submit"><?= $isUpdate ? 'EDIT' : 'ADD' ?> DEAL GROUP</button>
-      </div>             
-    </div>
   </div>          
 </div>

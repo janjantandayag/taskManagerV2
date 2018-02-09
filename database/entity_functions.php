@@ -176,6 +176,7 @@ function getEntityDetails($entity_id,$page = ''){
 			WHERE entities.entity_id = $entity_id			
 	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	
 	if($page === 'view'){
 		return $query;
 	}
