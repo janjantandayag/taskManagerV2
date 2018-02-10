@@ -8,10 +8,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/top_navigation.php');
   include('database/dealgroup_functions.php');
   include('database/user_functions.php');
+  include('database/entity_functions.php');
 
   $isUpdate = true;
   $dealgroup_id = $_GET['dealgroup_id'];
-  $dealgroup = getDealGroupsDetail($dealgroup_id);
+  $dealgroup = getDealGroupDetails($dealgroup_id);
 ?>
 
 <div class="right_col" role="main">
@@ -29,14 +30,14 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
         </div>  
   </div>
   <?php } unset($_SESSION['action_success'],$_SESSION['action_error']); ?>
-  <form class="form-horizontal form-label-left input_mask" method="POST" action="database/entity_functions.php" />
-    <?php include('includes/entities/entity_form_details.php') ?>
-    <?php include('includes/entities/entity_form_dealgroups.php') ?>
+  <form class="form-horizontal form-label-left input_mask" method="POST" action="database/dealgroup_functions.php" />
+    <?php include('includes/dealgroups/dealgroup_form.php') ?>
+    <?php include('includes/dealgroups/dealgroup_form_entity.php') ?>
 
     <div class="row">
       <div class="col-xs-12" style="text-align: center">              
-        <input type="hidden" name="entity_id" value="<?= $entity_details['entity_id'] ?>" />
-        <button class="btn btn-primary btn-xs" name="update_entity" type="submit"> Update Entity </button> 
+        <input type="hidden" name="dealgroup_id" value="<?= $dealgroup['dealgroup_id'] ?>" />
+        <button class="btn btn-primary btn-xs" name="update_dealgroup" type="submit"> Update Entity </button> 
       </div>              
     </div>
   </form>

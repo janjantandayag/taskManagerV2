@@ -72,7 +72,7 @@ function getDealGroupDetails($dealgroup_id , $page = ''){
 	return mysqli_fetch_assoc($query);
 }
 
-// function deal group
+// add deal group
 function addDealGroup(){
 	GLOBAL $connection;
 	$_SESSION['action_success'] = "";
@@ -142,9 +142,126 @@ function addDealGroup(){
     // }
 
 }
+// get previous entities
+function getPreviousEntity($dealgroup_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM dealgroup_entity_assignment
+			WHERE dealgroup_entity_assignment.dealgroup_id = $dealgroup_id
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$id = [];
+
+	while($row = mysqli_fetch_assoc($query)){
+		$id[] = $row['dealgroup_entity_assignment_id'];
+	}
+
+	return $id;
+}
+// update dealgroup
+function updateDealGroup() {
+	GLOBAL $connection;
+	$_SESSION['action_success'] = "";
+	$_SESSION['action_error'] = "";
+
+	$main_contact_id = $_POST['dealgroup_main_contact'];
+	$group_name = strtolower($_POST['group_name']);
+	$code_name = strtolower($_POST['code_name']);
+	$sector = strtolower($_POST['sector']);
+	$deal_type = strtolower($_POST['deal_type']);
+	$club_syndicate = strtolower($_POST['club_syndicate']);
+	$source = strtolower($_POST['source']);
+	$business_description = strtolower($_POST['business_description']);
+	$dealgroup_id = $_POST['dealgroup_id'];
+
+	$sql = "UPDATE deal_groups SET main_contact_id = $main_contact_id,group_name = '$group_name',code_name = '$code_name',
+			sector = '$sector', business_description = '$business_description', deal_type = '$deal_type' , club_syndicate = '$club_syndicate',
+			source = '$source' 
+			WHERE dealgroup_id = $dealgroup_id
+	";
+
+	mysqli_query($connection, $sql) or die(mysqli_error($connection));
+
+	$entities = $_POST['entity'];
+	$start_dates = $_POST['start_date'];
+	$end_dates = $_POST['end_date'];
+	$types = $_POST['type'];
+
+	$previousEntities = getPreviousEntity($dealgroup_id);
+
+	$currentEntityIds = [];
+	require_once('entity_functions.php');
+	for($i=0;$i<count($entities);$i++){
+		if(!empty($entities[$i])) {
+			$entity_id = $entities[$i];
+			$type = $types[$i];
+			$start_date = $start_dates[$i];
+			$end_date = $end_dates[$i];
+
+			$sql = "SELECT * FROM dealgroup_entity_assignment 
+				WHERE dealgroup_entity_assignment.entity_id = $entity_id
+				AND dealgroup_entity_assignment.dealgroup_id = $dealgroup_id
+			";
+
+			$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+			if(!$query->num_rows > 0){
+				$sql_insert = "INSERT INTO dealgroup_entity_assignment(entity_id,dealgroup_id,type,start_date,end_date)
+							VALUES ($entity_id,$dealgroup_id,'$type','$start_date','$end_date')";
+
+				mysqli_query($connection,$sql_insert) or die(mysqli_error($connection));
+
+				$inserted_id = mysqli_insert_id($connection);
+				$currentEntityIds[] = $inserted_id;
+
+				$detail = getEntityAssignmentDetails($inserted_id);
+				$_SESSION['action_success'] .= "<li><strong>" . strtoupper($detail['entity_legal_name']) .' (' . strtoupper($detail['entity_nickname']) .')' . "</strong> successfully added!</li>";
+			} else {
+				$id = mysqli_fetch_assoc($query)['dealgroup_entity_assignment_id'];
+				$sql_update = "UPDATE dealgroup_entity_assignment 
+							   SET type = '$type',start_date = '$start_date',end_date = '$end_date'
+							   WHERE dealgroup_entity_assignment_id = $id
+				";
+
+				mysqli_query($connection,$sql_update) or die(mysqli_error($connection));
+				$currentEntityIds[] = $id;
+			}
+		}		
+	}
+
+	$ids = array_unique(array_merge($currentEntityIds,$previousEntities));
+
+	foreach($ids as $id){		
+		$detail = getEntityAssignmentDetails($id);
+		if( in_array($id, $previousEntities) && !in_array($id, $currentEntityIds) ){
+			// add additional if set to a user_position
+			if(isAssignedToPosition($detail['dealgroup_id'],$detail['entity_id'])) {				
+				$_SESSION['action_error'] .= "<li><strong>" . ucwords($detail['entity_legal_name']) .' (' . strtoupper($detail['entity_nickname']) .')' . " can't be deleted! </strong><small> Assigned to a position.</small></li>";
+			} else {
+				$sql = "DELETE FROM dealgroup_entity_assignment 
+						WHERE dealgroup_entity_assignment.dealgroup_entity_assignment_id = $id";
+				mysqli_query($connection,$sql);
+
+				$_SESSION['action_success'] .= "<li><strong>" . ucwords($detail['entity_legal_name']) .' (' . strtoupper($detail['entity_nickname']) .')' . "</strong> successfully removed!</li>";
+			}
+		}
+	}
+
+	if(empty($_SESSION['action_error'])){
+		$_SESSION['action_success'] .= "<br/>Deal group succesfully updated! ";
+		unset($_SESSION['action_error']);
+		header("Location: ../dealgroups_update.php?dealgroup_id=$dealgroup_id");
+	} else {
+		unset($_SESSION['action_success']);
+		header("Location: ../dealgroups_update.php?dealgroup_id=$dealgroup_id");
+	}
+}
 
 if($_POST){
 	if(isset($_POST['add_dealgroup'])){
 		addDealGroup();
+	}
+	if(isset($_POST['update_dealgroup'])){
+		updateDealGroup();
 	}
 }

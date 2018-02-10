@@ -1,11 +1,3 @@
-<?php
-  if($isUpdate){
-    $dealgroup_id = $_GET['dealgroup_id'];
-    $dealgroup = getDealGroupDetails($dealgroup_id);
-  }
-?>
-
-
 <div class="x_panel">
   <div class="x_title">
     <h2>Deal Group <?= $isUpdate ? 'Update' : 'Details' ?></h2>
@@ -24,44 +16,45 @@
           <?php
             $users_query = getActiveUsers();
             while($user = mysqli_fetch_assoc($users_query)) {
+              $selected = $dealgroup['main_contact_id'] === $user['user_id'] ? 'selected' : '';
           ?>
-          <option value="<?=$user['user_id']; ?>"><?= ucwords($user['first_name']) . ' ' . ucwords($user['last_name']) ?></option>
+          <option value="<?=$user['user_id']; ?>" <?= $selected ?>><?= ucwords($user['first_name']) . ' ' . ucwords($user['last_name']) ?></option>
           <?php } ?>
         </select>
       </div>      
       <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
         <label>Group Name</label>
-        <input type="text" class="form-control has-feedback-right"  name="group_name" placeholder="Group Name"  value="<?= $isUpdate ? $dealgroup['group_name'] : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="group_name" placeholder="Group Name"  value="<?= $isUpdate ? ucwords($dealgroup['group_name']) : ''?>">
         <span class="fa fa-tags form-control-feedback right" aria-hidden="true" style="margin-top:30px"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Code Name</label>        
-        <input type="text" class="form-control has-feedback-right"  name="code_name" placeholder="Code Name"  value="<?= $isUpdate ? $dealgroup['code_name'] : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="code_name" placeholder="Code Name"  value="<?= $isUpdate ? ucwords($dealgroup['code_name']) : ''?>">
         <span class="fa fa-tags form-control-feedback right" aria-hidden="true" style="margin-top: 30px"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Sector</label>
-        <input type="text" class="form-control has-feedback-right"  name="sector" placeholder="Sector"  value="<?= $isUpdate ? $dealgroup['sector'] : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="sector" placeholder="Sector"  value="<?= $isUpdate ? ucwords($dealgroup['sector']) : ''?>">
         <span class="fa fa-tags form-control-feedback right" aria-hidden="true" style="margin-top: 30px"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Deal Type</label>
-        <input type="text" class="form-control has-feedback-right"  name="deal_type" placeholder="Deal Type"  value="<?= $isUpdate ? $dealgroup['deal_type'] : ''?>">
+        <input type="text" class="form-control has-feedback-right"  name="deal_type" placeholder="Deal Type"  value="<?= $isUpdate ? ucwords($dealgroup['deal_type']) : ''?>">
         <span class="fa fa-tags form-control-feedback right" aria-hidden="true" style="margin-top: 30px"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
         <label>Club Syndicate</label>
-        <input type="text" class="form-control has-feedback-right"  name="club_syndicate" placeholder="Club Syndicate" value="<?= $isUpdate ? $dealgroup['club_syndicate'] : ''?>" >
+        <input type="text" class="form-control has-feedback-right"  name="club_syndicate" placeholder="Club Syndicate" value="<?= $isUpdate ? ucwords($dealgroup['club_syndicate']) : ''?>" >
         <span class="fa fa-search form-control-feedback right" aria-hidden="true" style="margin-top:30px"></span>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
         <label>Source</label>
-        <input type="text" class="form-control has-feedback-right"   name="source" placeholder="Source" value="<?= $isUpdate ? $dealgroup['source'] : ''?>">
+        <input type="text" class="form-control has-feedback-right"   name="source" placeholder="Source" value="<?= $isUpdate ? ucwords($dealgroup['source']) : ''?>">
         <span class="fa fa-file form-control-feedback right" aria-hidden="true" style="margin-top: 30px"></span>
       </div>  
       <div class="col-md-6 col-sm-6 col-xs-12 form-group">
         <label>Business Description</label>
-        <textarea name="business_description" rows="1" style="width: 100%;resize: none;overflow-x: hidden" class="form-control" placeholder="Business description ..."></textarea>
+        <textarea name="business_description" rows="1" style="width: 100%;resize: none;overflow-x: hidden" class="form-control" placeholder="Business description ..."><?= $isUpdate ? $dealgroup['business_description'] : ''?></textarea>
       </div>    
     </div>
 <!--     <div class="row">      

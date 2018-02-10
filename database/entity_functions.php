@@ -264,6 +264,18 @@ function deleteEntity(){
 	die();
 
 }
+// assignment 
+function getEntityAssignmentDetails($id){
+	GLOBAL $connection;
+	$sql = "SELECT * 
+			FROM entities,dealgroup_entity_assignment
+			WHERE dealgroup_entity_assignment.dealgroup_entity_assignment_id = $id
+			AND dealgroup_entity_assignment.entity_id = entities.entity_id
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return mysqli_fetch_assoc($query);
+}
 
 
 if($_POST){
