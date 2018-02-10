@@ -257,11 +257,70 @@ function updateDealGroup() {
 	}
 }
 
+// DELETE DEAL GROUP
+function deleteDealGroup(){
+	GLOBAL $connection;
+
+	$id = $_POST['dealgroup_id'];
+
+	$sql = "SELECT * FROM role_position
+			WHERE role_position.dealgroup_id = $id
+	";
+	$query_position = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	if($query_position->num_rows > 0){
+		$count = $query_position->num_rows;
+		$append_s = $count > 1 ? 's' : '';
+		$message = "Deal group is assigned to <strong>{$count} position{$append_s}</strong>!";
+		echo json_encode([
+			'status' => 'error',
+			'message' => $message
+		]);
+		die;
+	} else {
+		$task_sql = "SELECT * FROM tasks
+			WHERE tasks.dealgroup_id = $id
+		";
+		$task_query = mysqli_query($connection,$task_sql) or die(mysqli_error($connection));
+
+		if($task_query->num_rows > 0){
+			$count = $task_query->num_rows;
+			$append_s = $count > 1 ? 's' : '';
+			$message = "Deal group is assigned to <strong>{$count} task{$append_s}</strong>!";
+			echo json_encode([
+				'status' => 'error',
+				'message' => $message
+			]);
+			die;
+		} else {
+			$sql = "DELETE FROM dealgroup_entity_assignment
+				WHERE dealgroup_entity_assignment.dealgroup_id = $id";
+			$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));		
+
+			$sql = "DELETE FROM deal_groups
+					WHERE deal_groups.dealgroup_id = $id";
+			$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+			echo json_encode([
+				'status' => 'success',
+				'message' => 'Deal group deleted successfully!',
+				'after_action' => [
+					'action' => 'redirect',
+					'ref' => 'dealgroups.php'
+				]
+			]);
+		}		
+	}	
+}
+
 if($_POST){
 	if(isset($_POST['add_dealgroup'])){
 		addDealGroup();
 	}
 	if(isset($_POST['update_dealgroup'])){
 		updateDealGroup();
+	}
+	if(isset($_POST['delete_dealgroup'])){
+		deleteDealGroup();
 	}
 }

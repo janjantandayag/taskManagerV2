@@ -24,14 +24,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
              <thead>
                   <tr>
                     <th  style="cursor: pointer;">Legal Name</th>
-                    <th  style="cursor: pointer;">Nickname</th>
-                    <th  style="cursor: pointer;">Street Address</th>
-                    <th  style="cursor: pointer;">City</th>
-                    <th  style="cursor: pointer;">State</th>
-                    <th  style="cursor: pointer;">Zip Code</th>
-                    <th  style="cursor: pointer;">Country</th>
+                    <th  style="cursor: pointer;">Address</th>
                     <th  style="cursor: pointer;">Incorporation State</th>
-                    <th  style="cursor: pointer;">Action</th>
                   </tr>
                 </thead>
               <tbody>
@@ -39,20 +33,18 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   $entity_query = getEntities(); 
                   if($entity_query->num_rows != 0) {
                     while($entity = mysqli_fetch_assoc($entity_query)){
+                      $street_add = strlen($entity['street_address']) == 10 ? substr($entity['street_address'],0,10) : substr($entity['street_address'],0,10) . '.., ';
+                      $city = strlen($entity['city']) == 8 ? substr($entity['city'],0,8) : substr($entity['city'],0,8) . '.. ';
+                      $address = ucwords($street_add) . '<br/>' . ucwords($city);
                 ?>
                 <tr id="entityrow_<?=$entity['entity_id']?>">
                   <td><a href="entities_view.php?entity_id=<?= $entity['entity_id']; ?>" class="dashboard_table_link_hover" ><?= empty($entity['entity_legal_name']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_legal_name']); ?></a></td>
-                  <td><?= empty($entity['entity_nickname']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['entity_nickname']); ?></td>
-                  <td><?= empty($entity['street_address']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['street_address']); ?></td>
-                  <td><?= empty($entity['city']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['city']); ?></td>
-                  <td><?= empty($entity['state']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['state']); ?></td>
-                  <td><?= empty($entity['zipcode']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['zipcode']); ?></td>
-                  <td><?= empty($entity['country']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['country']); ?></td>
+                  <td title="<?= empty($address) ? '' : ucwords($entity['street_address'] .', '. $entity['city'])?>"><?= empty($address) ? '<span class="label label-default">NOT SET</span>' : $address ?></td>
                   <td><?= empty($entity['incorporation_state']) ? '<span class="label label-default">NOT SET</span>' : ucwords($entity['incorporation_state']); ?></td>
-                  <td>
+                  <!-- <td>
                     <a href="entities_update.php?entity_id=<?=$entity['entity_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteEntity(<?= $entity['entity_id'] ?>, '<?= ucwords($entity['entity_legal_name']) . " (" . ucwords($entity['entity_nickname']) .")" ?>');"><i class="fa fa-trash-o" ></i> Delete </a>
-                  </td>
+                  </td> -->
                 </tr>
                 <?php } } ?>
               </tbody>

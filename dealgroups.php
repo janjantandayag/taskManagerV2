@@ -30,7 +30,6 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     <th  style="cursor: pointer;">Deal Type</th>
                     <th  style="cursor: pointer;">Club Syndicate</th>
                     <th  style="cursor: pointer;">Source</th>
-                    <th  style="cursor: pointer;">Action</th>
                   </tr>
                 </thead>
               <tbody>
@@ -47,10 +46,10 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   <td><?= empty($deal_group['deal_type']) ? '<span class="label label-default">NOT SET</span>' : ucwords($deal_group['deal_type']); ?></td>
                   <td><?= empty($deal_group['club_syndicate']) ? '<span class="label label-default">NOT SET</span>' : ucwords($deal_group['club_syndicate']); ?></td>
                   <td><?= empty($deal_group['source']) ? '<span class="label label-default">NOT SET</span>' : ucwords($deal_group['source']); ?></td>
-                  <td>
+                  <!-- <td>
                     <a href="dealgroups_update.php?dealgroup_id=<?=$deal_group['dealgroup_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                     <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteDealGroup(<?= $deal_group['dealgroup_id'] ?>, '<?= ucwords($deal_group['group_name']) . " (" . ucwords($deal_group['code_name']) .")" ?>');"><i class="fa fa-trash-o" ></i> Delete </a>
-                  </td>
+                  </td> -->
                 </tr>
                 <?php } } ?>
               </tbody>

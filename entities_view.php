@@ -58,26 +58,35 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                 <div class="col-md-9 col-sm-9 col-xs-12">
                   <div class="profile_title">
                     <div class="col-md-6">
-                      <h2>INSERT ADDITIONAL CONTENT HERE</h2>
+                      <h2>Entity Description Here</h2>
                     </div>
                   </div>
                 	<div class="" role="tabpanel" data-example-id="togglable-tabs">
-                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                          <li role="presentation" class=""><a href="#tab_content1" role="tab" id="deal-group-tab" data-toggle="tab" aria-expanded="false"> Deal Groups Assigned</a>
-                          </li>
-                          <li role="presentation" class=""><a href="#tab_content2" role="tab" id="position-tab" data-toggle="tab" aria-expanded="false"> Users and Positions Assigned</a>
-                          </li>
-                        </ul>
-                        <div id="myTabContent" class="tab-content">
-                          <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="deal-group-tab">
-                          	display dealgroups associated with this entity
-                          </div>
-                          <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="position-tab">
-                          	display positions 
-                          </div>
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class=""><a href="#tab_content1" role="tab" id="general-info-tab" data-toggle="tab" aria-expanded="false"> General Info</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="deal-association-tab" data-toggle="tab" aria-expanded="false"> Deal Associations</a>
+                        </li>
+                         <li role="presentation" class=""><a href="#tab_content3" role="tab" id="people-tab" data-toggle="tab" aria-expanded="false"> People</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="general-info-tab">
+                          GENERAL INFO
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="deal-association">
+                        	DEAL ASSOCIATIONS
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="people-tab">
+                          PEOPLE
                         </div>
                       </div>
                   </div>
+                  <div style="border-top: 1px solid #d2d2d2;padding-top:20px;margin-top: 20px;text-align: right">
+                     <a href="entities_update.php?entity_id=<?=$entity['entity_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteEntity(<?= $entity['entity_id'] ?>, '<?= ucwords($entity['entity_legal_name']) . " (" . ucwords($entity['entity_nickname']) .")" ?>');"><i class="fa fa-trash-o" ></i> Delete </a>
+                  </div>
+                </div>
                 </div>
               </div>
             </div>

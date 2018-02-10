@@ -239,10 +239,14 @@ function deleteEntity(){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 
 	if($query->num_rows > 0){
+		$count = $query->num_rows;
+		$append_s = $count > 1 ? 's' : '';
+		$message = "Entity is assigned to a <strong>{$count} position{$append_s}</strong>!";
 		echo json_encode([
 			'status' => 'error',
-			'message' => 'Entity is assigned to a position!'
+			'message' => $message
 		]);
+		die;
 	} else {
 		$sql = "DELETE FROM dealgroup_entity_assignment
 				WHERE dealgroup_entity_assignment.entity_id = $id";
@@ -256,8 +260,8 @@ function deleteEntity(){
 			'status' => 'success',
 			'message' => 'Entity successfully deleted!',
 			'after_action' => [
-				'action' => 'delete',
-				'target' => '#entityrow_' . $id,
+				'action' => 'redirect',
+				'ref' => 'entities.php'
 			]
 		]);
 	}	

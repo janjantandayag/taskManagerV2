@@ -90,8 +90,12 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                             PORTFOLIO REVIEW 
                           </div>
                         </div>
-                      </div>
                   </div>
+                  <div style="border-top: 1px solid #d2d2d2;padding-top:20px;margin-top: 20px;text-align: right">
+                    <a href="dealgroups_update.php?dealgroup_id=<?=$deal_group['dealgroup_id']?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteDealGroup(<?= $deal_group['dealgroup_id'] ?>, '<?= ucwords($deal_group['group_name']) . " (" . ucwords($deal_group['code_name']) .")" ?>');"><i class="fa fa-trash-o" ></i> Delete </a>
+                  </div>
+                </div>
                 </div>
               </div>
             </div>

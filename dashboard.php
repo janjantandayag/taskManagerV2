@@ -34,7 +34,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 			        		$uid = $pma['user_id'];
 			        		$link = $dealgroup_ids ? "dashboard.php?user_id=$uid" : "javascript:void(0)";
 			        	?>
-			          <a href="<?=$link?>"><?= ucfirst($pma['first_name']) . ' ' . ucfirst($pma['last_name'])?></a> <span data-toggle="collapse" href="#collapse<?= $i ?>" class="label label-<?= $dealgroup_ids ? 'success' : 'default'?> " style="float:right;font-size:13px;cursor: pointer;"><?= count($dealgroup_ids) ?></span>
+			          <a href="<?=$link?>"><?= ucwords($pma['first_name']) . ' ' . ucwords($pma['last_name'])?></a> <span data-toggle="collapse" href="#collapse<?= $i ?>" class="label label-<?= $dealgroup_ids ? 'success' : 'default'?> " style="float:right;font-size:13px;cursor: pointer;"><?= count($dealgroup_ids) ?></span>
 			        </h4>
 			      </div>
 			      <div id="collapse<?= $i ?>" class="panel-collapse collapse <?= $user_id === $pma['user_id'] ? 'in' : '' ?>">			      	
@@ -47,7 +47,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		        			$deal_group = getDealGroupDetails($dealgroupid);
 
 		        	?>
-			         	<li class="list-group-item" style="<?= $dealgroup_id === $deal_group['dealgroup_id'] && $pma['user_id'] === $user_id ? 'border-left:10px solid #5cb85c;background:#dff0d8;font-weight: bold;font-size:12px' : '' ?>"><a href="dashboard.php?deal_group_id=<?=$deal_group['dealgroup_id'];?>&user_id=<?=$pma['user_id'];?>"><?=$deal_group['group_name'];?></a></li>
+			         	<li class="list-group-item" style="<?= $dealgroup_id === $deal_group['dealgroup_id'] && $pma['user_id'] === $user_id ? 'border-left:10px solid #5cb85c;background:#dff0d8;font-weight: bold;font-size:12px' : '' ?>"><a href="dashboard.php?deal_group_id=<?=$deal_group['dealgroup_id'];?>&user_id=<?=$pma['user_id'];?>"><?=ucwords($deal_group['group_name']);?></a></li>
 		          	<?php  }  ?>
 			        </ul>
 			        <?php } ?>
