@@ -188,7 +188,7 @@ function getAssignedDealGroups($entity_id){
 	GLOBAL $connection;
 
 	$sql = "
-		SELECT deal_groups.dealgroup_id,group_name,code_name,dealgroup_entity_assignment.type,dealgroup_entity_assignment.start_date,dealgroup_entity_assignment.end_date FROM dealgroup_entity_assignment,deal_groups
+		SELECT * FROM dealgroup_entity_assignment,deal_groups
 		WHERE dealgroup_entity_assignment.entity_id = $entity_id
 		AND dealgroup_entity_assignment.dealgroup_id = deal_groups.dealgroup_id
 	";
@@ -266,7 +266,18 @@ function deleteEntity(){
 		]);
 	}	
 	die();
+}
 
+// get position entity
+function getEntityPeople($entity_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM role_position,users
+			WHERE role_position.entity_id = $entity_id
+			AND role_position.user_id = users.user_id";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
 }
 // assignment 
 function getEntityAssignmentDetails($id){
