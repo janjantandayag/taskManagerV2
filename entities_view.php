@@ -83,7 +83,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                             <h5>INCORPORATION STATE</h5>
                             <li><?= ucwords($entity['incorporation_state']) ?></li> <br/>
                             <hr>
-                            <h5>INCORPORATION STATE</h5>
+                            <h5>INCORPORATION DATE</h5>
                             <li><?= strtotime($entity['incorporation_date']) ? date('F d, Y | l', strtotime($entity['incorporation_date'])) : 'NOT SET' ?></li> <br/>
                           </ul>
                         </div>
@@ -114,7 +114,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
                           </table>
                           <div style="text-align: right;margin-top:50px">                            
-                            <a href="javascript:void(0);" class="btn btn-primary btn-xs assignEntity">Assign Entity</a>
+                            <a href="javascript:void(0);" class="btn btn-primary btn-xs assignEntity">Assign Deal Group</a>
                           </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="people-tab">
