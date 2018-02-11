@@ -61,14 +61,14 @@
           </li>
           <li><a><i class="fa fa-file"></i> Documents <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="#">All Documents</a></li>
-              <li><a href="#">Add New Document</a></li>
+              <li><a href="documents.php">All Documents</a></li>
+              <li><a href="documents_add.php">Add New Document</a></li>
             </ul>
           </li>
           <li><a><i class="fa fa-edit"></i> Assignment <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
               <li><a href="#">View Positions</a></li>
-              <li><a href="positions_assigned.php">Assign Positions</a></li>
+              <li><a href="#">Assign Positions</a></li>
               <li><a href="#">Add New Position</a></li>
             </ul>
           </li>

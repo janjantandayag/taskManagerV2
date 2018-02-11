@@ -283,6 +283,41 @@ function deleteDealGroup(id,entity_title){
     });
 }
 
+function deleteDocument(id,task_title){
+    BootstrapDialog.confirm({
+        title : 'DELETE DOCUMENT',
+        message : 'Are you sure to delete <b style="color:red">'+ task_title.toUpperCase() +'</b>?',
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Delete', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/document_functions.php', {'document_id':id,'delete_document' : 'delete_document'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback: function(result) {          
+                                updateFragment(data.after_action);
+                            }
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+}
+
 $("[name='checkbox-taskcomplete']").bootstrapSwitch({
     onText : 'FINISHED',
     offText : 'PENDING',
@@ -569,6 +604,25 @@ function updateFragment(data){
     }
 }
 
+function is_url(str)
+{
+    regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+    
+    if (regexp.test(str))  {
+      return true;
+    } else {
+      return false;
+    }
+}
+
+$('#document_link_input').on('change',function(){
+    url_val = $(this).val();
+    if(!is_url(url_val)){
+        alert("Please provide a valid url! | google.com | https://google.com");
+        $(this).val('');
+    }
+});
+
 $('#document_btn_label').on('change',function(){
     if(document.getElementById('document_btn').files.length > 0){
         $('#file_to_upload_container').css("display","block");
@@ -581,7 +635,6 @@ $('#document_btn_label').on('change',function(){
         $('#file_container_tb').html('');
         $('#file_to_upload_container').css("display","none");
     }
-
 });
 
 

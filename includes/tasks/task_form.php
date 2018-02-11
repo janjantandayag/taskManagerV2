@@ -96,6 +96,6 @@
   </div>  
   <div class="col-xs-12" style="text-align: center">              
     <input type="hidden" value="<?= $isUpdate ? $task_id : '' ?>" name="task_id">
-    <button class="btn btn-primary btn-xs" name="<?= $isUpdate ? 'edit_task' : 'add_task'?>" type="submit"><?= $isUpdate ? 'EDIT' : 'ADD' ?> TASK</button>
+    <button class="btn btn-primary btn-sm" name="<?= $isUpdate ? 'edit_task' : 'add_task'?>" type="submit"><?= $isUpdate ? 'EDIT' : 'ADD' ?> TASK</button>
   </div>              
 </div>
