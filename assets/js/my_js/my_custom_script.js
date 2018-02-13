@@ -538,11 +538,14 @@ $('.assignment_position_btn').on('click',function(){
                     if(data.status == 'success'){
                         if(data.count === 0){
                             alert('Selected entity has no deal group/s assigned to it!');
-                            var attr = $('.input_assign_dealgroup').attr('disabled');
+                            target.$('.input_assign_dealgroup');
 
-                            if (typeof attr !== typeof undefined && attr !== false) {
-                                attr.attr('disabled');
-                            }                            
+                            target.addClass('empty');
+
+                            if(target.hasClass('empty')){
+                                target.empty();
+                                target.attr('disabled''disabled');
+                            }
                         } else { 
                             $('.input_assign_dealgroup').removeAttr('disabled');
                             $('.input_assign_dealgroup').empty();
