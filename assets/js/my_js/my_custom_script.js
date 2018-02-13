@@ -544,7 +544,7 @@ $('.assignment_position_btn').on('click',function(){
 
                             if(target.hasClass('empty')){
                                 target.empty();
-                                target.attr('disabled''disabled');
+                                target.attr('disabled','disabled');
                             }
                         } else { 
                             $('.input_assign_dealgroup').removeAttr('disabled');
