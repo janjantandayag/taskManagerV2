@@ -538,7 +538,7 @@ $('.assignment_position_btn').on('click',function(){
                     if(data.status == 'success'){
                         if(data.count === 0){
                             alert('Selected entity has no deal group/s assigned to it!');
-                            target.$('.input_assign_dealgroup');
+                            target = $('.input_assign_dealgroup');
 
                             target.addClass('empty');
 
