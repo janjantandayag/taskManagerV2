@@ -527,6 +527,7 @@ $('.assignment_position_btn').on('click',function(){
 
     setTimeout(function(){
         $('form#assign_position_form').find('br').remove();        
+        alert('hi');
     }, 300);
 
     setTimeout(function(){
