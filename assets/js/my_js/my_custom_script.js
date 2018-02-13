@@ -470,11 +470,9 @@ $('.delete_assigned_position_btn').on('click',function(){
     });
 });
 
-$('.dealstaff_add_position').on('click',function(){
-    $entity_id = $(this).data('entityid');
-    $dealgroup_id = $(this).data('dealgroupid');
+$('.assignment_position_btn').on('click',function(){
 
-    $.post('database/dealgroup_staffing.php', {'dealgroup_id':$dealgroup_id, 'entity_id' : $entity_id, 'dealgroup_assigned_position' : 'dealgroup_assigned_position'}, function(data){
+    $.post('database/position_functions.php', {'assign_position' : 'assign_position'}, function(data){
         if(data.status == 'success'){
             BootstrapDialog.show({
                 title: 'ASSIGN POSITION',
@@ -486,14 +484,15 @@ $('.dealstaff_add_position').on('click',function(){
                     type: 'submit',
                     action: function(dialog){
                         $noError = true;
-                        $( "#update_staffing_form .input_required" ).each(function() {           
+                        $( "#assign_position_form .input_required" ).each(function() {           
                             if( !$(this).val() ) {
                                   $noError = false;
                             }
                         });  
+
                         if($noError) {
-                            $values = $('#update_staffing_form').serialize();
-                            $.post('database/dealgroup_staffing.php' , $values , function(data){
+                            $values = $('#assign_position_form').serialize();
+                            $.post('database/position_functions.php' , $values , function(data){
                                 if(data.status == 'success'){
                                      BootstrapDialog.alert({
                                         title: 'SUCCESS',
@@ -516,7 +515,7 @@ $('.dealstaff_add_position').on('click',function(){
                         }
                     }
                 }]
-            });           
+            });                     
         } else {
             BootstrapDialog.alert({
                 title: 'ERROR',
@@ -527,8 +526,48 @@ $('.dealstaff_add_position').on('click',function(){
     }, 'json');
 
     setTimeout(function(){
-        $('form#update_staffing_form').find('br').remove();
+        $('form#assign_position_form').find('br').remove();
+
+        var entity_inputform = document.getElementById("entity_inputform");
+        entity_inputform.addEventListener("change", function() {            
+            entity_id = entity_inputform.value;
+            if(entity_id != ''){
+                $.post('database/entity_functions.php', {'id':entity_id, 'get_dealgroups' : 'get_dealgroups'}, function(data){
+                    if(data.status == 'success'){
+                        if(data.count === 0){
+                            alert('Selected entity has no deal group/s assigned to it!');
+                            var attr = $('.input_assign_dealgroup').attr('disabled');
+
+                            if (typeof attr !== typeof undefined && attr !== false) {
+                                attr.attr('disabled');
+                            }                            
+                        } else { 
+                            $('.input_assign_dealgroup').removeAttr('disabled');
+                            $('.input_assign_dealgroup').empty();
+                            updateFragment(data.after_action);
+                        }
+                    } else {
+                         BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json');
+            } else {
+               BootstrapDialog.alert({
+                    title: 'ERROR',
+                    message: 'Error processing your request',
+                    type: BootstrapDialog.TYPE_DANGER
+                });
+            }
+            
+            
+        });
     }, 300);
+
+
+
 });
 
 $('.update_assigned_position_btn').on('click',function(){
@@ -636,6 +675,11 @@ $('#document_btn_label').on('change',function(){
         $('#file_to_upload_container').css("display","none");
     }
 });
+
+
+
+
+
 
 
 

@@ -5,7 +5,17 @@ if (session_status() == PHP_SESSION_NONE) {
 if(!isset($connection)){
 	include('connection.php');
 }
+// Get dealgroup details by fields 
+function getDealGroupDetailsField($id,$field){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM deal_groups 
+			WHERE deal_groups.dealgroup_id='$id'
+	";
 
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	return mysqli_fetch_assoc($query)[$field];
+}
 // GET TASK DETAILS
 function getDealGroups(){
 	GLOBAL $connection;

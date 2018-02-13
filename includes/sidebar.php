@@ -67,9 +67,9 @@
           </li>
           <li><a><i class="fa fa-edit"></i> Assignment <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="#">View Positions</a></li>
-              <li><a href="#">Assign Positions</a></li>
-              <li><a href="#">Add New Position</a></li>
+              <li><a href="assignment_position.php">Positions</a></li>
+              <li><a href="assignment_dealgroup.php">Deal Groups</a></li>
+              <li><a href="assignment_document.php">Documents</a></li>
             </ul>
           </li>
         </ul>

@@ -104,6 +104,18 @@ function getUserDetails($id){
 	return $query;
 }
 
+// Get user details by fields 
+function getUserDetailFields($id,$field){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM users 
+			WHERE user_id='$id'
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	return mysqli_fetch_assoc($query)[$field];
+}
+
 function getActivePositions($id){
 	GLOBAL $connection;
 	$sql = "SELECT positions.position_title,positions.position_id,positions.position_description,role_position.start_date,role_position.end_date,role_position.status

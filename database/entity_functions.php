@@ -14,6 +14,18 @@ function getEntities(){
 	return $query;
 }
 
+// Get entity details by fields 
+function getEntityDetailFields($id,$field){
+	GLOBAL $connection;
+	$sql = "SELECT * FROM entities 
+			WHERE entities.entity_id='$id'
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	return mysqli_fetch_assoc($query)[$field];
+}
+
 // ADD ENTITY
 function addEntity(){
 	GLOBAL $connection;
@@ -292,7 +304,42 @@ function getEntityAssignmentDetails($id){
 	return mysqli_fetch_assoc($query);
 }
 
+// GET ASSIGNED DEAL GRUOPS - AJAX
+function getAssignedDealGroupsAjax(){
+	GLOBAL $connection;
+	$entity_id = $_POST['id'];
 
+	$sql = "
+		SELECT * FROM dealgroup_entity_assignment,deal_groups
+		WHERE dealgroup_entity_assignment.entity_id = $entity_id
+		AND dealgroup_entity_assignment.dealgroup_id = deal_groups.dealgroup_id
+	";
+
+	$query = mysqli_query($connection,$sql) or die(json_encode([
+		'status' => 'error',
+		'message' => 'Error processing your request!'
+	]));
+
+	$options = "";
+	while($result = mysqli_fetch_assoc($query)){
+		$name = ucwords($result['group_name'] . ' ( ' . $result['code_name'] .')');
+		$options .= "<option value='".ucwords($result['dealgroup_id'])."'> $name </option>";
+	}
+
+	echo json_encode([		
+		'status' => 'success',
+		'count' => $query->num_rows,
+		'after_action' => [
+			'action' => 'append',
+			'fragments' => [
+				$options
+			],
+			'target' => '.input_assign_dealgroup'
+		]
+	]);
+
+	// return $query;
+}
 if($_POST){
 	if(isset($_POST['add_entity'])){
 		addEntity();
@@ -304,5 +351,9 @@ if($_POST){
 
 	if(isset($_POST['delete_entity'])){
 		deleteEntity();
+	}
+
+	if (isset($_POST['get_dealgroups'])) {
+		getAssignedDealGroupsAjax();
 	}
 }
