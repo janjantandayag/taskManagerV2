@@ -527,8 +527,7 @@ $('.assignment_position_btn').on('click',function(){
 
     setTimeout(function(){
         $('form#assign_position_form').find('br').remove();        
-        alert('hi');
-    }, 3000);
+    }, 1000);
 
     setTimeout(function(){
         var entity_inputform = document.getElementById("entity_inputform");
@@ -567,7 +566,7 @@ $('.assignment_position_btn').on('click',function(){
             
             
         });
-    },4000);
+    },3000);
 });
 
 $('.update_assigned_position_btn').on('click',function(){
