@@ -528,7 +528,7 @@ $('.assignment_position_btn').on('click',function(){
     setTimeout(function(){
         $('form#assign_position_form').find('br').remove();        
         alert('hi');
-    }, 300);
+    }, 3000);
 
     setTimeout(function(){
         var entity_inputform = document.getElementById("entity_inputform");
