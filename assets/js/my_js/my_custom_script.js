@@ -526,8 +526,10 @@ $('.assignment_position_btn').on('click',function(){
     }, 'json');
 
     setTimeout(function(){
-        $('form#assign_position_form').find('br').remove();
+        $('form#assign_position_form').find('br').remove();        
+    }, 300);
 
+    setTimeout(function(){
         var entity_inputform = document.getElementById("entity_inputform");
         entity_inputform.addEventListener("change", function() {            
             entity_id = entity_inputform.value;
@@ -564,10 +566,7 @@ $('.assignment_position_btn').on('click',function(){
             
             
         });
-    }, 300);
-
-
-
+    },4000);
 });
 
 $('.update_assigned_position_btn').on('click',function(){
