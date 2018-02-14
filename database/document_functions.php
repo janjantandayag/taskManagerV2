@@ -4,6 +4,26 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once('connection.php');
 
+// check if assign to task
+function isAssignedToTask($id,$dealgroup_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM tasks
+			WHERE tasks.document_id = $id
+			AND tasks.dealgroup_id = $dealgroup_id
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$status = [];
+
+	if($query->num_rows > 0){
+		$status['count'] = $query->num_rows;
+		$status['message'] = true;
+	} else {
+		$status['message'] = false;
+	}
+
+	return $status;
+}
 // GET ALL DOCUMENTS
 function getAllDocuments(){
 	GLOBAL $connection;

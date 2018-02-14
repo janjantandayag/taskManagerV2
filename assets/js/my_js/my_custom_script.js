@@ -471,7 +471,6 @@ $('.delete_assigned_position_btn').on('click',function(){
 });
 
 $('.assignment_position_btn').on('click',function(){
-
     $.post('database/position_functions.php', {'assign_position' : 'assign_position'}, function(data){
         if(data.status == 'success'){
             BootstrapDialog.show({
@@ -510,7 +509,11 @@ $('.assignment_position_btn').on('click',function(){
                                 dialog.close();
                             }, 'json');
                         } else {
-                            alert('Please specify required fields!');
+                            BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Please specify required fields!',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
                             return false;
                         }
                     }
@@ -534,10 +537,14 @@ $('.assignment_position_btn').on('click',function(){
         entity_inputform.addEventListener("change", function() {            
             entity_id = entity_inputform.value;
             if(entity_id != ''){
-                $.post('database/entity_functions.php', {'id':entity_id, 'get_dealgroups' : 'get_dealgroups'}, function(data){
+                $.post('database/entity_functions.php', {'id':entity_id, 'get_dealgroups_pos_page' : 'get_dealgroups_pos_page'}, function(data){
                     if(data.status == 'success'){
                         if(data.count === 0){
-                            alert('Selected entity has no deal group/s assigned to it!');
+                            BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Selected entity has no deal group/s assigned to it!!',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
                             target = $('.input_assign_dealgroup');
 
                             target.addClass('empty');
@@ -570,6 +577,262 @@ $('.assignment_position_btn').on('click',function(){
             
         });
     },3000);
+});
+
+$('.assigned_entity_deal_group_btn').on('click',function(){
+    $.post('database/entity_functions.php', {'get_form_ed' : 'get_form_ed'}, function(data){
+        if(data.status == 'success'){
+            BootstrapDialog.show({
+                title: 'ASSIGN ENTITY - DEAL GROUP',
+                message: data.message,
+                cssClass: 'login-dialog',
+                buttons: [{
+                    label: 'ASSIGN DEAL GROUP',
+                    cssClass: 'btn-primary',
+                    type: 'submit',
+                    action: function(dialog){
+                        $noError = true;
+                        $( "#entity_dealgroups_assign_form .input_required" ).each(function() {           
+                            if( !$(this).val() ) {
+                                  $noError = false;
+                            }
+                        });  
+
+                        if($noError) {
+                            $values = $('#entity_dealgroups_assign_form').serialize();
+                            $.post('database/entity_dealgroup_assignment.php' , $values , function(data){                                
+                                var $i = 0;
+                                if(data.status == 'success'){
+                                    for(key in data.message){
+                                        $message = "";                                                                       
+                                        for(i=0;i<data.message[key].length;i++){
+                                            $message += data.message[key][i];
+                                        }
+
+                                        if(key === 'success'){             
+                                            BootstrapDialog.alert({
+                                                title: 'SUCCESS',
+                                                message: $message,
+                                                type: BootstrapDialog.TYPE_SUCCESS,
+                                                callback: function (){
+                                                    if(data.last_prompt === 'success'){
+                                                        updateFragment(data.after_action);
+                                                    }
+                                                }
+                                            }); 
+                                        } else {
+                                             BootstrapDialog.alert({
+                                                title: 'ERROR',
+                                                message: $message,
+                                                type: BootstrapDialog.TYPE_DANGER,  
+                                                callback: function (){
+                                                    if(data.last_prompt === 'error'){
+                                                        updateFragment(data.after_action);
+                                                    }
+                                                }
+                                            });     
+                                        }
+                                    }
+                                } else {
+                                    BootstrapDialog.alert({
+                                        title: 'ERROR',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_DANGER
+                                    });
+                                }
+                                dialog.close();
+                            }, 'json');
+                        } else {
+                            BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Please specify required fields',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
+                            return false;
+                        }
+                    }
+                }]
+            });                     
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+    setTimeout(function(){
+        $('#dealgroup_id').select2({
+            placeholder: 'Select deal groups...',
+        });
+        $('form#entity_dealgroups_assign_form').find('br').remove();        
+    }, 1000);
+
+    setTimeout(function(){
+        var entity_inputform = document.getElementById("entity_id");
+        entity_inputform.addEventListener("change", function() {            
+            entity_id = entity_inputform.value;
+            if(entity_id != ''){
+                $.post('database/entity_functions.php', {'id':entity_id, 'get_dealgroups' : 'get_dealgroups'}, function(data){
+                    if(data.status == 'success'){
+                        var target = $('#dealgroup_id');
+
+                        target.removeAttr('disabled');
+                        target.empty();
+
+                        target.select2({
+                            theme: 'bootstrap',
+                            allowClear: true,
+                            multiple: true,
+                            data: data.options,
+                        });
+
+                        target.val(data.selectedValues).trigger('change');
+                    } else {
+                         BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json');
+            } else {
+               BootstrapDialog.alert({
+                    title: 'ERROR',
+                    message: 'Error processing your request',
+                    type: BootstrapDialog.TYPE_DANGER
+                });
+            }
+        });
+    },2000);
+});
+
+$('.assigned_dealgroup_document').on('click',function(){
+    $.post('database/dealgroup_document.php', {'get_form_dealgroup_document' : 'get_form_dealgroup_document'}, function(data){
+        if(data.status == 'success'){
+            BootstrapDialog.show({
+                title: 'ASSIGN DEAL GROUP DOCUMENTS',
+                message: data.message,
+                cssClass: 'login-dialog',
+                buttons: [{
+                    label: 'ASSIGN DOCUMENTS',
+                    cssClass: 'btn-primary',
+                    type: 'submit',
+                    action: function(dialog){
+                        $noError = true;
+                        $( "#dealgroup_documents_form .input_required" ).each(function() {           
+                            if( !$(this).val() ) {
+                                  $noError = false;
+                            }
+                        });  
+
+                        if($noError) {
+                            $values = $('#dealgroup_documents_form').serialize();
+                            $.post('database/dealgroup_document.php' , $values , function(data){                                
+                                var $i = 0;
+                                if(data.status == 'success'){
+                                    for(key in data.message){
+                                        $message = "";                                                                       
+                                        for(i=0;i<data.message[key].length;i++){
+                                            $message += data.message[key][i];
+                                        }
+
+                                        if(key === 'success'){             
+                                            BootstrapDialog.alert({
+                                                title: 'SUCCESS',
+                                                message: $message,
+                                                type: BootstrapDialog.TYPE_SUCCESS,
+                                                callback: function (){
+                                                    if(data.last_prompt === 'success'){
+                                                        updateFragment(data.after_action);
+                                                    }
+                                                }
+                                            }); 
+                                        } else {
+                                             BootstrapDialog.alert({
+                                                title: 'ERROR',
+                                                message: $message,
+                                                type: BootstrapDialog.TYPE_DANGER,  
+                                                callback: function (){
+                                                    if(data.last_prompt === 'error'){
+                                                        updateFragment(data.after_action);
+                                                    }
+                                                }
+                                            });     
+                                        }
+                                    }
+                                } else {
+                                    BootstrapDialog.alert({
+                                        title: 'ERROR',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_DANGER
+                                    });
+                                }
+                                dialog.close();
+                            }, 'json');
+                        } else {
+                             BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Please specify required fields!',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
+                            return false;
+                        }
+                    }
+                }]
+            });                     
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+    setTimeout(function(){
+        $('#document_ids').select2({
+            placeholder: 'Select documents...',
+        });
+
+        $('form#dealgroup_documents_form').find('br').remove();        
+    }, 1000);
+
+    setTimeout(function(){
+        var dealgroup_input = document.getElementById("dealgroup_id");
+        dealgroup_input.addEventListener("change", function() {            
+            dealgroup_id = dealgroup_input.value;
+            if(dealgroup_id != ''){
+                $.post('database/entity_dealgroup_assignment.php', {'id':dealgroup_id, 'get_documents' : 'get_documents'}, function(data){
+                    if(data.status == 'success'){
+                        var target = $('#document_ids');
+                        target.empty();
+
+                        target.select2({
+                            theme: 'bootstrap',
+                            allowClear: true,
+                            multiple: true,
+                            data: data.options,
+                        });
+                        target.removeAttr('disabled');
+
+                        target.val(data.selectedValues).trigger('change');
+                    } else {
+                         BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json');
+            } else {
+               BootstrapDialog.alert({
+                    title: 'ERROR',
+                    message: 'Error processing your request',
+                    type: BootstrapDialog.TYPE_DANGER
+                });
+            }
+        });
+    },2000);
 });
 
 $('.update_assigned_position_btn').on('click',function(){

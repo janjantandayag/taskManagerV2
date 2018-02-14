@@ -39,11 +39,22 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		          			while($position = mysqli_fetch_assoc($positions_query)) : 
 		          		?>
 		          		<tr>
-		          			<td><?= ucwords(getUserDetailFields($position['user_id'],'first_name')) . ' ' . ucwords(getUserDetailFields($position['user_id'],'last_name')) ?></td>
+		          			<td>
+								<a href="users_view.php?user_id=<?=$position['user_id']?>" class="hoverAnimateText" target="_blank" >
+		          				<?= ucwords(getUserDetailFields($position['user_id'],'first_name')) . ' ' . ucwords(getUserDetailFields($position['user_id'],'last_name')) ?></a>
+		          			</td>
 		          			<td><?= ucwords($position['position_title']) ?></td>
 		          			<td><?= ucfirst(substr($position['position_description'],0,20)) ?></td>
-		          			<td><?= ucwords(getEntityDetailFields($position['entity_id'],'entity_legal_name')) ?></td>
-		          			<td><?= ucwords(getDealGroupDetailsField($position['dealgroup_id'],'group_name') . ' ( ' . getDealGroupDetailsField($position['dealgroup_id'],'code_name') . ' )') ?></td>
+		          			<td>
+		          				<a href="entities_view.php?entity_id=<?=$position['entity_id']?>" class="hoverAnimateText" target="_blank" >
+		          				<?= ucwords(getEntityDetailFields($position['entity_id'],'entity_legal_name')) ?>		          					
+		          				</a>
+		          			</td>
+		          			<td>
+		          				<a href="dealgroups_view.php?dealgroup_id=<?=$position['dealgroup_id']?>" class="hoverAnimateText" target="_blank" >
+		          				<?= ucwords(getDealGroupDetailsField($position['dealgroup_id'],'group_name') . ' ( ' . getDealGroupDetailsField($position['dealgroup_id'],'code_name') . ' )') ?>
+		          				</a>
+		          			</td>
 		          			<td><?= date('F d, Y | D', strtotime($position['start_date']))  ?></td>
                                <td><?= ($position['status'] == 'ACTIVE' && empty(strtotime($position['end_date']))) ? 
                                 '<b>____</b>' : 

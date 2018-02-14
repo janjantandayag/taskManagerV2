@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 if(!isset($connection)){
-	include('connection.php');
+	require_once('connection.php');
 }
 // Get dealgroup details by fields 
 function getDealGroupDetailsField($id,$field){
@@ -151,6 +151,23 @@ function addDealGroup(){
     //     }
     // }
 
+}
+// get previous documents
+function getPreviousDocuments($id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM dealgroup_document
+			WHERE dealgroup_document.dealgroup_id = $id			
+	";
+
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	$id = [];
+
+	while($row = mysqli_fetch_assoc($query)){
+		$id[] = $row['dealgroup_document_id'];
+	}
+
+	return $id;
 }
 // get previous entities
 function getPreviousEntity($dealgroup_id){
@@ -322,6 +339,21 @@ function deleteDealGroup(){
 		}		
 	}	
 }
+
+// GET ALL DOCUMENTS
+function getAssignedDocuments($dealgroup_id){
+	GLOBAL $connection;
+
+	$sql = "SELECT * FROM dealgroup_document,documents
+			WHERE dealgroup_document.dealgroup_id = $dealgroup_id
+			AND dealgroup_document.document_id = documents.document_id
+	";
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	return $query;
+}
+
+
 
 if($_POST){
 	if(isset($_POST['add_dealgroup'])){

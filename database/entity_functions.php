@@ -305,7 +305,7 @@ function getEntityAssignmentDetails($id){
 }
 
 // GET ASSIGNED DEAL GRUOPS - AJAX
-function getAssignedDealGroupsAjax(){
+function getAssignedDealGroupsAjax($toSelect = false){
 	GLOBAL $connection;
 	$entity_id = $_POST['id'];
 
@@ -320,10 +320,48 @@ function getAssignedDealGroupsAjax(){
 		'message' => 'Error processing your request!'
 	]));
 
-	$options = "";
-	while($result = mysqli_fetch_assoc($query)){
-		$name = ucwords($result['group_name'] . ' ( ' . $result['code_name'] .')');
-		$options .= "<option value='".ucwords($result['dealgroup_id'])."'> $name </option>";
+	if($toSelect){
+		include ('dealgroup_functions.php');
+
+		$deal_groups = getDealGroups();
+		$dealgroup_options = [];
+
+		while($deal_group = mysqli_fetch_assoc($deal_groups)){
+			$name = ucwords($deal_group['group_name'] . ' ( ' . $deal_group['code_name'] .')');
+
+			$dealgroup_options[] = [
+				'id' => $deal_group['dealgroup_id'],
+				'text' => $name
+			];
+		}
+
+		$options = [];
+		$ids = [];
+		while($result = mysqli_fetch_assoc($query)){
+			$name = ucwords($result['group_name'] . ' ( ' . $result['code_name'] .')');
+			$ids[] = $result['dealgroup_id'];
+			$options[]= [
+				'id' => $result['dealgroup_id'],
+				'text' => $name
+			];
+		}
+
+
+
+		echo json_encode([
+			'status' => 'success',
+			'selectedValues' => $ids,
+			'options' => $dealgroup_options,
+			'count' => $query->num_rows,
+		]);
+		die();
+	
+	} else {
+		$options = "";
+		while($result = mysqli_fetch_assoc($query)){
+			$name = ucwords($result['group_name'] . ' ( ' . $result['code_name'] .')');
+			$options .= "<option value='".ucwords($result['dealgroup_id'])."'> $name </option>";
+		}
 	}
 
 	echo json_encode([		
@@ -340,6 +378,48 @@ function getAssignedDealGroupsAjax(){
 
 	// return $query;
 }
+
+function getFormEntityDealGroup(){
+    // GET ENTITIES
+    $entities_query = getEntities();
+    $entity_options = "<option selected disabled>Select entity ...</option>";
+    while($entity = mysqli_fetch_assoc($entities_query)) {    	
+    	$name = ucwords($entity['entity_legal_name']);
+    	$entity_options .= "<option value='" . $entity['entity_id'] . "'>" . $name . "</option>";
+    }
+	$form = <<< FORM
+	<form action="#" id="entity_dealgroups_assign_form">
+	    <div class="form-group">		    
+			<div class="row">
+				<div class="col-md-12">
+					<div style="margin-bottom:20px">  <label for="entity_id">Entity</label>
+						<select class="form-control input_required" id="entity_id" required name="entity_id">		
+							{$entity_options}        
+						</select>
+					</div>   
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div style="margin-bottom:20px">  <label for="dealgroup_id">Deal Groups:</label>
+						<select class="form-control input_assign_dealgroup" value="[]" multiple="" id="dealgroup_id" disabled placeholder="Select deal group ..." required name="dealgroup_id[]">		
+						</select>
+					</div> 
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="assignEntityDealGroup">
+	  </form> 
+FORM;
+
+	echo json_encode([
+		'status' => 'success',
+		'message' => "{$form}"
+	]);
+}
+
+
+
 if($_POST){
 	if(isset($_POST['add_entity'])){
 		addEntity();
@@ -353,7 +433,15 @@ if($_POST){
 		deleteEntity();
 	}
 
-	if (isset($_POST['get_dealgroups'])) {
+	if (isset($_POST['get_dealgroups_pos_page'])) {
 		getAssignedDealGroupsAjax();
+	}
+
+	if (isset($_POST['get_dealgroups'])) {
+		getAssignedDealGroupsAjax(true);
+	}
+
+	if(isset($_POST['get_form_ed'])){
+		getFormEntityDealGroup();
 	}
 }
