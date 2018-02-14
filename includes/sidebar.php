@@ -72,6 +72,13 @@
               <li><a href="assignment_document.php">Documents</a></li>
             </ul>
           </li>
+          <li><a><i class="fa fa-share-square"></i> Vacation <span class="fa fa-chevron-down"></span></a>
+            <ul class="nav child_menu">
+              <li><a href="#">Vacation Requests</a></li>
+              <li><a href="#">My Requests</a></li>
+              <li><a href="#">Send A Request</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
