@@ -74,9 +74,10 @@
           </li>
           <li><a><i class="fa fa-share-square"></i> Vacation <span class="fa fa-chevron-down"></span></a>
             <ul class="nav child_menu">
-              <li><a href="#">Vacation Requests</a></li>
-              <li><a href="#">My Requests</a></li>
-              <li><a href="#">Send A Request</a></li>
+              <li><a href="vacations.php">All Requests</a></li>
+              <li><a href="my_vacations.php">My Requests</a></li>
+              <li><a href="vacations_request.php">Send A Request</a></li>
+              <li><a href="vacations_pending.php">Pending For Confirmation</a></li>
             </ul>
           </li>
         </ul>

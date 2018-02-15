@@ -352,7 +352,8 @@ function setToComplete(task_id,switched){
 
 $('#datatable-responsive').DataTable( {
     "lengthMenu":  [ 1,5,10,15,20, 25, 50, 75, 100, 150, 200 ],
-    "pageLength" : 10
+    "pageLength" : 10,
+    "aaSorting" : []
 } );
 
 $('#taskadd_dealgroup').on('change',function(){
@@ -939,6 +940,82 @@ $('#document_btn_label').on('change',function(){
         $('#file_container_tb').html('');
         $('#file_to_upload_container').css("display","none");
     }
+});
+
+$('.approveVacationRequest').on('click',function(){
+    $id = $(this).data('id');
+    $title = $(this).data('title');
+
+    BootstrapDialog.confirm({
+        title : 'APPROVE VACATION REQUEST',
+        message : 'Are you sure to approve <b style="color:#337ab7">'+ $title +'?</b>',
+        type : BootstrapDialog.TYPE_PRIMARY,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Approve', // <-- Default value is 'OK',
+        btnOKClass: 'btn-primary', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/vacation_functions.php', {'v_id':$id,'approveVacationRequest' : 'approveVacationRequest'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback: function(result) {               
+                                updateFragment(data.after_action);
+                            }
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+});
+
+$('.rejectVacationRequest').on('click',function(){
+    $id = $(this).data('id');
+    $title = $(this).data('title');
+
+    BootstrapDialog.confirm({
+        title : 'REJECT VACATION REQUEST',
+        message : 'Are you sure to reject <b style="color:red">'+ $title +'?</b>',
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Reject', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/vacation_functions.php', {'v_id':$id,'rejectVacationRequest' : 'rejectVacationRequest'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback: function(result) {          
+                                updateFragment(data.after_action);
+                            }
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
 });
 
 

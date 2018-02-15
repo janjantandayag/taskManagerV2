@@ -42,7 +42,9 @@ a.dropdown-toggle{
 }
 .hoverAnimateText:hover{
 	font-size: 13.5px;
-	padding-left:5px;
 	border-bottom: 1px dotted #000;
 	transition: .5s all;
+}
+.mtop20{
+	margin-top:20px;
 }
