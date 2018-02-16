@@ -49,7 +49,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		          	?>
 		          	<tr>
 		          		<td>
-		          			<a href="vacations_view.php?vacation_id=<?=$vacation['vacation_id']; ?>" target="_blank" class="hoverAnimateText" >
+		          			<a href="vacations_view.php?vacation_id=<?=$vacation['vacation_id']; ?>" class="hoverAnimateText" >
 		          				<?= ucwords($vacation['title']) ?>
 		          			</a>	
 		          		</td>
@@ -61,7 +61,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 							<?= strtotime($vacation['approved_date']) ? date('F d, Y | l @ g:i A', strtotime($vacation['approved_date'])) : 'NOT SET' ?>
 		          		</td>
 		          		<td>
-		          			<a href="users_view.php?user_id=<?=$vacation['approved_by'];?>" target="_blank" class="hoverAnimateText" >							
+		          			<a href="users_view.php?user_id=<?=$vacation['approved_by'];?>" class="hoverAnimateText" >							
 		          			<?= $vacation['approved_by'] ? ucwords(mysqli_fetch_assoc(getUserDetails($vacation['approved_by']))['first_name'] . ' ' . mysqli_fetch_assoc(getUserDetails($vacation['approved_by']))['last_name']) : 'NOT SET' ?>
 							</a>
 		          		</td>

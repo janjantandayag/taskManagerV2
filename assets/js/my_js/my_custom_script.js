@@ -1018,6 +1018,42 @@ $('.rejectVacationRequest').on('click',function(){
     });
 });
 
+// DELETE VACATION
+function deleteVacation(id,vacation_title){
+    BootstrapDialog.confirm({
+        title : 'DELETE VACATION',
+        message : 'Are you sure to delete <b style="color:red">'+ vacation_title.toUpperCase() +'</b>?',
+        type : BootstrapDialog.TYPE_DANGER,
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Delete', // <-- Default value is 'OK',
+        btnOKClass: 'btn-danger', // <-- If you didn't specify it, dialog type will be used,
+        callback: function(result) {
+            if(result) {               
+                $.post('database/vacation_functions.php', {'vacation_id':id,'delete_vacation' : 'delete_vacation'}, function(data){
+                    if(data.status == 'success'){
+                         BootstrapDialog.alert({
+                            title: 'SUCCESS',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_SUCCESS,
+                            callback: function(result) {                        
+                                updateFragment(data.after_action);
+                            }
+                        });
+                    } else {
+                        BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json')
+            }
+        }
+    });
+}
+
 
 
 

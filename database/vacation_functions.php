@@ -73,6 +73,7 @@ function getVacationDetails($id){
 
 	$sql = "SELECT * FROM vacations
 			WHERE vacations.vacation_id = $id
+			AND vacations.status <> 'DELETED'
 	";
 
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
@@ -110,11 +111,68 @@ function confirmVacationRequest($status){
 		]
 	]);
 }
+// update requets
+function updateRequest(){
+	date_default_timezone_set("Asia/Manila");
+	$_SESSION['action_success'] = "";
+	GLOBAL $connection;
+
+	$title = strtolower($_POST['vacation_title']);
+	$type = strtolower($_POST['vacation_type']);
+	$start_date = $_POST['start_date'];
+	$end_date = $_POST['end_date'];
+	$description = strtolower($_POST['description']);
+	$vacation_id = $_POST['vacation_id'];
+
+	$sql = "UPDATE vacations 
+			SET 
+				title = '$title', type = '$type', start_date = '$start_date', end_date = '$end_date', description = '$description'
+			WHERE
+				vacations.vacation_id = $vacation_id
+	";
+
+	mysqli_query($connection,$sql) or die(mysqli_error($connection));
+
+	$_SESSION['action_success'] = "Request successfully updated!";
+	header("Location: ../vacations_update.php?vacation_id=$vacation_id");
+}
+
+// delete vacation request
+function deleteVacation(){
+	GLOBAL $connection;
+
+	$vacation_id = $_POST['vacation_id'];
+
+	$sql = "UPDATE vacations 
+			SET 
+				vacations.status = 'DELETED'
+			WHERE
+				vacations.vacation_id = $vacation_id
+	";
+
+	mysqli_query($connection,$sql) or die(json_encode([
+		'status' => 'error',
+		'message' => mysqli_error($connection)
+	]));
+
+	echo json_encode([
+		'status' => 'success',
+		'message' => 'Vacation request successfully deleted!',
+		'after_action' => [
+			'action' => 'redirect',
+			'ref' => 'vacations.php'
+		]
+	]);
+}
 
 
 if($_POST) {
 	if(isset($_POST['send_request'])){
 		sendRequest();
+	}
+
+	if(isset($_POST['update_request'])){
+		updateRequest();
 	}
 
 	if(isset($_POST['approveVacationRequest'])){
@@ -123,5 +181,9 @@ if($_POST) {
 
 	if(isset($_POST['rejectVacationRequest'])){
 		confirmVacationRequest('REJECTED');
+	}
+
+	if(isset($_POST['delete_vacation'])){
+		deleteVacation();
 	}
 }

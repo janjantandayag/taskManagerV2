@@ -77,7 +77,7 @@
               <li><a href="vacations.php">All Requests</a></li>
               <li><a href="my_vacations.php">My Requests</a></li>
               <li><a href="vacations_request.php">Send A Request</a></li>
-              <li><a href="vacations_pending.php">Pending For Confirmation</a></li>
+              <li><a href="vacations_pending.php">Pending Requests</a></li>
             </ul>
           </li>
         </ul>

@@ -6,6 +6,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
   include('includes/header.php');
   include('includes/sidebar.php');
   include('includes/top_navigation.php');
+
+  $isUpdate = false;
 ?>
 
   <div class="right_col" role="main">  

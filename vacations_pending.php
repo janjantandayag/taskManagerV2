@@ -14,7 +14,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	<div class="row" style="margin-top:70px">
 		<div class="page-title">
           <div class="title_left">
-            <h3>Pending For Confirmation Vacation Requests</h3>
+            <h3>Pending For Confirmation</h3>
           </div>
         </div>
 		<div class="col-md-12 col-sm-12 col-xs-12" style="background:#fff;border-top:5px solid #cecece">
@@ -38,13 +38,13 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		          	?>
 		          	<tr>
 		          		<td>
-		          			<a href="vacations_view.php?vacation_id=<?=$vacation['vacation_id']; ?>" target="_blank" class="hoverAnimateText" >		          					
+		          			<a href="vacations_view.php?vacation_id=<?=$vacation['vacation_id']; ?>" class="hoverAnimateText" >		          					
 		          				<?= ucwords($vacation['title']) ?>
 		          			</a>		          			
 		          		</td>
 		          		<td><?= ucfirst($vacation['description']) ?></td>
 		          		<td>
-						<a href="users_view.php?user_id=<?=$vacation['requester_id'];?>" target="_blank" class="hoverAnimateText">							
+						<a href="users_view.php?user_id=<?=$vacation['requester_id'];?>" class="hoverAnimateText">							
 		          			<?= ucwords(mysqli_fetch_assoc(getUserDetails($vacation['requester_id']))['first_name'] . ' ' . mysqli_fetch_assoc(getUserDetails($vacation['requester_id']))['last_name']); ?>
 						</a>
 						</td>

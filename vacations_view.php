@@ -131,9 +131,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     </div>
 
                     <div class="mtop20">
-                        <a href="#" class="btn btn-xs btn-primary">Edit Vacation</a>                        
+                        <?php if($vacation['status'] === 'PENDING')  : ?>
+                        <a href="vacations_update.php?vacation_id=<?= $vacation['vacation_id'] ?>" class="btn btn-xs btn-primary">Edit Vacation</a>                        
                         <a href="#" class="btn btn-danger btn-xs" onclick="deleteVacation(<?= $vacation['vacation_id'] ?>,'<?= $vacation['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
-                  </div>
+                        <?php endif; ?>
+                    </div>
                   </section>
                 </div>
               </div>
