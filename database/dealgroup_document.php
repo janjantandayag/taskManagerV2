@@ -4,8 +4,8 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 if(!isset($connection)){
 	require_once('connection.php');
+	require_once('helpers.php');
 }
-
 // get form
 function getFormDealGroupDocument(){
 	include('dealgroup_functions.php');
@@ -50,6 +50,7 @@ FORM;
 // function get details dealgorup-document assignment
 function getDealGroupDocumentDetails($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT * FROM dealgroup_document,documents
 			WHERE dealgroup_document.dealgroup_document_id = $id
@@ -64,8 +65,8 @@ function assignDealGroupDocuments(){
 	GLOBAL $connection;
 	$message = [];
 
-	$dealgroup_id = $_POST['dealgroup_id'];
-	$document_ids = isset($_POST['document_ids']) ? $_POST['document_ids'] : [];
+	$dealgroup_id = removeSpecialChars($_POST['dealgroup_id']);
+	$document_ids = isset($_POST['document_ids']) ? removeSpecialChars($_POST['document_ids']) : [];
 
 	include('dealgroup_functions.php');
 	include('document_functions.php');
@@ -74,7 +75,7 @@ function assignDealGroupDocuments(){
 	$currentDocumentIds = [];
 	for($i=0;$i<count($document_ids);$i++){
 		if(!empty($document_ids[$i])) {
-			$document_id = $document_ids[$i];
+			$document_id = removeSpecialChars($document_ids[$i]);
 
 			$sql = "SELECT * FROM dealgroup_document 
 				WHERE dealgroup_document.document_id = $document_id
