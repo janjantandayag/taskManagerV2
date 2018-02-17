@@ -3,6 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 // get all vacation requests
 function getVacationRequests() {
@@ -48,11 +49,11 @@ function sendRequest(){
 	$_SESSION['action_success'] = "";
 	GLOBAL $connection;
 
-	$title = strtolower($_POST['vacation_title']);
-	$type = strtolower($_POST['vacation_type']);
+	$title = removeSpecialChars(strtolower($_POST['vacation_title']));
+	$type = removeSpecialChars(strtolower($_POST['vacation_type']));
 	$start_date = $_POST['start_date'];
 	$end_date = $_POST['end_date'];
-	$description = strtolower($_POST['description']);
+	$description = removeSpecialChars(strtolower($_POST['description']));
 	$requested_by = $_SESSION['user_id'];
 	$status = 'PENDING';
 	$submitted_date = date('Y-m-d H:i:s');
@@ -70,9 +71,10 @@ function sendRequest(){
 // get vacation detail
 function getVacationDetails($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT * FROM vacations
-			WHERE vacations.vacation_id = $id
+			WHERE vacations.vacation_id = '$id'
 			AND vacations.status <> 'DELETED'
 	";
 
@@ -84,7 +86,7 @@ function confirmVacationRequest($status){
 	date_default_timezone_set("Asia/Manila");
 	GLOBAL $connection;
 
-	$v_id = $_POST['v_id'];
+	$v_id = removeSpecialChars($_POST['v_id']);
 	$approved_by = $_SESSION['user_id'];
 	$approved_date = date('Y-m-d H:i:s');
 
@@ -117,12 +119,12 @@ function updateRequest(){
 	$_SESSION['action_success'] = "";
 	GLOBAL $connection;
 
-	$title = strtolower($_POST['vacation_title']);
-	$type = strtolower($_POST['vacation_type']);
+	$title = removeSpecialChars(strtolower($_POST['vacation_title']));
+	$type = removeSpecialChars(strtolower($_POST['vacation_type']));
 	$start_date = $_POST['start_date'];
 	$end_date = $_POST['end_date'];
-	$description = strtolower($_POST['description']);
-	$vacation_id = $_POST['vacation_id'];
+	$description = removeSpecialChars(strtolower($_POST['description']));
+	$vacation_id = removeSpecialChars($_POST['vacation_id']);
 
 	$sql = "UPDATE vacations 
 			SET 
@@ -136,18 +138,17 @@ function updateRequest(){
 	$_SESSION['action_success'] = "Request successfully updated!";
 	header("Location: ../vacations_update.php?vacation_id=$vacation_id");
 }
-
 // delete vacation request
 function deleteVacation(){
 	GLOBAL $connection;
 
-	$vacation_id = $_POST['vacation_id'];
+	$vacation_id = removeSpecialChars($_POST['vacation_id']);
 
 	$sql = "UPDATE vacations 
 			SET 
 				vacations.status = 'DELETED'
 			WHERE
-				vacations.vacation_id = $vacation_id
+				vacations.vacation_id = '$vacation_id'
 	";
 
 	mysqli_query($connection,$sql) or die(json_encode([
