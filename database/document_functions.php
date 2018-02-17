@@ -3,10 +3,13 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 // check if assign to task
 function isAssignedToTask($id,$dealgroup_id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
 
 	$sql = "SELECT * FROM tasks
 			WHERE tasks.document_id = $id
@@ -35,10 +38,11 @@ function getAllDocuments(){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
-
 // Get document details
 function getDocumentDetails($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT *
 			FROM documents,users
 			WHERE documents.document_id = $id
@@ -48,18 +52,17 @@ function getDocumentDetails($id){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return mysqli_fetch_assoc($query);
 }
-
 // Add document 
 function addDocument(){
 	GLOBAL $connection;	
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$document_name = strtolower($_POST['document_name']);
-	$document_link = $_POST['document_link'];
+	$document_name = removeSpecialChars(strtolower($_POST['document_name']));
+	$document_link = removeSpecialChars($_POST['document_link']);
 	$effective_date = $_POST['effective_date'];
 	$obscelence_date = $_POST['obscelence_date'];
-	$type = strtolower($_POST['type']);
+	$type = removeSpecialChars(strtolower($_POST['type']));
 	$date_created = $_POST['date_created'];
 	$created_by = $_SESSION['user_id'];
 
@@ -80,21 +83,20 @@ function addDocument(){
 		header("Location: ../documents_add.php");
 	}
 }
-
 // Update document
 function updateDocument(){
 	GLOBAL $connection;	
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$document_name = strtolower($_POST['document_name']);
-	$document_link = $_POST['document_link'];
+	$document_name = removeSpecialChars(strtolower($_POST['document_name']));
+	$document_link = removeSpecialChars($_POST['document_link']);
 	$effective_date = $_POST['effective_date'];
 	$obscelence_date = $_POST['obscelence_date'];
-	$type = strtolower($_POST['type']);
+	$type = removeSpecialChars(strtolower($_POST['type']));
 	$date_created = $_POST['date_created'];
-	$created_by = $_POST['created_by'];
-	$document_id = $_POST['document_id'];
+	$created_by = removeSpecialChars($_POST['created_by']);
+	$document_id = removeSpecialChars($_POST['document_id']);
 
 	$sql = "UPDATE documents
 			SET created_by = $created_by, document_name = '$document_name', document_link = '$document_link',
@@ -116,11 +118,10 @@ function updateDocument(){
 
 	header("Location: ../documents_update.php?document_id=$document_id");
 }
-
 // delete document
 function deleteDocument(){
 	GLOBAL $connection;
-	$id = $_POST['document_id'];
+	$id = removeSpecialChars($_POST['document_id']);
 
 	$sql = "SELECT * FROM tasks
 			WHERE tasks.document_id = $id
@@ -171,6 +172,5 @@ if($_POST) {
 	if(isset($_POST['delete_document'])){
 		deleteDocument();
 	}
-
 }
 
