@@ -28,8 +28,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
             </div>  
       </div>
       <?php } unset($_SESSION['action_success']); ?>
- <div class="row">
-        <?php if(count($vacation) > 0) { ?> 
+        <?php if(count($vacation) > 0) { ?>
+    <div class="row">
       <div class="">        
         <div class="clearfix"></div>
         <div class="row">
@@ -142,12 +142,13 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
             </div>
           </div>
         </div>
-  </div>
+    </div>
         <?php } else { ?>
-     <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top:150px;font-size:20px">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <strong>ERROR:</strong> Sorry, vacation does not exist in the system. 
-          </div>
+     <div class="row">
+        <h5 style="text-align: center">
+          <strong style="color: #cc1b1b">ERROR:</strong> Sorry, vacation request is either deleted or does not exists in the system. 
+        </h5>
+      </div>
     <?php } ?>
   </div>
 </div>

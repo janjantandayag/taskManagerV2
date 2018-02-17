@@ -13,11 +13,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
 <div class="right_col" role="main">
 	<div class="">        
-      <div class="row">
     	<?php 
 			if(mysqli_num_rows($query) > 0){
 				$user_details =  mysqli_fetch_assoc($query);
-			?>
+			?>      
+      <div class="row">
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
@@ -123,10 +123,11 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
           </div>
         </div>
         <?php } else { ?>
-		 <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top:150px;font-size:20px">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <strong>ERROR:</strong> Sorry, the user does not exist in the system. 
-          </div>
+		    <div class="row">
+          <h5 style="text-align: center">
+            <strong style="color: #cc1b1b">ERROR:</strong> Sorry, user is either deleted or does not exists in the system. 
+          </h5>
+        </div>
 		<?php } ?>
       </div>
 </div>

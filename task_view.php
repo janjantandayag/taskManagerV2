@@ -94,7 +94,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                         </div>
                         <div class="message_wrapper">
                           <h4 class="heading"><?= ucfirst($task_comment['first_name'])  . ' ' . ucfirst($task_comment['last_name']); ?> </h4>
-                          <blockquote class="message"><?= $task_comment['comment'] ?></blockquote>
+                          <blockquote class="message"><?= htmlspecialchars_decode($task_comment['comment']) ?></blockquote>
                           <br />
                         </div>
                       </li>

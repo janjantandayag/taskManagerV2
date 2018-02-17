@@ -495,6 +495,4 @@ if($_GET){
 	if(isset($_GET['action']) == 'logout'){
 		logout();
 	}
-
-	header('../dashboard.php');
 }
