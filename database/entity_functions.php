@@ -3,6 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 // get all entities
 function getEntities(){
@@ -17,6 +18,9 @@ function getEntities(){
 // Get entity details by fields 
 function getEntityDetailFields($id,$field){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+	$field = removeSpecialChars($field);
+
 	$sql = "SELECT * FROM entities 
 			WHERE entities.entity_id='$id'
 	";
@@ -32,14 +36,14 @@ function addEntity(){
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$legal_name = strtolower($_POST['legal_name']);
-	$nick_name = strtolower($_POST['nick_name']);
-	$street_address = strtolower($_POST['street_address']);
-	$city = strtolower($_POST['city']);
-	$state = strtolower($_POST['state']);
-	$zipcode = strtolower($_POST['zip_code']);
-	$country = strtolower($_POST['country']);
-	$incorporation_state = strtolower($_POST['incorporation_state']);
+	$legal_name = removeSpecialChars(strtolower($_POST['legal_name']));
+	$nick_name = removeSpecialChars(strtolower($_POST['nick_name']));
+	$street_address = removeSpecialChars(strtolower($_POST['street_address']));
+	$city = removeSpecialChars(strtolower($_POST['city']));
+	$state = removeSpecialChars(strtolower($_POST['state']));
+	$zipcode = removeSpecialChars(strtolower($_POST['zip_code']));
+	$country = removeSpecialChars(strtolower($_POST['country']));
+	$incorporation_state = removeSpecialChars(strtolower($_POST['incorporation_state']));
     $dealgroups  = $_POST['deal_group'];
     $entitytypes = $_POST['entity_type'];	
     $start_dates = $_POST['start_date'];
@@ -54,8 +58,8 @@ function addEntity(){
 
 	for($i=0;$i<count($dealgroups);$i++){
 		if(!empty($dealgroups[$i])) {
-			$dealgroup_id = $dealgroups[$i];
-			$entity_type = $entitytypes[$i];
+			$dealgroup_id = removeSpecialChars($dealgroups[$i]);
+			$entity_type = removeSpecialChars($entitytypes[$i]);
 			$start_date = $start_dates[$i];
 			$end_date = $end_dates[$i];
 
@@ -85,22 +89,21 @@ function addEntity(){
 	}
 
 }
-
 // FUNCTION UPDATE ENTITY
 function updateEntity(){
 	GLOBAL $connection;
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$legal_name = strtolower($_POST['legal_name']);
-	$nick_name = strtolower($_POST['nick_name']);
-	$street_address = strtolower($_POST['street_address']);
-	$city = strtolower($_POST['city']);
-	$state = strtolower($_POST['state']);
-	$zipcode = strtolower($_POST['zip_code']);
-	$country = strtolower($_POST['country']);
-	$incorporation_state = strtolower($_POST['incorporation_state']);
-	$entity_id = $_POST['entity_id'];
+	$legal_name = removeSpecialChars(strtolower($_POST['legal_name']));
+	$nick_name = removeSpecialChars(strtolower($_POST['nick_name']));
+	$street_address = removeSpecialChars(strtolower($_POST['street_address']));
+	$city = removeSpecialChars(strtolower($_POST['city']));
+	$state = removeSpecialChars(strtolower($_POST['state']));
+	$zipcode = removeSpecialChars(strtolower($_POST['zip_code']));
+	$country = removeSpecialChars(strtolower($_POST['country']));
+	$incorporation_state = removeSpecialChars(strtolower($_POST['incorporation_state']));
+	$entity_id = removeSpecialChars($_POST['entity_id']);
 	$dealgroups = $_POST['deal_group'];
 	$entitytypes = $_POST['entity_type'];
     $start_dates = $_POST['start_date'];
@@ -117,8 +120,8 @@ function updateEntity(){
 	include('dealgroup_functions.php');
 	for($i=0;$i<count($dealgroups);$i++){
 		if(!empty($dealgroups[$i])) {
-			$dealgroup_id = $dealgroups[$i];
-			$entity_type = $entitytypes[$i];
+			$dealgroup_id = removeSpecialChars($dealgroups[$i]);
+			$entity_type = removeSpecialChars($entitytypes[$i]);
 			$start_date = $start_dates[$i];
 			$end_date = $end_dates[$i];
 
@@ -180,12 +183,14 @@ function updateEntity(){
 		header("Location: ../entities_update.php?entity_id=$entity_id");
 	}
 }
-
 // GET ENTITY DETAILS
 function getEntityDetails($entity_id,$page = ''){
 	GLOBAL $connection;
+	$entity_id = removeSpecialChars($entity_id);
+	$page = removeSpecialChars($page);
+
 	$sql = "SELECT * FROM entities
-			WHERE entities.entity_id = $entity_id			
+			WHERE entities.entity_id = '$entity_id'			
 	";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	
@@ -194,10 +199,10 @@ function getEntityDetails($entity_id,$page = ''){
 	}
 	return mysqli_fetch_assoc($query);
 }
-
 // GET ASSIGNED DEAL GRUOPS
 function getAssignedDealGroups($entity_id){
 	GLOBAL $connection;
+	$entity_id = removeSpecialChars($entity_id);
 
 	$sql = "
 		SELECT * FROM dealgroup_entity_assignment,deal_groups
@@ -208,9 +213,10 @@ function getAssignedDealGroups($entity_id){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
-
+// get previous deal group
 function getPreviousDealGroup($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT * FROM dealgroup_entity_assignment
 			WHERE dealgroup_entity_assignment.entity_id = $id			
@@ -224,9 +230,11 @@ function getPreviousDealGroup($id){
 
 	return $id;
 }
-
+// check if assign to position
 function isAssignedToPosition($dealgroup_id,$entity_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
+	$entity_id = removeSpecialChars($entity_id);
 
 	$sql = "SELECT * FROM role_position 
 			WHERE role_position.dealgroup_id = $dealgroup_id
@@ -239,10 +247,10 @@ function isAssignedToPosition($dealgroup_id,$entity_id){
 		return false;
 	}
 }
-
+// delete entity
 function deleteEntity(){
 	GLOBAL $connection;
-	$id = $_POST['entity_id'];
+	$id = removeSpecialChars($_POST['entity_id']);
 
 	$sql = "SELECT * FROM role_position
 			WHERE role_position.entity_id = $id
@@ -279,10 +287,10 @@ function deleteEntity(){
 	}	
 	die();
 }
-
 // get position entity
 function getEntityPeople($entity_id){
 	GLOBAL $connection;
+	$entity_id = removeSpecialChars($entity_id);
 
 	$sql = "SELECT * FROM role_position,users
 			WHERE role_position.entity_id = $entity_id
@@ -294,6 +302,8 @@ function getEntityPeople($entity_id){
 // assignment 
 function getEntityAssignmentDetails($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT * 
 			FROM entities,dealgroup_entity_assignment
 			WHERE dealgroup_entity_assignment.dealgroup_entity_assignment_id = $id
@@ -303,11 +313,10 @@ function getEntityAssignmentDetails($id){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return mysqli_fetch_assoc($query);
 }
-
 // GET ASSIGNED DEAL GRUOPS - AJAX
 function getAssignedDealGroupsAjax($toSelect = false){
 	GLOBAL $connection;
-	$entity_id = $_POST['id'];
+	$entity_id = removeSpecialChars($_POST['id']);
 
 	$sql = "
 		SELECT * FROM dealgroup_entity_assignment,deal_groups
