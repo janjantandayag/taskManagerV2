@@ -3,6 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 // get all assignment 
 function getEntityDealGroupAssignment(){
@@ -21,7 +22,7 @@ function assignEntityDealGroup(){
 	GLOBAL $connection;
 	$message = [];
 
-	$entity_id = $_POST['entity_id'];
+	$entity_id = removeSpecialChars($_POST['entity_id']);
 	$dealgroups = isset($_POST['dealgroup_id']) ? $_POST['dealgroup_id'] : [];
 
 	include('entity_functions.php');
@@ -31,7 +32,7 @@ function assignEntityDealGroup(){
 	include('dealgroup_functions.php');
 	for($i=0;$i<count($dealgroups);$i++){
 		if(!empty($dealgroups[$i])) {
-			$dealgroup_id = $dealgroups[$i];
+			$dealgroup_id = removeSpecialChars($dealgroups[$i]);
 
 			$sql = "SELECT * FROM dealgroup_entity_assignment 
 				WHERE dealgroup_entity_assignment.entity_id = $entity_id
@@ -93,7 +94,7 @@ function assignEntityDealGroup(){
 // get documents ajax
 function getDocumentsAjax(){
 	GLOBAL $connection;
-	$dealgroup_id = $_POST['id'];
+	$dealgroup_id = removeSpecialChars($_POST['id']);
 
 	$sql = "SELECT * FROM dealgroup_document,documents
 			WHERE dealgroup_document.dealgroup_id = $dealgroup_id
