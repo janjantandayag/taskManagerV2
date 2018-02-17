@@ -3,6 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 date_default_timezone_set('Asia/Manila');
 // UPDATE task status
@@ -43,6 +44,8 @@ function updateStatus(){
 function getAllTasks($user_id = '', $dealgroup_id = '',$from = '' , $to = ''){	
 	GLOBAL $connection;	
 	updateStatus();
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
+	$user_id = removeSpecialChars($user_id);
 
 	$dateQuery = '';
 
@@ -117,6 +120,8 @@ function filterTask($filter,$to = '',$from = ''){
 // GET TASK DETAILS
 function getTaskDetails($task_id){
 	GLOBAL $connection;
+	$task_id = removeSpecialChars($task_id);
+
 	$sql = "SELECT *,tasks.type AS task_type
 			FROM tasks,documents,deal_groups
 			WHERE tasks.task_id = '$task_id'
@@ -131,6 +136,8 @@ function getTaskDetails($task_id){
 
 function getTaskComments($task_id){
 	GLOBAL $connection;
+	$task_id = removeSpecialChars($task_id);
+
 	$task_id = 't_' . $task_id;
 	$sql = "SELECT *
 			FROM comments,users
@@ -148,14 +155,14 @@ function getTaskComments($task_id){
 function addTask(){
 	GLOBAL $connection;
 
-	$task_title = $_POST['task_title'];
-	$due_date = $_POST['due_date'];
-	$start_date = $_POST['start_date'];
-	$deal_group = $_POST['deal_group'];
-	$document = $_POST['document'];
-	$task_ref = $_POST['task_ref'];
-	$link_to_support = $_POST['link_to_support'];
-	$task_type = $_POST['task_type'];
+	$task_title = removeSpecialChars($_POST['task_title']);
+	$due_date = removeSpecialChars($_POST['due_date']);
+	$start_date = removeSpecialChars($_POST['start_date']);
+	$deal_group = removeSpecialChars($_POST['deal_group']);
+	$document = removeSpecialChars($_POST['document']);
+	$task_ref = removeSpecialChars($_POST['task_ref']);
+	$link_to_support = removeSpecialChars($_POST['link_to_support']);
+	$task_type = removeSpecialChars($_POST['task_type']);
 	$task_language = nl2br(htmlentities($_POST['task_language'], ENT_QUOTES, 'UTF-8'));
 	$task_note = nl2br(htmlentities($_POST['task_note'], ENT_QUOTES, 'UTF-8'));
 
@@ -169,19 +176,19 @@ function addTask(){
 	header("Location: ../task_view.php?task_id=$task_id");
 }
 
-// Edit Task
+// edit task
 function editTask(){
 	GLOBAL $connection;	
 
-	$task_title = $_POST['task_title'];
+	$task_title = removeSpecialChars($_POST['task_title']);
 	$due_date = $_POST['due_date'];
 	$start_date = $_POST['start_date'];
-	$deal_group = $_POST['deal_group'];
-	$document = $_POST['document'];
-	$task_ref = $_POST['task_ref'];
-	$link_to_support = $_POST['link_to_support'];
-	$task_type = $_POST['task_type'];
-	$status = $_POST['task_status'];
+	$deal_group = removeSpecialChars($_POST['deal_group']);
+	$document = removeSpecialChars($_POST['document']);
+	$task_ref = removeSpecialChars($_POST['task_ref']);
+	$link_to_support = removeSpecialChars($_POST['link_to_support']);
+	$task_type = removeSpecialChars($_POST['task_type']);
+	$status = removeSpecialChars($_POST['task_status']);
 
 	$task_language = nl2br(htmlentities($_POST['task_language'], ENT_QUOTES, 'UTF-8'));
 	$task_note = nl2br(htmlentities($_POST['task_note'], ENT_QUOTES, 'UTF-8'));
@@ -199,15 +206,15 @@ function editTask(){
 
 	header("Location: ../tasks_update.php?task_id=$task_id");
 }
-
-// DELETE A TASK
+// delete a task
 function deleteTask(){
 	GLOBAL $connection;
-	$task_id = $_POST['task_id'];
+	$task_id = removeSpecialChars($_POST['task_id']);
 
 	$query = "UPDATE tasks SET status = 'DELETED'
-			WHERE tasks.task_id=$task_id
+			WHERE tasks.task_id='$task_id'
 	";
+
 	mysqli_query($connection, $query) or die(json_encode([
 		'status' => 'error',
 		'message' => mysqli_error($connection)
@@ -218,23 +225,24 @@ function deleteTask(){
 		'message' => 'Task successfully deleted!'
 	]);
 }
-
 // Change status
 function changeStatus(){
 	GLOBAL $connection;
 
-	$task_id = $_POST['task_id'];
-	$action = $_POST['action_task_status'];
+	$task_id = removeSpecialChars($_POST['task_id']);
+	$action = removeSpecialChars($_POST['action_task_status']);
 	$status = ($action === 'unset') ? ' ' : 'FINISHED';
 
-	$query = "UPDATE tasks SET status = '$status'
-			WHERE tasks.task_id=$task_id
+	$query = "UPDATE tasks 
+			  SET status = '$status'
+			  WHERE tasks.task_id='$task_id'
 	";
 
 	mysqli_query($connection, $query) or die(json_encode([
 		'status' => 'error',
 		'message' => mysqli_error($connection)
 	]));
+
 	updateStatus();
 
 	echo json_encode([
@@ -242,14 +250,13 @@ function changeStatus(){
 		'message' => 'Task status successfully updated!'
 	]);
 }
-
 // Update document when dealgroup id is selected
 function updateDocumentField(){
 	GLOBAL $connection;
-	$dealgroup_id = $_POST['dealgroup_id'];
+	$dealgroup_id = removeSpecialChars($_POST['dealgroup_id']);
 
 	$sql = "SELECT * FROM documents,dealgroup_document
-			 WHERE dealgroup_document.dealgroup_id = $dealgroup_id
+			 WHERE dealgroup_document.dealgroup_id = '$dealgroup_id'
 			 AND dealgroup_document.document_id = documents.document_id
 	";
 
@@ -264,10 +271,10 @@ function updateDocumentField(){
 	}
 	echo json_encode($documents);
 }
-
 // Document on update
 function getDocumentsByDealGroup($dealgroup_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
 
 	$sql = "SELECT * FROM documents,dealgroup_document
 			 WHERE dealgroup_document.dealgroup_id = $dealgroup_id

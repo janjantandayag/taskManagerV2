@@ -139,7 +139,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 
                     <div class="mtop20">
                         <a href="tasks_update.php?task_id=<?= $task['task_id']; ?>" class="btn btn-xs btn-primary">Edit Task</a>                        
-                        <a href="#" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
+                        <a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteTask(<?= $task['task_id'] ?>,'<?= $task['title']?>');"><i class="fa fa-trash-o"></i> Delete </a>
                  	</div>
                   </section>
                 </div>

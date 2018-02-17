@@ -95,7 +95,10 @@
     </div>
   </div>  
   <div class="col-xs-12" style="text-align: center">              
+    <?php if($isUpdate) : ?>
     <input type="hidden" value="<?= $isUpdate ? $task_id : '' ?>" name="task_id">
+    <input type="hidden" value="<?= $isUpdate ? $task['status'] : '' ?>" name="task_status">
+    <?php endif; ?>
     <button class="btn btn-primary btn-sm" name="<?= $isUpdate ? 'edit_task' : 'add_task'?>" type="submit"><?= $isUpdate ? 'EDIT' : 'ADD' ?> TASK</button>
   </div>              
 </div>
