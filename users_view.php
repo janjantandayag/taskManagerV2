@@ -9,8 +9,6 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 	include('database/user_functions.php');
 
 	$query = getUserDetails($_GET['user_id']);
-
-
 ?>
 
 <div class="right_col" role="main">

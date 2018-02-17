@@ -3,9 +3,14 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
+
 // LOGGED-IN THE USER
 function login($username,$password){
 	GLOBAL $connection;
+	$username = removeSpecialChars($username);
+	$password = removeSpecialChars($password);
+
 	$sql = "SELECT * FROM users WHERE email='$username' AND password=md5('$password') AND status='ACTIVE'";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 
@@ -27,6 +32,7 @@ function login($username,$password){
 // GET ALL USERS' POSITIONS NOT SET
 function fetchUserPositions($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT positions.position_id AS id, positions.position_title as text FROM role_position,positions
 			WHERE role_position.user_id = $id
@@ -44,6 +50,7 @@ function fetchUserPositions($id){
 // GET ALL USERS' POSITIONS NOT SET
 function getPreviousPositions($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT role_position.role_position_id
 			FROM role_position
@@ -58,7 +65,7 @@ function getPreviousPositions($id){
 
 	return $data;
 }
-// GET USER ROLES
+// Get users' roles.
 function getUserRoles(){
 	GLOBAL $connection;
 	$id = $_SESSION['user_id'];
@@ -74,14 +81,11 @@ function getUserRoles(){
 	}
 	return $roles;
 }
-
-
 // Logged out user
 function logout(){
 	session_destroy();
 	header('Location: ../index.php');
 }
-
 // Get all users.
 function getUsers(){	
 	GLOBAL $connection;
@@ -99,14 +103,18 @@ function getActiveUsers(){
 // Get specific user using ID
 function getUserDetails($id){	
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT * FROM users WHERE user_id='$id'";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
-
 // Get user details by fields 
 function getUserDetailFields($id,$field){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+	$field = removeSpecialChars($field);
+
 	$sql = "SELECT * FROM users 
 			WHERE user_id='$id'
 	";
@@ -118,6 +126,8 @@ function getUserDetailFields($id,$field){
 
 function getActivePositions($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT positions.position_title,positions.position_id,positions.position_description,role_position.start_date,role_position.end_date,role_position.status
 		FROM users
 		LEFT JOIN role_position ON users.user_id = role_position.user_id
@@ -132,6 +142,8 @@ function getActivePositions($id){
 // Get positions 
 function getPositionHistory($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT *
 			FROM role_position,entities,deal_groups
 			WHERE role_position.user_id = '$id'
@@ -142,10 +154,11 @@ function getPositionHistory($id){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));	
 	return $query;
 }
-
 // Get user positions
 function getUserPositions($user_id){
 	GLOBAL $connection;
+	$user_id = removeSpecialChars($user_id);
+
 	$sql = "SELECT DISTINCT role_position.position_title FROM role_position 
 			WHERE role_position.user_id = $user_id
 			AND role_position.status = 'ACTIVE'";
@@ -158,10 +171,11 @@ function getUserPositions($user_id){
 
 	return $value ? implode(', ',$value) : "<span class='label label-danger'>Position Not Set</span>";
 }
-
 // Count number of positions
 function countPosition($user_id){
 	GLOBAL $connection;
+	$user_id = removeSpecialChars($user_id);
+
 	$sql = "SELECT * FROM role_position 
 			WHERE role_position.user_id = $user_id
 			AND role_position.status = 'ACTIVE'
@@ -170,17 +184,15 @@ function countPosition($user_id){
 	$count = mysqli_num_rows($query);
 	return ($count > 1) ? 's' : '';
 }
-
 // Add New User
 function addUser($data){
 	GLOBAL $connection;	
-	$first_name = strtolower($data['first_name']);
-	$last_name = strtolower($data['last_name']);
-	$email = strtolower($data['email']);
-	$office_phone = strtolower($data['office_phone']);
-	$cell_phone = strtolower($data['cell_phone']);
-	$password = strtolower($data['password']);
-	// $positions = $data['positions'];
+	$first_name = removeSpecialChars(strtolower($data['first_name']));
+	$last_name = removeSpecialChars(strtolower($data['last_name']));
+	$email = removeSpecialChars(strtolower($data['email']));
+	$office_phone = removeSpecialChars(strtolower($data['office_phone']));
+	$cell_phone = removeSpecialChars(strtolower($data['cell_phone']));
+	$password = removeSpecialChars(strtolower($data['password']));
 
 	$query = "INSERT INTO users(first_name,last_name,email,office_phone,cell_phone,password,status) 
 			VALUES ('$first_name','$last_name','$email','$office_phone','$cell_phone',md5('$password'),'ACTIVE')";
@@ -207,24 +219,21 @@ function addUser($data){
 		header("Location:../users_form.php");	
 	}
 }
-
 // Update User
 function updateUser($data) {	
 	GLOBAL $connection;	
 	$_SESSION['update_user_error'] = "";
 	$_SESSION['update_user_success'] = "";
 
-	$user_id = $data['user_id'];
-	$first_name = strtolower($data['first_name']);
-	$last_name = strtolower($data['last_name']);
-	$email = strtolower($data['email']);
-	$office_phone = strtolower($data['office_phone']);
-	$cell_phone = strtolower($data['cell_phone']);
-	$password = strtolower($data['password']);
+	$user_id = removeSpecialChars($data['user_id']);
+	$first_name = removeSpecialChars(strtolower($data['first_name']));
+	$last_name = removeSpecialChars(strtolower($data['last_name']));
+	$email = removeSpecialChars(strtolower($data['email']));
+	$office_phone = removeSpecialChars(strtolower($data['office_phone']));
+	$cell_phone = removeSpecialChars(strtolower($data['cell_phone']));
+	$password = removeSpecialChars(strtolower($data['password']));
 	$current = empty($data['positions']) ? [] : $data['positions'] ;
 	$previous = explode(",", $data['previous_positions']);
-
-
 
 	$query = "UPDATE users 
 	        SET first_name = '$first_name',last_name = '$last_name',email = '$email', 
@@ -296,7 +305,6 @@ function updateUser($data) {
 
 	header("Location:../users_update.php?id=$user_id&&form=update");
 }
-
 // Upload Image
 function uploadImage($file_name_init,$user_id){
 	// Modify file name
@@ -393,10 +401,11 @@ function uploadImage($file_name_init,$user_id){
         }
     }
 }
-
 // Reset Password
 function resetPassword($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT * FROM users WHERE users.user_id = $id";
 	$query = mysqli_query($connection,$sql);
 
@@ -418,12 +427,13 @@ function resetPassword($id){
 // modify status
 function modifyStatus($id,$action){	
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+	$action = removeSpecialChars($action);
 
 	$status = $action === 'activate' ? 'ACTIVE' : 'INACTIVE';
 	$sql = "UPDATE users SET status='$status' WHERE users.user_id = $id";
 	$query = mysqli_query($connection,$sql);
 }
-
 // get users that are portfolio management analyst
 function getAllPMA(){	
 	GLOBAL $connection;
@@ -439,10 +449,10 @@ function getAllPMA(){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
-
 // get deal groups associated with PMA
 function pmaDealGroups($user_id){
 	GLOBAL $connection;
+	$user_id = removeSpecialChars($user_id);
 
 	$query_deal_groups = "SELECT role_position.dealgroup_id
 		FROM role_position
@@ -455,9 +465,7 @@ function pmaDealGroups($user_id){
 	}
 
 	return $dealgroup_ids;
-
 }
-
 
 if($_POST){
 	if(isset($_POST['login'])){
@@ -487,4 +495,6 @@ if($_GET){
 	if(isset($_GET['action']) == 'logout'){
 		logout();
 	}
+
+	header('../dashboard.php');
 }
