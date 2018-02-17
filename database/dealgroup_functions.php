@@ -4,10 +4,14 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 if(!isset($connection)){
 	require_once('connection.php');
+	require_once('helpers.php');
 }
 // Get dealgroup details by fields 
 function getDealGroupDetailsField($id,$field){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+	$field = removeSpecialChars($field);
+
 	$sql = "SELECT * FROM deal_groups 
 			WHERE deal_groups.dealgroup_id='$id'
 	";
@@ -29,6 +33,8 @@ function getDealGroups(){
 // GET deal group details
 function getDealGroupAssignmentDetails($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT * 
 			FROM deal_groups,dealgroup_entity_assignment
 			WHERE dealgroup_entity_assignment.dealgroup_entity_assignment_id = $id
@@ -41,6 +47,8 @@ function getDealGroupAssignmentDetails($id){
 // GET ENTITIES
 function getAssocEntities($dealgroup_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
+
 	$sql = "SELECT * FROM deal_groups,dealgroup_entity_assignment,entities
 			WHERE deal_groups.dealgroup_id = $dealgroup_id
 			AND deal_groups.dealgroup_id = dealgroup_entity_assignment.dealgroup_id
@@ -54,6 +62,9 @@ function getAssocEntities($dealgroup_id){
 // GET STAFF ASSIGNMENT
 function getEntityDealGroupStaff($dealgroup_id,$entity_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
+	$entity_id = removeSpecialChars($entity_id);
+
 	$sql = "SELECT * FROM dealgroup_staffing,role_position,positions,users
 			WHERE dealgroup_staffing.dealgroup_id = $dealgroup_id
 			AND dealgroup_staffing.entity_id = $entity_id
@@ -70,6 +81,8 @@ function getEntityDealGroupStaff($dealgroup_id,$entity_id){
 // get dealgroup details
 function getDealGroupDetails($dealgroup_id , $page = ''){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
+	$page = removeSpecialChars($page);
 	
 	$sql = "SELECT *
 		FROM deal_groups
@@ -88,14 +101,14 @@ function addDealGroup(){
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$main_contact_id = $_POST['dealgroup_main_contact'];
-	$group_name = strtolower($_POST['group_name']);
-	$code_name = strtolower($_POST['code_name']);
-	$sector = strtolower($_POST['sector']);
-	$deal_type = strtolower($_POST['deal_type']);
-	$club_syndicate = strtolower($_POST['club_syndicate']);
-	$source = strtolower($_POST['source']);
-	$business_description = strtolower($_POST['business_description']);
+	$main_contact_id = removeSpecialChars($_POST['dealgroup_main_contact']);
+	$group_name = removeSpecialChars(strtolower($_POST['group_name']));
+	$code_name = removeSpecialChars(strtolower($_POST['code_name']));
+	$sector = removeSpecialChars(strtolower($_POST['sector']));
+	$deal_type = removeSpecialChars(strtolower($_POST['deal_type']));
+	$club_syndicate = removeSpecialChars(strtolower($_POST['club_syndicate']));
+	$source = removeSpecialChars(strtolower($_POST['source']));
+	$business_description = removeSpecialChars(strtolower($_POST['business_description']));
 	$entities = $_POST['entity'];
 	$start_dates = $_POST['start_date'];
 	$end_dates = $_POST['end_date'];
@@ -114,7 +127,7 @@ function addDealGroup(){
 			$entity_id = $entities[$i];
 			$start_date = $start_dates[$i];
 			$end_date = $end_dates[$i];
-			$type = $types[$i];
+			$type = removeSpecialChars($types[$i]);
 
 			$sql = "INSERT INTO dealgroup_entity_assignment (dealgroup_id,entity_id,start_date,end_date,type)
 					VALUES ($id,$entity_id,'$start_date','$end_date','$type'); 
@@ -155,6 +168,7 @@ function addDealGroup(){
 // get previous documents
 function getPreviousDocuments($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
 
 	$sql = "SELECT * FROM dealgroup_document
 			WHERE dealgroup_document.dealgroup_id = $id			
@@ -172,6 +186,7 @@ function getPreviousDocuments($id){
 // get previous entities
 function getPreviousEntity($dealgroup_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
 
 	$sql = "SELECT * FROM dealgroup_entity_assignment
 			WHERE dealgroup_entity_assignment.dealgroup_id = $dealgroup_id
@@ -191,15 +206,15 @@ function updateDealGroup() {
 	$_SESSION['action_success'] = "";
 	$_SESSION['action_error'] = "";
 
-	$main_contact_id = $_POST['dealgroup_main_contact'];
-	$group_name = strtolower($_POST['group_name']);
-	$code_name = strtolower($_POST['code_name']);
-	$sector = strtolower($_POST['sector']);
-	$deal_type = strtolower($_POST['deal_type']);
-	$club_syndicate = strtolower($_POST['club_syndicate']);
-	$source = strtolower($_POST['source']);
-	$business_description = strtolower($_POST['business_description']);
-	$dealgroup_id = $_POST['dealgroup_id'];
+	$main_contact_id = removeSpecialChars($_POST['dealgroup_main_contact']);
+	$group_name = removeSpecialChars(strtolower($_POST['group_name']));
+	$code_name = removeSpecialChars(strtolower($_POST['code_name']));
+	$sector = removeSpecialChars(strtolower($_POST['sector']));
+	$deal_type = removeSpecialChars(strtolower($_POST['deal_type']));
+	$club_syndicate = removeSpecialChars(strtolower($_POST['club_syndicate']));
+	$source = removeSpecialChars(strtolower($_POST['source']));
+	$business_description = removeSpecialChars(strtolower($_POST['business_description']));
+	$dealgroup_id = removeSpecialChars($_POST['dealgroup_id']);
 
 	$sql = "UPDATE deal_groups SET main_contact_id = $main_contact_id,group_name = '$group_name',code_name = '$code_name',
 			sector = '$sector', business_description = '$business_description', deal_type = '$deal_type' , club_syndicate = '$club_syndicate',
@@ -220,8 +235,8 @@ function updateDealGroup() {
 	require_once('entity_functions.php');
 	for($i=0;$i<count($entities);$i++){
 		if(!empty($entities[$i])) {
-			$entity_id = $entities[$i];
-			$type = $types[$i];
+			$entity_id = removeSpecialChars($entities[$i]);
+			$type = removeSpecialChars($types[$i]);
 			$start_date = $start_dates[$i];
 			$end_date = $end_dates[$i];
 
@@ -288,7 +303,7 @@ function updateDealGroup() {
 function deleteDealGroup(){
 	GLOBAL $connection;
 
-	$id = $_POST['dealgroup_id'];
+	$id = removeSpecialChars($_POST['dealgroup_id']);
 
 	$sql = "SELECT * FROM role_position
 			WHERE role_position.dealgroup_id = $id
@@ -343,6 +358,7 @@ function deleteDealGroup(){
 // GET ALL DOCUMENTS
 function getAssignedDocuments($dealgroup_id){
 	GLOBAL $connection;
+	$dealgroup_id = removeSpecialChars($dealgroup_id);
 
 	$sql = "SELECT * FROM dealgroup_document,documents
 			WHERE dealgroup_document.dealgroup_id = $dealgroup_id
@@ -352,8 +368,6 @@ function getAssignedDocuments($dealgroup_id){
 
 	return $query;
 }
-
-
 
 if($_POST){
 	if(isset($_POST['add_dealgroup'])){
