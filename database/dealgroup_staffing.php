@@ -3,13 +3,14 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 require_once('connection.php');
+require_once('helpers.php');
 
 function assignedPosition(){
 	GLOBAL $connection;	
-	$position_id = $_POST['position_id'];
-	$user_id = $_POST['user_id'];
-	$dealgroup_id = $_POST['dealgroup_id'];
-	$entity_id = $_POST['entity_id'];
+	$position_id = removeSpecialChars($_POST['position_id']);
+	$user_id = removeSpecialChars($_POST['user_id']);
+	$dealgroup_id = removeSpecialChars($_POST['dealgroup_id']);
+	$entity_id = removeSpecialChars($_POST['entity_id']);
 	$start_date = $_POST['start_date'];
 	$end_date = empty($_POST['end_date']) ? NULL : $_POST['end_date'];
 	$status = is_null($end_date) ? 'ACTIVE' : '';
@@ -88,6 +89,8 @@ ROW;
 
 function getDealGroupStaffingDetailsById($id){
 	GLOBAL $connection;
+	$id = removeSpecialChars($id);
+
 	$sql = "SELECT users.first_name,users.last_name,positions.position_title,dealgroup_staffing.dealgroup_id,dealgroup_staffing.entity_id, role_position.user_id,role_position.role_position_id,role_position.position_id,dealgroup_staffing.dealgroup_staffing_id,dealgroup_staffing.start_date,dealgroup_staffing.end_date FROM dealgroup_staffing,role_position,positions,users 
 		WHERE dealgroup_staffing.dealgroup_staffing_id = $id
 		AND dealgroup_staffing.role_position_id = role_position.role_position_id
@@ -175,7 +178,7 @@ APPEND_ASSIGNED;
 
 function updateDealStaffingForm(){
 	GLOBAL $connection;
-	$id = $_POST['id'];
+	$id = removeSpecialChars($_POST['id']);
 
 	$query = getDealGroupStaffingDetailsById($id);
 
@@ -190,8 +193,8 @@ function updateDealStaffingForm(){
 }
 
 function assignedDealStaffForm(){
-	$entity_id = $_POST['dealgroup_id'];
-	$dealgroup_id = $_POST['dealgroup_id'];
+	$entity_id = removeSpecialChars($_POST['dealgroup_id']);
+	$dealgroup_id = removeSpecialChars($_POST['dealgroup_id']);
 
 	$form = getAssignedPositionForm([],'','assigned',$_POST);
 	
@@ -204,15 +207,15 @@ function assignedDealStaffForm(){
 function updateDealStaffPosition(){
 	GLOBAL $connection;	
 
-	$position_id = $_GET['position_id'];
-	$user_id = $_GET['user_id'];
+	$position_id = removeSpecialChars($_GET['position_id']);
+	$user_id = removeSpecialChars($_GET['user_id']);
 	$start_date = $_GET['start_date'];
 	$end_date = empty($_GET['end_date']) ? NULL : $_GET['end_date'];
 	$status = is_null($end_date) ? 'ACTIVE' : '';
-	$role_position_id = $_GET['role_position_id'];
-	$dealgroup_staffing_id = $_GET['dealgroup_staffing_id'];
-	$entity_id = $_GET['entity_id'];
-	$dealgroup_id = $_GET['dealgroup_id'];
+	$role_position_id = removeSpecialChars($_GET['role_position_id']);
+	$dealgroup_staffing_id = removeSpecialChars($_GET['dealgroup_staffing_id']);
+	$entity_id = removeSpecialChars($_GET['entity_id']);
+	$dealgroup_id = removeSpecialChars($_GET['dealgroup_id']);
 	
 	$sql = "SELECT role_position_id FROM role_position 
 			WHERE position_id=$position_id AND user_id=$user_id";
@@ -268,8 +271,8 @@ function updateDealStaffPosition(){
 // REMOVE
 function dealStaffRemove(){
 	GLOBAL $connection;
-	$id = $_POST['dealgroup_staff_id'];
-	$target = $_POST['target_row'];
+	$id = removeSpecialChars($_POST['dealgroup_staff_id']);
+	$target = removeSpecialChars($_POST['target_row']);
 
 	$sql = "DELETE FROM dealgroup_staffing WHERE dealgroup_staffing.dealgroup_staffing_id=$id";
 	mysqli_query($connection,$sql) or die(json_encode([
