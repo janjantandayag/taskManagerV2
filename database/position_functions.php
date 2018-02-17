@@ -4,11 +4,15 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once('connection.php');
+require_once('helpers.php');
 
 function getPositions(){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM positions ORDER BY positions.position_title
+	$sql = "SELECT * 
+			FROM positions 
+			ORDER BY positions.position_title
 	";
+
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
@@ -25,8 +29,12 @@ function getRolePositions(){
 
 function getRolePositionDetails($id){
 	GLOBAL $connection;
-	$sql = "SELECT * FROM role_position,positions WHERE role_position.role_position_id = $id
-			AND role_position.position_id = positions.position_id";
+	$id = removeSpecialChars($id);
+
+	$sql = "SELECT * 
+			FROM role_position,positions 
+			WHERE role_position.role_position_id = '$id'
+				AND role_position.position_id = positions.position_id";
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return mysqli_fetch_assoc($query);
 }
@@ -125,14 +133,14 @@ FORM;
 function assignPosition(){
 	GLOBAL $connection;
 
-	$user_id = $_POST['user_id'];
-	$position_title = strtolower($_POST['position_title']);
-	$position_description = strtolower($_POST['position_description']);
-	$entity_id = $_POST['entity_inputform'];
-	$dealgroup_id = $_POST['deal_group'];
+	$user_id = removeSpecialChars($_POST['user_id']);
+	$position_title = removeSpecialChars(strtolower($_POST['position_title']));
+	$position_description = removeSpecialChars(strtolower($_POST['position_description']));
+	$entity_id = removeSpecialChars($_POST['entity_inputform']);
+	$dealgroup_id = removeSpecialChars($_POST['deal_group']);
 	$start_date = $_POST['start_date'];
 	$end_date = $_POST['end_date'];
-	$supervisor_id = $_POST['supervisor_id'];
+	$supervisor_id = removeSpecialChars($_POST['supervisor_id']);
 	$status = empty($end_date) ? 'ACTIVE' : 'INACTIVE';
 
 	$sql = "INSERT INTO role_position (user_id,supervisor_id,entity_id,dealgroup_id,start_date,end_date,status,position_title,position_description)
@@ -165,4 +173,5 @@ if($_POST){
 }
 
 if($_GET){
+
 }
