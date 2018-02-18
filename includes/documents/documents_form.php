@@ -77,6 +77,12 @@
           </select>
         </div>
       <?php endif; ?>
+      <div class="col-md-6 col-sm-6 col-xs-12 form-group">
+        <label>Document Description</label>
+        <div class="form-group">
+          <textarea name="document_description" id="" class="form-control" rows="4"> <?= $isUpdate ? $document['document_description'] : '' ?> </textarea>
+        </div>
+      </div>
   </div>  
   <div class="col-md-12" style="text-align: center">              
     <input type="hidden" value="<?= $isUpdate ? $document_id : '' ?>" name="document_id">

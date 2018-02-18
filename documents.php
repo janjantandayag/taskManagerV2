@@ -39,10 +39,10 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		         <thead>
 	                <tr>
 	                  <th  style="cursor: pointer;">Document Name</th>
+	                  <th style="cursor: pointer;">Description</th>
 	                  <th  style="cursor: pointer;">Effective Date</th>
 	                  <th  style="cursor: pointer;">Obscelence Date</th>
 	                  <th  style="cursor: pointer;">Type</th>
-	                  <th  style="cursor: pointer;">Date Created</th>
 	                  <th  style="cursor: pointer;">Created By</th>
 	                  <th  style="cursor: pointer;">Action</th>
 	                </tr>
@@ -61,10 +61,10 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                  			?>           
                  			</a>
 	                	</td>
+	                	<td title="<?= ucfirst($document['document_description']); ?>"> <?= substr(ucfirst($document['document_description']),0,20); ?> </td>
 	                	<td><?= strtotime($document['effective_date']) ? date('F d, Y | l', strtotime($document['effective_date'])) : 'NOT SET' ?></td>
 	                	<td><?= strtotime($document['obscelence_date']) ? date('F d, Y | l', strtotime($document['obscelence_date'])) : 'NOT SET' ?></td>
                  		<td><?= $document['type'] ? ucwords($document['type']) : 'NOT SET' ?></td>
-	                	<td><?= strtotime($document['date_created']) ? date('F d, Y | l', strtotime($document['date_created'])) : 'NOT SET' ?></td>
                  		<td><a href="users_view.php?user_id=<?=$document['user_id']?>"> <?= ucwords($document['first_name'] . ' ' . $document['last_name']) ?> </a></td>
                  		<td>
                  			<a href="documents_update.php?document_id=<?=$document['document_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>

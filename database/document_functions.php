@@ -65,9 +65,11 @@ function addDocument(){
 	$type = removeSpecialChars(strtolower($_POST['type']));
 	$date_created = $_POST['date_created'];
 	$created_by = $_SESSION['user_id'];
+	$document_description = removeSpecialChars(strtolower($_POST['document_description']));
 
-	$sql = "INSERT INTO documents (created_by,document_name,document_link,effective_date,obscelence_date,type,date_created)
-			VALUES ($created_by,'$document_name','$document_link','$effective_date','$obscelence_date','$type','$date_created')
+
+	$sql = "INSERT INTO documents (created_by,document_name,document_link,effective_date,obscelence_date,type,date_created,document_description)
+			VALUES ($created_by,'$document_name','$document_link','$effective_date','$obscelence_date','$type','$date_created','$document_description')
 	";
 
 	mysqli_query($connection,$sql) or die(mysqli_error($connection));
@@ -97,10 +99,12 @@ function updateDocument(){
 	$date_created = $_POST['date_created'];
 	$created_by = removeSpecialChars($_POST['created_by']);
 	$document_id = removeSpecialChars($_POST['document_id']);
+	$document_description = removeSpecialChars(strtolower($_POST['document_description']));
 
 	$sql = "UPDATE documents
 			SET created_by = $created_by, document_name = '$document_name', document_link = '$document_link',
-			    effective_date = '$effective_date', obscelence_date = '$obscelence_date', type = '$type', date_created = '$date_created'
+			    effective_date = '$effective_date', obscelence_date = '$obscelence_date', type = '$type', date_created = '$date_created',
+			    document_description = '$document_description'
 			WHERE
 				document_id = $document_id
 	";
