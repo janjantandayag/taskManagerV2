@@ -51,7 +51,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
 		          	<?php while($document = mysqli_fetch_assoc($documents_query)) : ?>	
                  	<tr id="row_document_<?= $document['document_id'] ?>">
                  		<td>
-                 			<a href="//<?= $document['document_link'] ?>" title="<?= ucwords($document['document_name']) ?>" target="_new"> 
+                 			<a href="documents_view.php?document_id=<?= $document['document_id'] ?>" title="<?= ucwords($document['document_name']) ?>" > 
                  			<?php
                  				if(strlen($document['document_name']) > 20){
                  					echo substr(ucwords($document['document_name']), 0, 20) . ' ...';
@@ -61,7 +61,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                  			?>           
                  			</a>
 	                	</td>
-	                	<td title="<?= ucfirst($document['document_description']); ?>"> <?= $document['document_description'] ? substr(ucfirst($document['document_description']),0,20) : 'NOT SET' ?> </td>
+	                	<td title="<?= ucfirst($document['document_description']); ?>"> <?= $document['document_description'] ? substr(ucfirst(trim($document['document_description'])),0,20) : 'NOT SET' ?> </td>
 	                	<td><?= strtotime($document['effective_date']) ? date('F d, Y | l', strtotime($document['effective_date'])) : 'NOT SET' ?></td>
 	                	<td><?= strtotime($document['obscelence_date']) ? date('F d, Y | l', strtotime($document['obscelence_date'])) : 'NOT SET' ?></td>
                  		<td><?= $document['type'] ? ucwords($document['type']) : 'NOT SET' ?></td>

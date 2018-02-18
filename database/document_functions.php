@@ -45,7 +45,7 @@ function getDocumentDetails($id){
 
 	$sql = "SELECT *
 			FROM documents,users
-			WHERE documents.document_id = $id
+			WHERE documents.document_id = '$id'
 			AND users.user_id = documents.created_by
 	";
 
