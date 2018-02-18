@@ -100,6 +100,18 @@ function getActiveUsers(){
 	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
 	return $query;
 }
+// Get all users.
+function getActiveUsersExcept($user_id){	
+	GLOBAL $connection;
+	$sql = "SELECT * 
+			FROM users 
+			WHERE users.status = 'ACTIVE'
+				AND users.user_id NOT IN ($user_id) 
+				ORDER BY last_name, first_name";
+				
+	$query = mysqli_query($connection,$sql) or die(mysqli_error($connection));
+	return $query;
+}
 // Get specific user using ID
 function getUserDetails($id){	
 	GLOBAL $connection;

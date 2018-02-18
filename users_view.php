@@ -37,7 +37,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                   <h3><?=  ucfirst($user_details['first_name']) . ' ' . ucfirst($user_details['last_name']) ?></h3>
 
                   <ul class="list-unstyled user_data">
-                    <li><i class="fa fa-envelope user-profile-icon"></i> <?= $user_details['email']; ?></li>
+                    <li><i class="fa fa-envelope user-profile-icon"></i> <a href="mailto:<?= $user_details['email']; ?>"><?= $user_details['email']; ?></a></li>
 
                     <li><i class="fa fa-phone user-profile-icon"></i> <?= $user_details['office_phone']; ?></li>
 
@@ -52,7 +52,8 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                     </li>
                   </ul>
                   <hr>
-                  <a href="users_update.php?id=<?= $user_details['user_id'] ?>&&form=update" class="btn btn-primary btn-sm"><i class="fa fa-edit m-right-xs"></i> Edit Profile</a>
+                  <a href="users_update.php?id=<?= $user_details['user_id'] ?>&&form=update" class="btn btn-primary btn-xs"><i class="fa fa-edit m-right-xs"></i> Edit Profile</a>
+                  <a href="javascript:void(0);" class="btn btn-default btn-xs userAssignPositionBtn" data-id="<?= $user_details['user_id'] ?>" data-user="<?= ucwords($user_details['first_name'] . ' ' . $user_details['last_name']); ?>"><i class="fa fa-edit m-right-xs"></i> Assign Position</a>
                   <br />                  
                 </div>
                 <div class="col-md-9 col-sm-9 col-xs-12">
@@ -92,9 +93,9 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                             ?>                            
                             <tr>
                               <td><?= $i ?></td>
-                              <td><?= $position['position_title'] ?></td>
-                              <td><?= $position['position_description'] ?></td>
-                              <td><?= $position['group_name'] . ' ('. ucwords($position['entity_legal_name']) .')' ?></td>
+                              <td><?= ucwords($position['position_title']) ?></td>
+                              <td><?= ucfirst($position['position_description']) ?></td>
+                              <td><?= ucwords($position['group_name'] . ' ('. ucwords($position['entity_legal_name']) .')') ?></td>
                               <td><?= date('F d, Y | D', strtotime($position['start_date']))  ?></td>
                                <td><?= ($position['status'] == 'ACTIVE' && empty(strtotime($position['end_date']))) ? 
                                 '<b>____</b>' : 

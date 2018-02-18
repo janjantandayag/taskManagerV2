@@ -909,8 +909,7 @@ function updateFragment(data){
     }
 }
 
-function is_url(str)
-{
+function is_url(str){
     regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
     
     if (regexp.test(str))  {
@@ -941,7 +940,7 @@ $('#document_btn_label').on('change',function(){
         $('#file_to_upload_container').css("display","none");
     }
 });
-
+// APPROVE VACATION REQUEST
 $('.approveVacationRequest').on('click',function(){
     $id = $(this).data('id');
     $title = $(this).data('title');
@@ -979,7 +978,7 @@ $('.approveVacationRequest').on('click',function(){
         }
     });
 });
-
+// REJECT VACATION REQUEST
 $('.rejectVacationRequest').on('click',function(){
     $id = $(this).data('id');
     $title = $(this).data('title');
@@ -1017,7 +1016,6 @@ $('.rejectVacationRequest').on('click',function(){
         }
     });
 });
-
 // DELETE VACATION
 function deleteVacation(id,vacation_title){
     BootstrapDialog.confirm({
@@ -1053,7 +1051,116 @@ function deleteVacation(id,vacation_title){
         }
     });
 }
+// ASSIGN POSITION TO USER
+$('.userAssignPositionBtn').on('click',function () {
+    var $name = $(this).data('user');
+    var $user_id = $(this).data('id');
 
+    $.post('database/position_functions.php', {'user_assign_position' : 'user_assign_position','user_id' : $user_id}, function(data){
+        if(data.status == 'success'){
+            BootstrapDialog.show({
+                title: "ASSIGN POSITION <strong style='color:#000'>[" + $name.toUpperCase() + "]</strong>",
+                message: data.message,
+                cssClass: 'login-dialog',
+                buttons: [{
+                    label: 'ASSIGN POSITION',
+                    cssClass: 'btn-primary',
+                    type: 'submit',
+                    action: function(dialog){
+                        $noError = true;
+                        $( "#assign_userposition_form .input_required" ).each(function() {           
+                            if( !$(this).val() ) {
+                                  $noError = false;
+                            }
+                        });  
+
+                        if($noError) {
+                            $values = $('#assign_userposition_form').serialize();
+                            $.post('database/position_functions.php' , $values , function(data){
+                                if(data.status == 'success'){
+                                     BootstrapDialog.alert({
+                                        title: 'SUCCESS',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_SUCCESS,
+                                        callback : function (result) { if(result) updateFragment(data.after_action);}
+                                    });        
+                                } else {
+                                    BootstrapDialog.alert({
+                                        title: 'ERROR',
+                                        message: data.message,
+                                        type: BootstrapDialog.TYPE_DANGER
+                                    });
+                                }
+                                dialog.close();
+                            }, 'json');
+                        } else {
+                            BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Please specify required fields!',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
+                            return false;
+                        }
+                    }
+                }]
+            });                     
+        } else {
+            BootstrapDialog.alert({
+                title: 'ERROR',
+                message: data.message,
+                type: BootstrapDialog.TYPE_DANGER
+            });
+        }
+    }, 'json');
+
+    setTimeout(function(){
+        $('form#assign_userposition_form').find('br').remove();        
+    }, 1000);
+
+    setTimeout(function(){
+        var entity_inputform = document.getElementById("entity_inputform");
+        entity_inputform.addEventListener("change", function() {            
+            entity_id = entity_inputform.value;
+            if(entity_id != ''){
+                $.post('database/entity_functions.php', {'id':entity_id, 'get_dealgroups_pos_page' : 'get_dealgroups_pos_page'}, function(data){
+                    if(data.status == 'success'){
+                        if(data.count === 0){
+                            BootstrapDialog.alert({
+                                title: 'ERROR',
+                                message: 'Selected entity has no deal group/s assigned to it!!',
+                                type: BootstrapDialog.TYPE_DANGER
+                            });
+                            target = $('.input_assign_dealgroup');
+
+                            target.addClass('empty');
+
+                            if(target.hasClass('empty')){
+                                target.empty();
+                                target.attr('disabled','disabled');
+                            }
+                        } else { 
+                            $('.input_assign_dealgroup').removeAttr('disabled');
+                            $('.input_assign_dealgroup').empty();
+                            updateFragment(data.after_action);
+                        }
+                    } else {
+                         BootstrapDialog.alert({
+                            title: 'ERROR',
+                            message: data.message,
+                            type: BootstrapDialog.TYPE_DANGER
+                        });
+                    }
+                }, 'json');
+            } else {
+               BootstrapDialog.alert({
+                    title: 'ERROR',
+                    message: 'Error processing your request',
+                    type: BootstrapDialog.TYPE_DANGER
+                });
+            }
+        });
+    },3000);
+});
 
 
 
