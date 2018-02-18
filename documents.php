@@ -61,7 +61,7 @@ if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true){
                  			?>           
                  			</a>
 	                	</td>
-	                	<td title="<?= ucfirst($document['document_description']); ?>"> <?= substr(ucfirst($document['document_description']),0,20); ?> </td>
+	                	<td title="<?= ucfirst($document['document_description']); ?>"> <?= $document['document_description'] ? substr(ucfirst($document['document_description']),0,20) : 'NOT SET' ?> </td>
 	                	<td><?= strtotime($document['effective_date']) ? date('F d, Y | l', strtotime($document['effective_date'])) : 'NOT SET' ?></td>
 	                	<td><?= strtotime($document['obscelence_date']) ? date('F d, Y | l', strtotime($document['obscelence_date'])) : 'NOT SET' ?></td>
                  		<td><?= $document['type'] ? ucwords($document['type']) : 'NOT SET' ?></td>
